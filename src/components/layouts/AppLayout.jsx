@@ -13,7 +13,7 @@ export default function AppLayout() {
 
 function InnerLayout() {
     return (
-        <div className="flex h-screen  overflow-hidden bg-gray-50">
+        <div className="flex h-screen overflow-hidden bg-[#F6F3EE]">
             <Sidebar />
             <div className="flex flex-1 flex-col overflow-hidden">
                 <Topbar />
