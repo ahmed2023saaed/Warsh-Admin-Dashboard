@@ -33,12 +33,21 @@ export default function Topbar() {
     const pageRout = location.pathname.split("/").filter(Boolean).pop();
 
     const pageKey =
-      pageRout === "en" || pageRout === "ar" ? "dashboard" : pageRout;
+      pageRout === "en" || pageRout === "ar"
+        ? "Dashboard"
+        : pageRout
+            .split("-")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join("");
 
     return topbarMock[pageKey] || ["Page Not Found", ""];
   }
 
   const [pageTitle, PageInfo] = pageDtails();
+  const currentRoute = location.pathname.split("/").filter(Boolean).pop();
+  const isDashboard = ["en", "ar", "dashboard"].includes(
+    currentRoute?.toLowerCase(),
+  );
 
   function getFormattedDate() {
     return new Intl.DateTimeFormat("en-GB", {
@@ -59,7 +68,9 @@ export default function Topbar() {
         <h1 className="text-[22px] font-extrabold leading-tight tracking-[-0.01em] text-[#1C1712]">
           {pageTitle}
         </h1>
-        <p className="mt-1 text-[13.5px] text-[#8A8074]">{`${PageInfo}. ${today}`}</p>
+        <p className="mt-1 text-[14.5px] text-[#8A8074]">
+          {isDashboard ? `${PageInfo} · ${today}` : PageInfo}
+        </p>
       </div>
 
       {/* Search, notifications, and the signed-in admin. */}

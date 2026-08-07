@@ -1,17 +1,17 @@
 {
-  "dashboard": ["Business Health", "Warsha operations at a glance "],
-  "customers": ["Customers", "312 registered customers"],
-  "service-centers": [
+  "Dashboard": ["Business Health", "Warsha operations at a glance "],
+  "Customers": ["Customers", "312 registered customers"],
+  "ServiceCenters": [
     "Service Centers",
     "Manage partner centers and approvals"
   ],
-  "bookings": ["Bookings", "All bookings across service centers"],
-  "payments": ["Payments", "Income, commission and payout tracking"],
-  "reviews": ["Reviews", "2,140 customer reviews across all centers"],
-  "marketing": ["Marketing", "Banners, promo codes and featured centers"],
-  "emergency": ["Emergency", "Live roadside assistance requests"],
-  "settings": ["Settings", "Platform configuration and admin roles"],
-  "reports": ["Reports", "Exportable business reports"],
-  "notifications": ["Notifications", "System notifications"],
-  "admin-users": ["Admin Users", "Manage admin accounts"]
+  "Bookings": ["Bookings", "All bookings across service centers"],
+  "Payments": ["Payments", "Income, commission and payout tracking"],
+  "Reviews": ["Reviews", "2,140 customer reviews across all centers"],
+  "Marketing": ["Marketing", "Banners, promo codes and featured centers"],
+  "Emergency": ["Emergency", "Live roadside assistance requests"],
+  "Settings": ["Settings", "Platform configuration and admin roles"],
+  "Reports": ["Reports", "Exportable business reports"],
+  "Notifications": ["Notifications", "System notifications"],
+  "AdminUsers": ["Admin Users", "Manage admin accounts"]
 }
