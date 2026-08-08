@@ -1,10 +1,10 @@
 {
   "summary": {
-    "all": 1204,
-    "pending": 18,
-    "active": 9,
-    "completed": 1151,
-    "cancelled": 26
+    "all": 6,
+    "pending": 2,
+    "active": 1,
+    "completed": 2,
+    "cancelled": 1
   },
   "currency": "EGP",
   "bookings": [
@@ -21,7 +21,22 @@
       "fee": 15,
       "commission": 16,
       "paymentMethod": "Fawry",
-      "status": "upcoming"
+      "status": "pending"
+    },
+    {
+      "id": "WRSH-2932",
+      "customer": {
+        "name": "mark Khaled",
+        "initials": "AK"
+      },
+      "center": "BMW Club",
+      "car": "BMW 730i",
+      "service": "Engine Check",
+      "price": 6080,
+      "fee": 15,
+      "commission": 0,
+      "paymentMethod": "Card",
+      "status": "cancelled"
     },
     {
       "id": "WRSH-2639",
@@ -36,7 +51,7 @@
       "fee": 15,
       "commission": 60,
       "paymentMethod": "InstaPay",
-      "status": "upcoming"
+      "status": "pending"
     },
     {
       "id": "WRSH-2638",
@@ -51,7 +66,7 @@
       "fee": 15,
       "commission": 96,
       "paymentMethod": "Card",
-      "status": "working"
+      "status": "active"
     },
     {
       "id": "WRSH-2637",
@@ -66,7 +81,7 @@
       "fee": 15,
       "commission": 28,
       "paymentMethod": "Cash",
-      "status": "done"
+      "status": "completed"
     },
     {
       "id": "WRSH-2636",
@@ -81,7 +96,7 @@
       "fee": 15,
       "commission": 112,
       "paymentMethod": "Fawry",
-      "status": "done"
+      "status": "completed"
     },
     {
       "id": "WRSH-2632",
