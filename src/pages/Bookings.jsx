@@ -7,7 +7,7 @@ function Bookings() {
   const [isActive, setIsActive] = useState("all");
   const [filterBy, setFilterBy] = useState("");
 
-  const coutn = [10, 20, 10, 50];
+  const coutn = [10, 2560, 10, 520];
 
   function handelClick(name) {
     setIsActive(name);
@@ -20,36 +20,41 @@ function Bookings() {
           <FilterButton
             active={isActive === "all"}
             onClick={() => handelClick("all")}
+            count={coutn.reduce((acc, cur) => acc + cur, 0)}
           >
-            All <span>{coutn.reduce((acc, cur) => acc + cur, 0)}</span>
+            All
           </FilterButton>
           <FilterButton
             active={isActive === "Pending"}
             onClick={() => handelClick("Pending")}
+            count={coutn[0]}
           >
-            Pending <span>{coutn[0]}</span>
+            Pending
           </FilterButton>
           <FilterButton
             active={isActive === "Active"}
             onClick={() => handelClick("Active")}
+            count={coutn[1]}
           >
-            Active <span>{coutn[1]}</span>
+            Active
           </FilterButton>
           <FilterButton
             active={isActive === "Completed"}
             onClick={() => handelClick("Completed")}
+            count={coutn[2]}
           >
-            Completed <span>{coutn[2]}</span>
+            Completed
           </FilterButton>
           <FilterButton
             active={isActive === "Cancelled"}
             onClick={() => handelClick("Cancelled")}
+            count={coutn[3]}
           >
-            Cancelled <span>{coutn[3]}</span>
+            Cancelled
           </FilterButton>
         </div>
-        <Button className="min-h-[38px] min-w-0 gap-2 !rounded-[9px] !border-[#1C1712] !bg-[#1C1712] !px-[14px] !py-2 !text-sm !font-bold !text-white hover:!bg-[#332920]">
-          <Download size={14} strokeWidth={2.5} />
+        <Button className="min-h-[42px] min-w-0 gap-2 !rounded-[9px] !border-[#1C1712] !bg-[#1C1712] !px-[14px] !py-2 !text-base !font-bold !text-white hover:!bg-[#332920]">
+          <Download size={16} strokeWidth={2.5} />
           Export
         </Button>
       </div>
