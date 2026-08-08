@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
                 children: [
                     {index: true, element: withSuspense(<Dashboard />)},
                     {path: 'customers', element: withSuspense(<Customers />)},
-                    {path: 'serviceCentera', element: withSuspense(<ServiceCenters />)},
+                    {path: 'serviceCenters', element: withSuspense(<ServiceCenters />)},
                     {path: 'bookings', element: withSuspense(<Bookings />)},
                     {path: 'payments', element: withSuspense(<Payments />)},
                     {path: 'reviews', element: withSuspense(<Reviews />)},
