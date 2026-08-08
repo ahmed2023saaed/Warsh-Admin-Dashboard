@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Download } from "lucide-react";
 import Button from "../components/UI/Button";
 import FilterButton from "../components/UI/FilterButton";
+import State from "../components/UI/State";
 
 function Bookings() {
   const [isActive, setIsActive] = useState("all");
@@ -57,6 +58,9 @@ function Bookings() {
           <Download size={16} strokeWidth={2.5} />
           Export
         </Button>
+        <State>good </State>
+        <State>no </State>
+        <State>well </State>
       </div>
     </section>
   );
