@@ -1,0 +1,102 @@
+{
+  "summary": {
+    "all": 1204,
+    "pending": 18,
+    "active": 9,
+    "completed": 1151,
+    "cancelled": 26
+  },
+  "currency": "EGP",
+  "bookings": [
+    {
+      "id": "WRSH-2640",
+      "customer": {
+        "name": "Sara Mohamed",
+        "initials": "SM"
+      },
+      "center": "BMW Station",
+      "car": "BMW X1",
+      "service": "Battery",
+      "price": 200,
+      "fee": 15,
+      "commission": 16,
+      "paymentMethod": "Fawry",
+      "status": "upcoming"
+    },
+    {
+      "id": "WRSH-2639",
+      "customer": {
+        "name": "Karim Hassan",
+        "initials": "KH"
+      },
+      "center": "BMW Station",
+      "car": "BMW 520i",
+      "service": "AC Service",
+      "price": 750,
+      "fee": 15,
+      "commission": 60,
+      "paymentMethod": "InstaPay",
+      "status": "upcoming"
+    },
+    {
+      "id": "WRSH-2638",
+      "customer": {
+        "name": "Mostafa Ibrahim",
+        "initials": "MI"
+      },
+      "center": "BMW Station",
+      "car": "BMW M3",
+      "service": "Full Service",
+      "price": 1200,
+      "fee": 15,
+      "commission": 96,
+      "paymentMethod": "Card",
+      "status": "working"
+    },
+    {
+      "id": "WRSH-2637",
+      "customer": {
+        "name": "Nadia Saleh",
+        "initials": "NS"
+      },
+      "center": "Crank BMW",
+      "car": "BMW i3",
+      "service": "Diagnostic",
+      "price": 350,
+      "fee": 15,
+      "commission": 28,
+      "paymentMethod": "Cash",
+      "status": "done"
+    },
+    {
+      "id": "WRSH-2636",
+      "customer": {
+        "name": "Omar Reda",
+        "initials": "OR"
+      },
+      "center": "Bimmer's Egypt",
+      "car": "BMW 530i",
+      "service": "Brake Pads",
+      "price": 1400,
+      "fee": 15,
+      "commission": 112,
+      "paymentMethod": "Fawry",
+      "status": "done"
+    },
+    {
+      "id": "WRSH-2632",
+      "customer": {
+        "name": "Amr Khaled",
+        "initials": "AK"
+      },
+      "center": "BMW Club",
+      "car": "BMW 730i",
+      "service": "Engine Check",
+      "price": 680,
+      "fee": 15,
+      "commission": 0,
+      "paymentMethod": "Card",
+      "status": "cancelled"
+    }
+  ]
+}
