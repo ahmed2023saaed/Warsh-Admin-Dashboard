@@ -32,5 +32,18 @@
     "passwordMismatch": "كلمتا المرور غير متطابقتين.",
     "failed": "تعذر إنشاء الحساب. يرجى المحاولة مرة أخرى.",
     "submit": "إنشاء حساب"
+  },
+  "sidebar":{
+    "title":"ورشـة",
+    "subtitle":"لوحة تحكم المسؤول",
+    "dashboard":"لوحة التحكم",
+    "adminUsers":"المستخدمون الإداريون",
+    "settings":"الإعدادات",
+    "serviceCenter":"مركز الخدمة",
+    "customers":"العملاء",
+    "bookings":"الحجوزات",
+    "payments":"المدفوعات",
+    "reviews":"المراجعات",
+    "marketing":"التسويق"
   }
 }

@@ -1,4 +1,4 @@
-import { createContext, useCallback } from 'react';
+import { createContext, useCallback, useContext } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -41,4 +41,12 @@ export function LanguageProvider({children}) {
     return <languageContext.Provider value={{lang, changeLanguage, toggleLanguage, dir, isRTL}}>
         {children}
     </languageContext.Provider>
+}
+
+export function useLanguage() {
+    const ctx = useContext(languageContext);
+    if(!ctx) {
+        throw new Error('useLanguage must be used within a LanguageProvider');
+    } 
+    return ctx;
 }

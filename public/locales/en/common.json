@@ -33,5 +33,18 @@
     "failed": "Unable to create your account. Please try again.",
     "submit": "Create account"
 
+  },
+  "sidebar":{
+    "title":"Warsha",
+    "subtitle":"Admin Dashboard",
+    "dashboard":"Dashboard",
+    "adminUsers":"Admin Users",
+    "settings":"Settings",
+    "serviceCenter":"Service Center",
+    "customers":"Customers",
+    "bookings":"Bookings",
+    "payments":"Payments",
+    "reviews":"Reviews",
+    "marketing":"Marketing"
   }
 }
