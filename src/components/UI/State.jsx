@@ -1,25 +1,48 @@
 /**
- * Reusable status pill used inside tables and cards.
+ * Reusable status badge.
  *
- * Props:
- * - children: The status label and optional icon displayed inside the pill.
- * - fontColor: Text and icon color. Defaults to the green "Done" color.
- * - bgColor: Background color. Defaults to the pale-green "Done" background.
- * - className: Adds or overrides Tailwind classes for one status pill.
- * - style: Adds or overrides inline CSS styles.
- * - props: Any other native span props, such as title, role, or aria-label.
+ * Presets:
+ * <State good>✓ Done</State>
+ * <State bad>✕ Cancelled</State>
+ * <State between>Upcoming</State>
+ *
+ * Custom colors:
+ * <State fontColor="#2F6FED" bgColor="#EAF1FE">Working</State>
  */
+const stateStyles = {
+  good: { color: "#1F9D55", backgroundColor: "#E7F7EE" },
+  bad: { color: "#D64545", backgroundColor: "#FBE9E9" },
+  between: { color: "#C8790A", backgroundColor: "#FDF1DE" },
+};
+
 function State({
   children,
-  fontColor = "#1F9D55",
-  bgColor = "#E7F7EE",
+  good = false,
+  bad = false,
+  between = false,
+  fontColor = "#1C1712",
+  bgColor = "#F6F3EE",
   className = "",
   style = {},
   ...props
 }) {
+  let selectedStyle = {
+    color: fontColor,
+    backgroundColor: bgColor,
+  };
+
+  // Presets take priority; custom colors are used when all presets are false.
+  if (good) {
+    selectedStyle = stateStyles.good;
+  } else if (bad) {
+    selectedStyle = stateStyles.bad;
+  } else if (between) {
+    selectedStyle = stateStyles.between;
+  }
+
   // Use a span so the status stays inline inside a table cell.
   // The shared classes control its size, spacing, pill shape, and typography.
-  // Inline colors make fontColor and bgColor work with any valid CSS color.
+  // Inline styles allow preset and custom CSS colors.
   return (
     <span
       className={`
@@ -30,8 +53,7 @@ function State({
         ${className}
       `}
       style={{
-        color: fontColor,
-        backgroundColor: bgColor,
+        ...selectedStyle,
         ...style,
       }}
       {...props}

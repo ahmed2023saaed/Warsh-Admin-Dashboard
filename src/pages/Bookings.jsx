@@ -3,6 +3,7 @@ import { Download } from "lucide-react";
 import Button from "../components/UI/Button";
 import FilterButton from "../components/UI/FilterButton";
 import State from "../components/UI/State";
+import Box from "../components/UI/Box";
 
 function Bookings() {
   const [isActive, setIsActive] = useState("all");
@@ -58,9 +59,12 @@ function Bookings() {
           <Download size={16} strokeWidth={2.5} />
           Export
         </Button>
-        <State>good </State>
-        <State>no </State>
-        <State>well </State>
+      </div>
+      <div className="flex flex-wrap gap-[14px]">
+        <Box />
+        <Box />
+        <Box />
+        <Box />
       </div>
     </section>
   );
