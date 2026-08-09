@@ -16,7 +16,7 @@ import { CreditCard } from "lucide-react";
  * - style: Adds or overrides inline styles on the box.
  * - props: Any other native article props, such as aria-label or title.
  */
-function Box({
+function StatCard({
   icon: Icon = CreditCard,
   iconColor = "#C8790A",
   iconBg = "#FDF1DE",
@@ -73,4 +73,4 @@ function Box({
   );
 }
 
-export default Box;
+export default StatCard;

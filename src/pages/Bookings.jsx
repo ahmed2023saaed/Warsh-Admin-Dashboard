@@ -3,7 +3,7 @@ import { Download } from "lucide-react";
 import Button from "../components/UI/Button";
 import FilterButton from "../components/UI/FilterButton";
 import State from "../components/UI/State";
-import Box from "../components/UI/Box";
+import StatCard from "../components/UI/StatCard";
 
 function Bookings() {
   const [isActive, setIsActive] = useState("all");
@@ -61,10 +61,10 @@ function Bookings() {
         </Button>
       </div>
       <div className="flex flex-wrap gap-[14px]">
-        <Box />
-        <Box />
-        <Box />
-        <Box />
+        <StatCard />
+        <StatCard />
+        <StatCard />
+        <StatCard />
       </div>
     </section>
   );
