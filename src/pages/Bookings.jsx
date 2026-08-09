@@ -2,8 +2,6 @@ import { useState } from "react";
 import { Download } from "lucide-react";
 import Button from "../components/UI/Button";
 import FilterButton from "../components/UI/FilterButton";
-import State from "../components/UI/State";
-import StatCard from "../components/UI/StatCard";
 
 function Bookings() {
   const [isActive, setIsActive] = useState("all");
@@ -59,12 +57,6 @@ function Bookings() {
           <Download size={16} strokeWidth={2.5} />
           Export
         </Button>
-      </div>
-      <div className="flex flex-wrap gap-[14px]">
-        <StatCard />
-        <StatCard />
-        <StatCard />
-        <StatCard />
       </div>
     </section>
   );
