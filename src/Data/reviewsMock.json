@@ -1,0 +1,175 @@
+{
+  "summary": {
+    "all": 12,
+    "ratings": {
+      "5": 4,
+      "4": 2,
+      "3": 2,
+      "2": 2,
+      "1": 2
+    },
+    "reported": 2
+  },
+  "reviews": [
+    {
+      "id": "REV-2140",
+      "customer": {
+        "name": "Yasmine Adel",
+        "initials": "YA"
+      },
+      "serviceCenter": {
+        "id": "SC-001",
+        "name": "BMW Station"
+      },
+      "rating": 5,
+      "comment": "Super fast and honest pricing. They showed me the old part before replacing it.",
+      "createdAt": "2026-05-14T12:00:00+03:00",
+      "relativeTime": "2 hours ago",
+      "status": "published",
+      "reported": false
+    },
+    {
+      "id": "REV-2136",
+      "customer": { "name": "Nour Emad", "initials": "NE" },
+      "serviceCenter": { "id": "SC-004", "name": "Auto Care Egypt" },
+      "rating": 4,
+      "comment": "The team was helpful and the repair was completed on time.",
+      "createdAt": "2026-05-10T16:00:00+03:00",
+      "relativeTime": "4 days ago",
+      "status": "published",
+      "reported": false
+    },
+    {
+      "id": "REV-2135",
+      "customer": { "name": "Ahmed Samir", "initials": "AS" },
+      "serviceCenter": { "id": "SC-002", "name": "Bimmer's Egypt" },
+      "rating": 4,
+      "comment": "Good service and clear communication throughout the repair.",
+      "createdAt": "2026-05-09T11:30:00+03:00",
+      "relativeTime": "5 days ago",
+      "status": "published",
+      "reported": false
+    },
+    {
+      "id": "REV-2134",
+      "customer": { "name": "Mariam Hany", "initials": "MH" },
+      "serviceCenter": { "id": "SC-003", "name": "Crank BMW" },
+      "rating": 3,
+      "comment": "The repair was fine, but the waiting area could be improved.",
+      "createdAt": "2026-05-08T13:15:00+03:00",
+      "relativeTime": "6 days ago",
+      "status": "published",
+      "reported": false
+    },
+    {
+      "id": "REV-2133",
+      "customer": { "name": "Karim Nabil", "initials": "KN" },
+      "serviceCenter": { "id": "SC-001", "name": "BMW Station" },
+      "rating": 3,
+      "comment": "Average experience. The work was good but took longer than expected.",
+      "createdAt": "2026-05-07T10:45:00+03:00",
+      "relativeTime": "1 week ago",
+      "status": "published",
+      "reported": false
+    },
+    {
+      "id": "REV-2132",
+      "customer": { "name": "Sara Tamer", "initials": "ST" },
+      "serviceCenter": { "id": "SC-004", "name": "Auto Care Egypt" },
+      "rating": 5,
+      "comment": "Excellent experience from booking to pickup. Highly recommended.",
+      "createdAt": "2026-05-06T17:20:00+03:00",
+      "relativeTime": "1 week ago",
+      "status": "published",
+      "reported": false
+    },
+    {
+      "id": "REV-2131",
+      "customer": { "name": "Mostafa Ali", "initials": "MA" },
+      "serviceCenter": { "id": "SC-001", "name": "BMW Station" },
+      "rating": 5,
+      "comment": "Professional technicians, fair price, and very quick service.",
+      "createdAt": "2026-05-05T09:10:00+03:00",
+      "relativeTime": "1 week ago",
+      "status": "published",
+      "reported": false
+    },
+    {
+      "id": "REV-2130",
+      "customer": { "name": "Dina Wael", "initials": "DW" },
+      "serviceCenter": { "id": "SC-003", "name": "Crank BMW" },
+      "rating": 2,
+      "comment": "The issue was fixed, but I had to call several times for an update.",
+      "createdAt": "2026-05-04T14:40:00+03:00",
+      "relativeTime": "10 days ago",
+      "status": "published",
+      "reported": false
+    },
+    {
+      "id": "REV-2129",
+      "customer": { "name": "Tarek Adel", "initials": "TA" },
+      "serviceCenter": { "id": "SC-004", "name": "Auto Care Egypt" },
+      "rating": 1,
+      "comment": "This review contains repeated promotional content unrelated to the service.",
+      "createdAt": "2026-05-03T12:25:00+03:00",
+      "relativeTime": "11 days ago",
+      "status": "reported",
+      "reported": true,
+      "reportCount": 2,
+      "reportReason": "Promotional spam"
+    },
+    {
+      "id": "REV-2139",
+      "customer": {
+        "name": "Omar Fathy",
+        "initials": "OF"
+      },
+      "serviceCenter": {
+        "id": "SC-003",
+        "name": "Crank BMW"
+      },
+      "rating": 2,
+      "comment": "Waited longer than the estimated time and price went up without a clear reason.",
+      "createdAt": "2026-05-13T14:00:00+03:00",
+      "relativeTime": "1 day ago",
+      "status": "published",
+      "reported": false
+    },
+    {
+      "id": "REV-2138",
+      "customer": {
+        "name": "Hossam Sabry",
+        "initials": "HS"
+      },
+      "serviceCenter": {
+        "id": "SC-002",
+        "name": "Bimmer's Egypt"
+      },
+      "rating": 1,
+      "comment": "This review looks suspicious — same wording posted on 3 other centers.",
+      "createdAt": "2026-05-12T14:00:00+03:00",
+      "relativeTime": "2 days ago",
+      "status": "reported",
+      "reported": true,
+      "reportCount": 3,
+      "reportReason": "Suspected duplicate or spam content"
+    },
+    {
+      "id": "REV-2137",
+      "customer": {
+        "name": "Laila Kamal",
+        "initials": "LK"
+      },
+      "serviceCenter": {
+        "id": "SC-001",
+        "name": "BMW Station"
+      },
+      "rating": 5,
+      "comment": "Been coming here for 2 years, never disappointed.",
+      "createdAt": "2026-05-11T14:00:00+03:00",
+      "relativeTime": "3 days ago",
+      "status": "published",
+      "reported": false
+    }
+  ]
+}
