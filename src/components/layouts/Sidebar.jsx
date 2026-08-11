@@ -26,7 +26,7 @@ export default function Sidebar({ collapsed, onCollapse, onMobileSidebarClose, m
 
         <div
         className={[
-            "flex h-20 items-center justify-between border-b border-white/10 px-4",
+            "flex h-24 items-center justify-between border-b border-white/10 px-4",
             collapsed ? "justify-center px-2" : "px-5",
         ].join(" ")}
         >
