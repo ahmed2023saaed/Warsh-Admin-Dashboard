@@ -20,7 +20,7 @@ function InnerLayout() {
 
 
     return (
-        <div className="flex h-screen  overflow-hidden bg-gray-50">
+        <div className="flex h-screen overflow-hidden bg-[#f6f3ee]">
             <Sidebar 
              collapsed={collapsed}
              onCollapse={onCollapse} 
@@ -29,7 +29,7 @@ function InnerLayout() {
               />
             <div className="flex flex-1 flex-col overflow-hidden">
                 <Topbar />
-                <main className="flex-1 overflow-auto">
+                <main className="flex-1 overflow-auto bg-[#f6f3ee] px-4 pb-12 pt-6 sm:px-6 lg:px-8">
                     <Outlet />
                 </main>
             </div>
