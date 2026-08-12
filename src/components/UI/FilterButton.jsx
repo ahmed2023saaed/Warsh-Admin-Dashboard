@@ -24,7 +24,7 @@ function FilterButton({
 
   // Layout, size, typography, and keyboard-focus styles shared by every filter.
   const baseStyles =
-    "inline-flex min-h-[42px] cursor-pointer items-center justify-center gap-2 rounded-[9px] border px-[14px] py-2 text-base font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E08B2F]/40";
+    "inline-flex h-[35px] cursor-pointer items-center justify-center gap-2 rounded-[9px] border px-[14px] py-2 text-base font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E08B2F]/40";
 
   // Switch colors for the selected and unselected states.
   const activeStyles = active

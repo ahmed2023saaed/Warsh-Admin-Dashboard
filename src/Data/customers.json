@@ -1,0 +1,134 @@
+[
+  {
+    "id": "C-001",
+    "fullName": "Seif Fawzy",
+    "phone": "+20 111 519 944",
+    "carsCount": 1,
+    "bookingsCount": 32,
+    "totalSpending": 12450,
+    "ratingGiven": 4.8,
+    "status": "active",
+    "createdAt": "2026-08-02"
+  },
+  {
+    "id": "C-002",
+    "fullName": "Nour El-Din",
+    "phone": "+20 100 234 5567",
+    "carsCount": 2,
+    "bookingsCount": 18,
+    "totalSpending": 8200,
+    "ratingGiven": 4.5,
+    "status": "active",
+    "createdAt": "2026-07-14"
+  },
+  {
+    "id": "C-003",
+    "fullName": "Yasmine Adel",
+    "phone": "+20 122 998 1122",
+    "carsCount": 1,
+    "bookingsCount": 7,
+    "totalSpending": 3100,
+    "ratingGiven": 4.9,
+    "status": "active",
+    "createdAt": "2026-08-05"
+  },
+  {
+    "id": "C-004",
+    "fullName": "Omar Fathy",
+    "phone": "+20 155 667 2231",
+    "carsCount": 1,
+    "bookingsCount": 2,
+    "totalSpending": 900,
+    "ratingGiven": 3.2,
+    "status": "suspended",
+    "createdAt": "2026-06-18"
+  },
+  {
+    "id": "C-005",
+    "fullName": "Laila Kamal",
+    "phone": "+20 106 445 8890",
+    "carsCount": 3,
+    "bookingsCount": 41,
+    "totalSpending": 19600,
+    "ratingGiven": 4.7,
+    "status": "active",
+    "createdAt": "2026-05-22"
+  },
+  {
+    "id": "C-006",
+    "fullName": "Hossam Sabry",
+    "phone": "+20 111 776 3345",
+    "carsCount": 1,
+    "bookingsCount": 0,
+    "totalSpending": 0,
+    "ratingGiven": null,
+    "status": "new",
+    "createdAt": "2026-08-10"
+  },
+  {
+    "id": "C-007",
+    "fullName": "Ahmed Hassan",
+    "phone": "+20 101 345 7821",
+    "carsCount": 2,
+    "bookingsCount": 14,
+    "totalSpending": 6750,
+    "ratingGiven": 4.3,
+    "status": "active",
+    "createdAt": "2026-07-09"
+  },
+  {
+    "id": "C-008",
+    "fullName": "Mariam Tarek",
+    "phone": "+20 120 884 3312",
+    "carsCount": 1,
+    "bookingsCount": 5,
+    "totalSpending": 2450,
+    "ratingGiven": 4.6,
+    "status": "active",
+    "createdAt": "2026-08-01"
+  },
+  {
+    "id": "C-009",
+    "fullName": "Mahmoud Samir",
+    "phone": "+20 109 552 6710",
+    "carsCount": 2,
+    "bookingsCount": 9,
+    "totalSpending": 4300,
+    "ratingGiven": 3.9,
+    "status": "suspended",
+    "createdAt": "2026-04-17"
+  },
+  {
+    "id": "C-010",
+    "fullName": "Salma Mostafa",
+    "phone": "+20 127 441 9065",
+    "carsCount": 1,
+    "bookingsCount": 0,
+    "totalSpending": 0,
+    "ratingGiven": null,
+    "status": "new",
+    "createdAt": "2026-08-08"
+  },
+  {
+    "id": "C-011",
+    "fullName": "Mostafa Adel",
+    "phone": "+20 112 633 2089",
+    "carsCount": 4,
+    "bookingsCount": 27,
+    "totalSpending": 14800,
+    "ratingGiven": 4.4,
+    "status": "active",
+    "createdAt": "2026-03-11"
+  },
+  {
+    "id": "C-012",
+    "fullName": "Aya Mohamed",
+    "phone": "+20 102 775 4318",
+    "carsCount": 1,
+    "bookingsCount": 3,
+    "totalSpending": 1750,
+    "ratingGiven": 5,
+    "status": "active",
+    "createdAt": "2026-08-07"
+  }
+]
