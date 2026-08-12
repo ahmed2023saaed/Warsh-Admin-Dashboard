@@ -50,7 +50,7 @@ function Customers() {
 
 
   return (
-    <div className='m-6 space-y-8'>
+    <div className=' space-y-4'>
 
 
       {/* Header Buttons */}
@@ -97,7 +97,7 @@ function Customers() {
         columns={customerColumns}
         data={paginated}
         emptyMessage="No customers found."
-        minWidth="1100px"
+        minWidth="800px"
       />
 
 

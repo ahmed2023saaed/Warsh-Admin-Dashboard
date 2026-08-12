@@ -18,7 +18,7 @@ export default function DataTable(
                     {columns.map((column)=>
                         <th 
                          key={column.key}
-                         className='py-4 px-0.5 uppercase text-center text-xs font-semibold tracking-wide text-[#5A6968]'
+                         className='py-2 px-0.5 uppercase text-center text-xs font-semibold tracking-wide text-[#5A6968]'
                          >
                             {column.header}
                         </th>
@@ -29,7 +29,7 @@ export default function DataTable(
 
             <tbody>
                     {data.length === 0 ? (
-                        <tr>
+                        <tr >
                             <td 
                                 colSpan={columns.length}
                                 className="px-4 py-16  text-center text-sm text-gray-400"
@@ -41,7 +41,7 @@ export default function DataTable(
                         data.map((row, index)=>(
                             <tr 
                                 key={row.id}
-                                className='border-b border-gray-100 bg-white hover:bg-gray-50/50'
+                                className='border-b border-gray-100 px-1.5 bg-white hover:bg-gray-50/50'
                             >
                                 {columns.map((column) =>(
                                     <td className= {` ${cellClassName} ${column.cellClassName ?? ''} px-3 py-3.5 text-center`}

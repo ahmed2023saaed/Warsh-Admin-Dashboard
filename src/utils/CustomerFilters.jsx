@@ -163,7 +163,7 @@ export const customerColumns = [
 
 
 
-const normalizeText = (value) =>
+export const normalizeText = (value) =>
   String(value ?? '')
     .trim()
     .toLowerCase();
