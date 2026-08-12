@@ -3,6 +3,7 @@ import { useState } from "react";
 import Input from "../UI/Input";
 import { useLocation } from "react-router-dom";
 import topbarMock from "../../Data/topbarMock.json";
+import reviewsMock from "../../Data/reviewsMock.json";
 
 function capitalizeWords(value) {
   return value
@@ -43,7 +44,11 @@ export default function Topbar() {
     return topbarMock[pageKey] || ["Page Not Found", ""];
   }
 
-  const [pageTitle, PageInfo] = pageDtails();
+  const [pageTitle, defaultPageInfo] = pageDtails();
+  const PageInfo =
+    pageTitle === "Reviews"
+      ? `${reviewsMock.reviews.length.toLocaleString()} customer reviews across all centers`
+      : defaultPageInfo;
   const currentRoute = location.pathname.split("/").filter(Boolean).pop();
   const isDashboard = ["en", "ar", "dashboard"].includes(
     currentRoute?.toLowerCase(),
