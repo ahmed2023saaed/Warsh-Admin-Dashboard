@@ -1,20 +1,48 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Download } from "lucide-react";
 import Button from "../components/UI/Button";
 import FilterButton from "../components/UI/FilterButton";
+import { createBookingColumns, FilterBookings } from "../utils/BookingHelpers";
+import MockBookings from '../Data/bookingsMock.json'
+import DataTable from "../components/UI/DataTable";
 
 function Bookings() {
   const [isActive, setIsActive] = useState("all");
+  const [selectedBooking, setSelectedBooking] = useState(null);
+  const [bookings, setBookings] = useState(MockBookings['bookings'])
+  const [currentPage, setCurrentPage] = useState(1)
+
+  const bookingColumns = useMemo(
+    () =>
+      createBookingColumns({
+        onView: setSelectedBooking,
+      }),
+    []
+  );
+
+  const filteredBookings = useMemo(
+  () =>
+    FilterBookings(bookings, {
+      tab: isActive,
+    }),
+  [bookings, isActive]
+  );
+
+  const perPage = 8
+  const totalPages = Math.max(1,Math.ceil(filteredBookings.length / perPage))
+  const currentPageSafe = Math.min(currentPage, totalPages)
+  const paginatedBookings = filteredBookings.slice((currentPageSafe - 1) * perPage,
+    currentPageSafe * perPage)
 
   const coutn = [10, 2560, 10, 520];
-  const filteres = ["all", "Pending", "Active", "Completed"];
+  const filteres = ["all", "pending", "active", "completed"];
 
   function handelClick(name) {
     setIsActive(name);
   }
 
   return (
-    <section>
+    <section className="flex flex-col space-y-8">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2.5">
         <div className="flex flex-wrap gap-2">
           {filteres.map((filter, i) => (
@@ -37,6 +65,14 @@ function Bookings() {
           Export
         </Button>
       </div>
+
+        <DataTable
+        columns={bookingColumns}
+        data={paginatedBookings}
+        rowKey="id"
+        emptyMessage="No bookings found."
+        minWidth="800px"
+      />
     </section>
   );
 }
