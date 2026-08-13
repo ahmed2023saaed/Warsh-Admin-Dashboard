@@ -1,7 +1,7 @@
 import { Eye } from 'lucide-react';
-import Avatar from '../components/ui/Avatar';
+import Avatar from '../components/UI/Avatar';
 import StatusBadge from '../components/widgets/statusBadge';
-import {normalizeText} from '../utils/CustomerFilters'
+import {normalizeText} from '../utils/CustomerFilters.jsx'
 
 export const createBookingColumns = ({ onView }) => [
 //   {

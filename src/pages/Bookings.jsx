@@ -28,7 +28,7 @@ function Bookings() {
   [bookings, isActive]
   );
 
-  const perPage = 8
+  const perPage = 10
   const totalPages = Math.max(1,Math.ceil(filteredBookings.length / perPage))
   const currentPageSafe = Math.min(currentPage, totalPages)
   const paginatedBookings = filteredBookings.slice((currentPageSafe - 1) * perPage,
