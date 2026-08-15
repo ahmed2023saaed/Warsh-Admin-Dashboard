@@ -18,7 +18,7 @@ export default function DataTable(
                     {columns.map((column)=>
                         <th 
                          key={column.key}
-                         className='py-2 px-0.5 uppercase text-center text-xs font-semibold tracking-wide text-[#5A6968]'
+                         className={`py-2 px-0.5 uppercase text-center text-xs font-semibold tracking-wide text-[#5A6968] ${column.headerClassName ?? ''}`}
                          >
                             {column.header}
                         </th>
@@ -38,7 +38,7 @@ export default function DataTable(
                             </td>
                         </tr>
                     ):(
-                        data.map((row, index)=>(
+                        data.map((row)=>(
                             <tr 
                                 key={row.id}
                                 className='border-b border-gray-100 px-1.5 bg-white hover:bg-gray-50/50'

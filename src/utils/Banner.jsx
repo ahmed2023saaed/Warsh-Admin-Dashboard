@@ -1,7 +1,8 @@
 import { EllipsisVertical } from "lucide-react";
+import { memo } from "react";
 import Button from "../components/UI/Button";
 
-export function Banner({ banner, onOpenActions }) {
+export const Banner = memo(function Banner({ banner, onOpenActions }) {
   const isLive = banner.status === "Live";
 
   return (
@@ -37,7 +38,7 @@ export function Banner({ banner, onOpenActions }) {
           {banner.description} . {banner.placement}
         </p>
         <Button
-          onClick={onOpenActions}
+          onClick={() => onOpenActions(banner)}
           aria-label={`More options for ${banner.title}`}
           className="!absolute !bottom-2.5 !right-2.5 !min-h-0 !border-0 !bg-transparent !p-1.5 !text-[#8A8074] !shadow-none hover:!bg-[#F0EDEA] hover:!text-[#1C1712]"
         >
@@ -46,4 +47,4 @@ export function Banner({ banner, onOpenActions }) {
       </div>
     </article>
   );
-}
+});
