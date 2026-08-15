@@ -21,15 +21,15 @@ function Bookings() {
   );
 
   const filteredBookings = useMemo(
-  () =>
-    FilterBookings(bookings, {
-      tab: isActive,
-    }),
-  [bookings, isActive]
+    () =>
+      FilterBookings(bookings, {
+        tab: isActive,
+      }),
+    [bookings, isActive]
   );
 
-  const perPage = 8
-  const totalPages = Math.max(1,Math.ceil(filteredBookings.length / perPage))
+  const perPage = 8                              
+  const totalPages = Math.max(1, Math.ceil(filteredBookings.length / perPage))
   const currentPageSafe = Math.min(currentPage, totalPages)
   const paginatedBookings = filteredBookings.slice((currentPageSafe - 1) * perPage,
     currentPageSafe * perPage)
@@ -66,7 +66,7 @@ function Bookings() {
         </Button>
       </div>
 
-        <DataTable
+      <DataTable
         columns={bookingColumns}
         data={paginatedBookings}
         rowKey="id"
