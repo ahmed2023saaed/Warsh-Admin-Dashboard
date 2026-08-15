@@ -38,7 +38,7 @@ export default function DataTable(
                             </td>
                         </tr>
                     ):(
-                        data.map((row, index)=>(
+                        data.map((row)=>(
                             <tr 
                                 key={row.id}
                                 className='border-b border-gray-100 px-1.5 bg-white hover:bg-gray-50/50'

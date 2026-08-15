@@ -1,0 +1,108 @@
+import {
+  CreditCard,
+  Car,
+  ArrowLeftRight,
+  AlertTriangle,
+  Star,
+  Bell,
+  UserPlus,
+  Building2,
+} from 'lucide-react'
+
+export const mockStatCards = [
+  {
+    key: 'monthly-revenue',
+    icon: CreditCard,
+    iconColor: '#c8790a',
+    iconBg: '#fdf1de',
+    title: 'Monthly Revenue',
+    value: '186,400',
+    unit: 'EGP',
+    footer: '▲ +18% vs April',
+    footerColor: 'var(--green)',
+  },
+
+  {
+    key: 'cars-serviced-today',
+    icon: Car,
+    iconColor: '#2f6fed',
+    iconBg: '#eaf1fe',
+    title: 'Cars Serviced Today',
+    value: '42',
+    unit: '',
+    footer: '▲ +6 vs yesterday',
+    footerColor: 'var(--green)',
+  },
+
+  {
+    key: 'outstanding-commission',
+    icon: ArrowLeftRight,
+    iconColor: 'var(--red)',
+    iconBg: 'var(--red-bg)',
+    title: 'Outstanding Commission',
+    value: '23,100',
+    unit: 'EGP',
+    footer: '12 centers owe',
+    footerColor: 'var(--gray)',
+  },
+
+  {
+    key: 'expired-subscriptions',
+    icon: AlertTriangle,
+    iconColor: '#c8790a',
+    iconBg: '#fdf1de',
+    title: 'Expired Subscriptions',
+    value: '4',
+    unit: 'centers',
+    footer: 'Needs action',
+    footerColor: 'var(--amber)',
+  },
+
+  {
+    key: 'avg-customer-rating',
+    icon: Star,
+    iconColor: '#c8790a',
+    iconBg: '#fdf1de',
+    title: 'Avg. Customer Rating',
+    value: '4.7',
+    unit: '/5',
+    footer: '▲ +0.1 this month',
+    footerColor: 'var(--green)',
+  },
+
+  {
+    key: 'open-emergency-requests',
+    icon: Bell,
+    iconColor: 'var(--red)',
+    iconBg: 'var(--red-bg)',
+    title: 'Open Emergency Requests',
+    value: '2',
+    unit: '',
+    footer: '1 waiting 8+ min',
+    footerColor: 'var(--amber)',
+  },
+
+  {
+    key: 'new-customers',
+    icon: UserPlus,
+    iconColor: 'var(--green)',
+    iconBg: 'var(--green-bg)',
+    title: 'New Customers',
+    value: '312',
+    unit: '',
+    footer: '▲ +24% vs April',
+    footerColor: 'var(--green)',
+  },
+
+  {
+    key: 'new-service-centers',
+    icon: Building2,
+    iconColor: 'var(--green)',
+    iconBg: 'var(--green-bg)',
+    title: 'New Service Centers',
+    value: '7',
+    unit: '',
+    footer: '3 pending approval',
+    footerColor: 'var(--gray)',
+  },
+]

@@ -25,13 +25,16 @@ function StatCard({
   unit = "EGP",
   footer = "▲ +18% vs April",
   footerColor = "#1F9D55",
+  minWidth,
+  maxWidth,
   className = "",
+
   style = {},
   ...props
 }) {
   return (
     <article
-      className={`w-full min-w-[214px] max-w-[280px] rounded-[14px] border border-[#E8E2D8] bg-white p-[18px] ${className}`}
+      className={`w-full min-w-[${minWidth}] max-w-[${maxWidth}] rounded-[14px] border border-[#E8E2D8] bg-white p-[18px] ${className}`}
       style={style}
       {...props}
     >
