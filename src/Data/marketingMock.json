@@ -1,0 +1,116 @@
+{
+  "banners": [
+    {
+      "id": "BNR-001",
+      "title": "Summer Service Offer",
+      "description": "10% off",
+      "placement": "Home banner",
+      "image": null,
+      "active": true,
+      "status": "Live",
+      "startsAt": "2026-05-01T00:00:00+03:00",
+      "endsAt": "2026-08-31T23:59:59+03:00"
+    },
+    {
+      "id": "BNR-002",
+      "title": "BMW Station Feature",
+      "description": "Sponsored placement",
+      "placement": "Featured centers",
+      "image": null,
+      "active": true,
+      "status": "Live",
+      "startsAt": "2026-05-10T00:00:00+03:00",
+      "endsAt": "2026-06-10T23:59:59+03:00"
+    },
+
+    {
+      "id": "BNR-004",
+      "title": "AC Check Campaign",
+      "description": "Free AC inspection with selected services",
+      "placement": "Services page",
+      "image": null,
+      "active": true,
+      "status": "Draft",
+      "startsAt": "2026-06-01T00:00:00+03:00",
+      "endsAt": "2026-07-31T23:59:59+03:00"
+    }
+  ],
+  "promoCodes": [
+    {
+      "id": "PROMO-001",
+      "code": "WARSHA50",
+      "discountType": "fixed",
+      "discountValue": 50,
+      "discountLabel": "50 EGP off",
+      "used": 212,
+      "usageLimit": 500,
+      "status": "Active",
+      "expiresAt": "2026-12-31T23:59:59+03:00"
+    },
+    {
+      "id": "PROMO-002",
+      "code": "BMWFIRST",
+      "discountType": "percentage",
+      "discountValue": 15,
+      "discountLabel": "15%",
+      "used": 48,
+      "usageLimit": 100,
+      "status": "Active",
+      "expiresAt": "2026-09-30T23:59:59+03:00"
+    },
+    {
+      "id": "PROMO-003",
+      "code": "RAMADAN25",
+      "discountType": "percentage",
+      "discountValue": 25,
+      "discountLabel": "25%",
+      "used": 500,
+      "usageLimit": 500,
+      "status": "Expired",
+      "expiresAt": "2026-03-31T23:59:59+03:00"
+    },
+    {
+      "id": "PROMO-004",
+      "code": "OILCHANGE10",
+      "discountType": "percentage",
+      "discountValue": 10,
+      "discountLabel": "10%",
+      "used": 76,
+      "usageLimit": 250,
+      "status": "Active",
+      "expiresAt": "2026-10-31T23:59:59+03:00"
+    }
+  ],
+  "featuredServiceCenters": [
+    {
+      "id": "SC-001",
+      "initials": "BS",
+      "name": "BMW Station",
+      "featured": true
+    },
+    {
+      "id": "SC-002",
+      "initials": "BE",
+      "name": "Bimmer's Egypt",
+      "featured": true
+    },
+    {
+      "id": "SC-003",
+      "initials": "CB",
+      "name": "Crank BMW & Mini",
+      "featured": false
+    },
+    {
+      "id": "SC-004",
+      "initials": "BC",
+      "name": "BMW Club",
+      "featured": false
+    },
+    {
+      "id": "SC-005",
+      "initials": "MC",
+      "name": "Mansour Center",
+      "featured": false
+    }
+  ]
+}

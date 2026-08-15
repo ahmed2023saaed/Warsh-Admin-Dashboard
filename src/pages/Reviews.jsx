@@ -2,9 +2,13 @@ import reviewsMock from "../Data/reviewsMock.json";
 import State from "../components/UI/State";
 import FilterButton from "../components/UI/FilterButton";
 import Button from "../components/UI/Button";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ArrowRight, Flag, Star, Trash2 } from "lucide-react";
 import Modal from "../components/UI/Modal";
+import {
+  showErrorToast,
+  showSuccessToast,
+} from "../components/UI/toastNotifications";
 
 function Reviews() {
   const [isActive, setIsActive] = useState("all");
@@ -12,35 +16,86 @@ function Reviews() {
 
   const filteres = ["all", "5", "4", "3", "2", "1", "reported"];
 
-  const filterCounts = {
-    all: reviews.length,
-    reported: reviews.filter((review) => review.reported).length,
-    ...Object.fromEntries(
-      [5, 4, 3, 2, 1].map((rating) => [
-        rating,
-        reviews.filter((review) => review.rating === rating).length,
-      ]),
-    ),
-  };
+  const filterCounts = useMemo(
+    () => ({
+      all: reviews.length,
+      reported: reviews.filter((review) => review.reported).length,
+      ...Object.fromEntries(
+        [5, 4, 3, 2, 1].map((rating) => [
+          rating,
+          reviews.filter((review) => review.rating === rating).length,
+        ]),
+      ),
+    }),
+    [reviews],
+  );
 
-  const filterReviews = reviews.filter((review) => {
-    if (isActive === "all") return true;
-    if (isActive === "reported") return review.reported;
-    return review.rating === Number(isActive);
-  });
+  const filterReviews = useMemo(
+    () =>
+      reviews.filter((review) => {
+        if (isActive === "all") return true;
+        if (isActive === "reported") return review.reported;
+        return review.rating === Number(isActive);
+      }),
+    [reviews, isActive],
+  );
 
   function handleDelete(reviewId) {
-    setReviews((currentReviews) =>
-      currentReviews.filter((review) => review.id !== reviewId),
-    );
+    try {
+      const review = reviews.find((item) => item.id === reviewId);
+
+      if (!review) {
+        throw new Error("Review not found.");
+      }
+
+      setReviews((currentReviews) =>
+        currentReviews.filter((item) => item.id !== reviewId),
+      );
+      showSuccessToast(
+        `Review from ${review.customer.name} was deleted.`,
+        "Deleting review...",
+      );
+      return true;
+    } catch (error) {
+      console.error("Failed to delete review:", error);
+      showErrorToast(
+        "Could not delete the review. Please try again.",
+        "Deleting review...",
+      );
+      return false;
+    }
   }
 
   function handleReply(reviewId, replyText) {
-    setReviews((currentReviews) =>
-      currentReviews.map((review) =>
-        review.id === reviewId ? { ...review, reply: replyText } : review,
-      ),
-    );
+    try {
+      if (!reviews.some((review) => review.id === reviewId)) {
+        throw new Error("Review not found.");
+      }
+
+      if (!replyText.trim()) {
+        throw new Error("Reply cannot be empty.");
+      }
+
+      setReviews((currentReviews) =>
+        currentReviews.map((review) =>
+          review.id === reviewId ? { ...review, reply: replyText } : review,
+        ),
+      );
+      showSuccessToast(
+        "Your reply was saved successfully.",
+        "Saving reply...",
+      );
+      return true;
+    } catch (error) {
+      console.error("Failed to save review reply:", error);
+      showErrorToast(
+        error instanceof Error
+          ? error.message
+          : "Could not save the reply. Please try again.",
+        "Saving reply...",
+      );
+      return false;
+    }
   }
 
   return (
@@ -133,8 +188,9 @@ function ReviewBox({
     const trimmedReply = replyText.trim();
     if (!trimmedReply) return;
 
-    handleReply(reviewId, trimmedReply);
-    closeModal();
+    if (handleReply(reviewId, trimmedReply)) {
+      closeModal();
+    }
   }
 
   return (
@@ -229,8 +285,9 @@ function ReviewBox({
               <Button
                 className="min-w-24 !border-[#D64545] !bg-[#D64545] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#B93636] hover:!bg-[#B93636] focus-visible:!ring-[#D64545]/40"
                 onClick={() => {
-                  handleDelete(reviewId);
-                  closeModal();
+                  if (handleDelete(reviewId)) {
+                    closeModal();
+                  }
                 }}
               >
                 Delete
