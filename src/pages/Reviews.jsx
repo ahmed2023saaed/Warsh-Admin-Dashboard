@@ -100,7 +100,7 @@ function Reviews() {
 
   return (
     <div>
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="mb-4 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
         {filteres.map((filter) => {
           const isReported = filter === "reported";
 
@@ -110,9 +110,9 @@ function Reviews() {
               active={isActive === filter}
               count={filterCounts[filter]}
               onClick={() => setIsActive(filter)}
-              className={
+              className={`shrink-0 ${
                 isReported && isActive !== "reported" ? "!text-[#D64545]" : ""
-              }
+              }`}
             >
               {filter === "all" ? (
                 "All"
@@ -131,7 +131,7 @@ function Reviews() {
           );
         })}
       </div>
-      <div className="overflow-hidden rounded-[14px] border border-[#E8E2D8] bg-white px-[18px]">
+      <div className="overflow-hidden rounded-[14px] border border-[#E8E2D8] bg-white px-3 sm:px-[18px]">
         {filterReviews.length > 0 ? (
           filterReviews.map((review) => (
             <ReviewBox
@@ -195,9 +195,9 @@ function ReviewBox({
 
   return (
     <article className="border-b border-[#E8E2D8] py-5 last:border-b-0">
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex flex-wrap items-start justify-between gap-2 sm:gap-4">
         <div className="min-w-0 flex-1">
-          <h3 className="text-[15px] font-bold text-[#1C1712]">
+          <h3 className="text-sm font-bold leading-6 text-[#1C1712] sm:text-[15px]">
             <span>{customer}</span>
             <ArrowRight
               aria-hidden="true"
@@ -243,7 +243,7 @@ function ReviewBox({
         </div>
       )}
 
-      <div className="mt-2 flex items-center gap-2">
+      <div className="mt-2 flex flex-wrap items-center gap-2">
         <p className="text-xs text-[#8A8074]">{relativeTime}</p>
         <span aria-hidden="true" className="text-xs text-[#B8AEA3]">
           ·

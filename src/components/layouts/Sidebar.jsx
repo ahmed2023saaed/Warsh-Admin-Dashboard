@@ -15,8 +15,8 @@ export default function Sidebar({ collapsed, onCollapse, onMobileSidebarClose, m
     return (
         <aside 
         className={[
-            "flex h-full flex-col bg-[#1c1712] text-[#a89a8a] transition-all duration-300 ease-in-out",
-            collapsed ? "w-20" : "w-[240px]",
+            "flex h-full w-[min(82vw,280px)] flex-col bg-[#1c1712] text-[#a89a8a] shadow-2xl transition-all duration-300 ease-in-out lg:shadow-none",
+            collapsed ? "lg:w-20" : "lg:w-[240px]",
             "fixed inset-y-0 z-50 lg:static",
             isRTL ? `right-0 transition-transform ${mobileOpen ? "translate-x-0" : "translate-x-full"} lg:translate-x-0`
             : `left-0 transition-transform ${mobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`
@@ -27,23 +27,21 @@ export default function Sidebar({ collapsed, onCollapse, onMobileSidebarClose, m
         <div
         className={[
             "flex h-24 items-center justify-between border-b border-white/10 px-4",
-            collapsed ? "justify-center px-2" : "px-5",
+            collapsed ? "lg:justify-center lg:px-2" : "px-5",
         ].join(" ")}
         >
             <div className="flex items-center gap-2">
                 <div className="flex-shrink-0">
                     <img src={logo} alt="Logo" className="h-8 w-8" />
                 </div>
-                {!collapsed && (
-                    <div className="min-w-0">
+                <div className={collapsed ? "min-w-0 lg:hidden" : "min-w-0"}>
                         <p className="truncate text-lg font-semibold text-white">
                             {t("sidebar.title", { defaultValue: "Warsha" })}
                         </p>
                         <p className="truncate text-xs text-gray-300">
                             {t("sidebar.subtitle", { defaultValue: "Admin Panel" })}
                         </p>
-                    </div>
-                )}
+                </div>
             </div>
             <button className="text-white/70 hover:bg-white/10 p-2 lg:hidden rounded-full" onClick={onMobileSidebarClose} aria-label="Close menu">
                 <X className="h-5 w-5" />   
@@ -64,7 +62,7 @@ export default function Sidebar({ collapsed, onCollapse, onMobileSidebarClose, m
                                 className={({ isActive }) =>
                                     `flex items-center gap-3 rounded-lg px-3 relative py-2 text-sm font-medium transition-colors duration-200 ${
                                         isActive ? "bg-[#2a2119] text-white" : "text-[#a89a8a] hover:bg-white/10 hover:text-white"
-                                    } ${collapsed ? "justify-center" : ""}`
+                                    } ${collapsed ? "lg:justify-center" : ""}`
                                 }
                             >
                                 {({ isActive }) =>
@@ -78,7 +76,7 @@ export default function Sidebar({ collapsed, onCollapse, onMobileSidebarClose, m
                                     )}
 
                                     <Icon className={`h-5 w-5 ${isActive ? 'text-[#e08b2f]' : '' } `} />
-                                    {!collapsed && <span className="truncate">{t(`sidebar.${item.key}`, { defaultValue: item.title })}</span>}
+                                    <span className={collapsed ? "truncate lg:hidden" : "truncate"}>{t(`sidebar.${item.key}`, { defaultValue: item.title })}</span>
 
                                     </>
                                 )
@@ -91,7 +89,7 @@ export default function Sidebar({ collapsed, onCollapse, onMobileSidebarClose, m
             </ul>
         </nav>
 
-        <div className="flex items-center justify-center border-t border-white/10 p-4">
+        <div className="hidden items-center justify-center border-t border-white/10 p-4 lg:flex">
             <button
                 onClick={onCollapse}
                 className="rounded-full bg-[#2a2119] p-2 text-white/70 hover:bg-[#3a2b1f] hover:text-white"

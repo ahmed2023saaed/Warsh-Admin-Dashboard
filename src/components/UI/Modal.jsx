@@ -87,7 +87,7 @@ function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-3 sm:p-4"
       onClick={handleBackdropClick}
     >
       <div
@@ -98,7 +98,7 @@ function Modal({
         onClick={(event) => event.stopPropagation()}
       >
         {/* Top section: title and X button. */}
-        <div className="flex items-center justify-between border-b border-[#E8E2D8] px-6 py-4">
+        <div className="flex items-center justify-between border-b border-[#E8E2D8] px-4 py-3.5 sm:px-6 sm:py-4">
           <h2 id={titleId} className="text-lg font-semibold text-[#1C1712]">
             {title}
           </h2>
@@ -117,7 +117,7 @@ function Modal({
 
         {/* Middle section: put your form or other content here. */}
         <div
-          className={`max-h-[70vh] overflow-y-auto px-6 py-4 ${contentClassName}`}
+          className={`max-h-[70dvh] overflow-y-auto px-4 py-4 sm:px-6 ${contentClassName}`}
         >
           {children}
         </div>
@@ -125,7 +125,7 @@ function Modal({
         {/* Bottom section: usually contains Cancel and Save buttons. */}
         {footer && (
           <div
-            className={`flex justify-end gap-3 border-t border-[#E8E2D8] px-6 py-4 ${footerClassName}`}
+            className={`flex flex-wrap justify-end gap-2 border-t border-[#E8E2D8] px-4 py-3.5 sm:gap-3 sm:px-6 sm:py-4 ${footerClassName}`}
           >
             {footer}
           </div>

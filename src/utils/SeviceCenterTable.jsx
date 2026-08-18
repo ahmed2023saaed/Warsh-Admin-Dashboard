@@ -1,6 +1,6 @@
 import Button from "../components/UI/Button";
 
-export function SeviceCenterTable() {
+export function SeviceCenterTable({ onApprove, onReject }) {
   return [
     {
       key: "Center",
@@ -49,12 +49,18 @@ export function SeviceCenterTable() {
       key: "Action",
       header: "",
       cellClassName: "!text-left",
-      render: () => (
+      render: (center) => (
         <div className="flex items-center gap-2">
-          <Button className="!rounded-[10px] !border-[#20A45B] !bg-[#20A45B] !px-4 !py-2 !text-xs !text-white hover:!border-[#19894A] hover:!bg-[#19894A]">
+          <Button
+            onClick={() => onApprove(center.id)}
+            className="!rounded-[10px] !border-[#20A45B] !bg-[#20A45B] !px-4 !py-2 !text-xs !text-white hover:!border-[#19894A] hover:!bg-[#19894A]"
+          >
             Approve
           </Button>
-          <Button className="!rounded-[10px] !border-[#F0CCCC] !bg-white !px-4 !py-2 !text-xs !text-[#D64545] hover:!border-[#D64545] hover:!bg-[#FFF7F7]">
+          <Button
+            onClick={() => onReject(center.id)}
+            className="!rounded-[10px] !border-[#F0CCCC] !bg-white !px-4 !py-2 !text-xs !text-[#D64545] hover:!border-[#D64545] hover:!bg-[#FFF7F7]"
+          >
             Reject
           </Button>
         </div>
@@ -64,16 +70,8 @@ export function SeviceCenterTable() {
 }
 
 export function CenterBox({ center, onView, onEdit }) {
-  const {
-    name,
-    brand,
-    rating,
-    initials,
-    location,
-    bookings,
-    revenue,
-    status,
-  } = center;
+  const { name, brand, rating, initials, location, bookings, revenue, status } =
+    center;
 
   const statusClassName =
     status === "Active"
@@ -83,13 +81,15 @@ export function CenterBox({ center, onView, onEdit }) {
         : "text-[#D64545]";
 
   return (
-    <article className="flex min-h-[225px] flex-col rounded-[18px] border border-[#E4DDD3] bg-white p-5 shadow-[0_1px_2px_rgba(28,23,18,0.02)]">
+    <article className="flex min-h-[225px] flex-col rounded-[18px] border border-[#E4DDD3] bg-white p-4 shadow-[0_1px_2px_rgba(28,23,18,0.02)] sm:p-5">
       <div className="flex items-center gap-3">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[12px] bg-[#E88B22] text-sm font-bold text-white">
           {initials}
         </div>
         <div className="min-w-0">
-          <h3 className="truncate text-base font-bold text-[#17120E]">{name}</h3>
+          <h3 className="truncate text-base font-bold text-[#17120E]">
+            {name}
+          </h3>
           <div className="mt-0.5 flex flex-wrap items-center gap-1 text-sm text-[#8B7868]">
             <span>{brand}</span>
             <span aria-hidden="true">·</span>
@@ -100,7 +100,7 @@ export function CenterBox({ center, onView, onEdit }) {
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-4">
+      <div className="mt-4 grid grid-cols-3 gap-2 sm:gap-4">
         <div>
           <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#8B7868]">
             Bookings
@@ -121,7 +121,9 @@ export function CenterBox({ center, onView, onEdit }) {
           <p className="text-[11px] font-medium uppercase tracking-[0.04em] text-[#8B7868]">
             Owes
           </p>
-          <span className={`mt-0.5 block text-base font-bold ${statusClassName}`}>
+          <span
+            className={`mt-0.5 block text-base font-bold ${statusClassName}`}
+          >
             {status}
           </span>
         </div>
