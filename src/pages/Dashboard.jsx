@@ -21,7 +21,7 @@ function Dashboard() {
 
 
   return (
-    <div className="space-y-4">
+    <div className="min-w-0 space-y-4">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
         {mockStatCards.map((card) => (
           <StatCard
@@ -59,7 +59,7 @@ function Dashboard() {
         />
       </div>
 
-      <div className='flex grid grid-cols-2 gap-4'>
+      <div className='grid grid-cols-1 gap-4 xl:grid-cols-2'>
         <div className="rounded-2xl w-full bg-white border border-gray-200 p-4 overflow-hidden space-y-4 ">
 
           <div className=" flex items-center justify-between ">
@@ -78,7 +78,7 @@ function Dashboard() {
             columns={RecentBookingColumns}
             data={bookings.slice(0, 4)}
             emptyMessage="No bookings found."
-          // minWidth="500px"
+            minWidth="560px"
           />
         </div>
 
@@ -96,14 +96,14 @@ function Dashboard() {
 
                   <hr className="text-gray-300 " />
 
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-3">
 
-                    <div className="my-2 ">
+                    <div className="my-2 min-w-0">
                       <h2 className="font-bold text-sm ">{pending.name}--{pending.location}</h2>
                       <p className="text-gray-500 text-xs ">Review submission</p>
                     </div>
 
-                    <Link to={`/${lang}/serviceCenters`} className="text-white bg-black rounded-lg py-1 px-3 ">Review</Link>
+                    <Link to={`/${lang}/serviceCenters`} className="shrink-0 rounded-lg bg-black px-3 py-1 text-xs text-white">Review</Link>
                   </div>
 
                 </div>
@@ -126,12 +126,12 @@ function Dashboard() {
 
                   <hr className="text-gray-300 " />
 
-                  <div className="flex items-center justify-between my-2">
+                  <div className="flex items-center justify-between gap-3 my-2">
 
-                      <h2 className="font-bold text-sm ">{center.name}</h2>
+                      <h2 className="min-w-0 font-bold text-sm ">{center.name}</h2>
 
 
-                    <h2  className="text-sm font-bold  ">{center.revenue.toLocaleString("en-EG")} EGP</h2>
+                    <h2  className="shrink-0 text-sm font-bold">{center.revenue.toLocaleString("en-EG")} EGP</h2>
                   </div>
 
                 </div>

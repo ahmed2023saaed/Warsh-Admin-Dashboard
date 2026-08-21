@@ -79,36 +79,17 @@ export default function Topbar({ onMenuOpen }) {
           <Menu aria-hidden="true" size={21} />
         </button>
         <div className="min-w-0">
-        <h1 className="truncate text-lg font-extrabold leading-tight tracking-[-0.01em] text-[#1C1712] sm:text-[22px]">
-          {pageTitle}
-        </h1>
-        <p className="mt-1 hidden truncate text-[14.5px] text-[#8A8074] sm:block">
-          {isDashboard ? `${PageInfo} · ${today}` : PageInfo}
-        </p>
+          <h1 className="truncate text-lg font-extrabold leading-tight tracking-[-0.01em] text-[#1C1712] sm:text-[22px]">
+            {pageTitle}
+          </h1>
+          <p className="mt-1 hidden truncate text-[14.5px] text-[#8A8074] sm:block">
+            {isDashboard ? `${PageInfo} · ${today}` : PageInfo}
+          </p>
         </div>
       </div>
 
       {/* Search, notifications, and the signed-in admin. */}
       <div className="flex shrink-0 items-center gap-2 sm:gap-[14px]">
-        <Input
-          ID="global-search"
-          placeholder="Search anything..."
-          icon={Search}
-          dimensions={{ width: "240px", height: "42px" }}
-          value={searchValue}
-          onChange={(event) => setSearchValue(event.target.value)}
-          className="hidden xl:flex"
-        />
-
-        <button
-          type="button"
-          aria-label="Open notifications"
-          className="relative flex h-[42px] w-[42px] shrink-0 cursor-pointer items-center justify-center rounded-[11px] border border-[#E8E2D8] bg-white text-[#1C1712] transition-colors hover:border-[#E08B2F] hover:text-[#E08B2F]"
-        >
-          <Bell size={18} strokeWidth={2} />
-          <span className="absolute right-[9px] top-2 h-[7px] w-[7px] rounded-full bg-[#D9534F]" />
-        </button>
-
         <div className="flex items-center gap-[9px]">
           {/* Generated from the first letter of every word in userName. */}
           <div

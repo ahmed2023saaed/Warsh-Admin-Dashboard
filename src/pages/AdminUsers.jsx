@@ -40,7 +40,7 @@ function AdminUsers() {
 
   console.log("inside admin", filteredUsers)
   return (
-    <div className='space-y-6'>
+    <div className='min-w-0 space-y-6'>
       <div className='grid grid-cols-1 md:grid-cols-2  xl:grid-cols-4 gap-4'>
         {cards.map((card) => (
           <StatCard

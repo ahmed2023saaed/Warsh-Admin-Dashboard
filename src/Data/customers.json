@@ -1,4 +1,5 @@
-[
+{
+  "customers": [
   {
     "id": "C-001",
     "fullName": "Seif Fawzy",
@@ -8,7 +9,12 @@
     "totalSpending": 12450,
     "ratingGiven": 4.8,
     "status": "active",
-    "createdAt": "2026-08-02"
+    "createdAt": "2026-08-02",
+    "email": "seif.fawzy@example.com",
+    "cars": [{ "id": "CAR-001", "brand": "BMW", "model": "320i", "year": 2022, "plateNumber": "ABC 1234", "vin": "WBA8A9C01NK123451", "lastServiceDate": "2026-08-12", "status": "Active" }],
+    "recentBookings": [{ "id": "BK-1198", "serviceCenter": "BMW Station", "vehicle": "BMW 320i", "service": "Computer Diagnostics", "date": "2026-08-12", "amount": 1200, "status": "Completed" }, { "id": "BK-1134", "serviceCenter": "BMW Club", "vehicle": "BMW 320i", "service": "Periodic Maintenance", "date": "2026-07-20", "amount": 2200, "status": "Completed" }, { "id": "BK-1068", "serviceCenter": "Bimmer's Egypt", "vehicle": "BMW 320i", "service": "Brake Service", "date": "2026-06-08", "amount": 1800, "status": "Completed" }],
+    "reviews": [{ "id": "CR-001", "serviceCenter": "BMW Station", "rating": 5, "comment": "Excellent diagnosis and clear explanation.", "date": "2026-08-12", "reported": false }],
+    "activity": [{ "id": "ACT-001", "type": "booking_completed", "description": "Completed Computer Diagnostics at BMW Station", "date": "2026-08-12" }, { "id": "ACT-013", "type": "review_added", "description": "Added a five-star review for BMW Station", "date": "2026-08-12" }, { "id": "ACT-014", "type": "payment_completed", "description": "Paid EGP 1,200 for booking BK-1198", "date": "2026-08-12" }]
   },
   {
     "id": "C-002",
@@ -19,7 +25,12 @@
     "totalSpending": 8200,
     "ratingGiven": 4.5,
     "status": "active",
-    "createdAt": "2026-07-14"
+    "createdAt": "2026-07-14",
+    "email": "nour.eldin@example.com",
+    "cars": [{ "id": "CAR-002", "brand": "BMW", "model": "X3", "year": 2021, "plateNumber": "NDR 2045", "vin": "WBAXX1101M9123452", "lastServiceDate": "2026-08-14", "status": "Active" }, { "id": "CAR-003", "brand": "Mini", "model": "Cooper S", "year": 2020, "plateNumber": "NDR 8871", "vin": "WMWXX2102L2123453", "lastServiceDate": "2026-06-20", "status": "Active" }],
+    "recentBookings": [{ "id": "BK-1187", "serviceCenter": "Bimmer's Egypt", "vehicle": "BMW X3", "service": "Brake Service", "date": "2026-08-14", "amount": 1800, "status": "Completed" }, { "id": "BK-1112", "serviceCenter": "BMW Station", "vehicle": "Mini Cooper S", "service": "Oil Change", "date": "2026-07-12", "amount": 950, "status": "Completed" }, { "id": "BK-1041", "serviceCenter": "Crank BMW & Mini", "vehicle": "BMW X3", "service": "Engine Inspection", "date": "2026-05-29", "amount": 1600, "status": "Cancelled" }],
+    "reviews": [{ "id": "CR-002", "serviceCenter": "Bimmer's Egypt", "rating": 4, "comment": "Good work and friendly staff.", "date": "2026-08-14", "reported": false }],
+    "activity": [{ "id": "ACT-002", "type": "review_added", "description": "Added a review for Bimmer's Egypt", "date": "2026-08-14" }, { "id": "ACT-015", "type": "booking_completed", "description": "Completed Brake Service at Bimmer's Egypt", "date": "2026-08-14" }]
   },
   {
     "id": "C-003",
@@ -30,7 +41,12 @@
     "totalSpending": 3100,
     "ratingGiven": 4.9,
     "status": "active",
-    "createdAt": "2026-08-05"
+    "createdAt": "2026-08-05",
+    "email": "yasmine.adel@example.com",
+    "cars": [{ "id": "CAR-004", "brand": "BMW", "model": "118i", "year": 2023, "plateNumber": "YSA 5510", "vin": "WBA1A1104P3123454", "lastServiceDate": "2026-08-15", "status": "Active" }],
+    "recentBookings": [{ "id": "BK-1201", "serviceCenter": "BMW Station", "vehicle": "BMW 118i", "service": "Oil Change", "date": "2026-08-15", "amount": 950, "status": "Completed" }, { "id": "BK-1146", "serviceCenter": "BMW Club", "vehicle": "BMW 118i", "service": "General Inspection", "date": "2026-07-25", "amount": 800, "status": "Completed" }],
+    "reviews": [{ "id": "CR-003", "serviceCenter": "BMW Station", "rating": 5, "comment": "Fast service and transparent pricing.", "date": "2026-08-15", "reported": false }],
+    "activity": [{ "id": "ACT-003", "type": "booking_completed", "description": "Completed Oil Change at BMW Station", "date": "2026-08-15" }, { "id": "ACT-016", "type": "payment_completed", "description": "Paid EGP 950 for booking BK-1201", "date": "2026-08-15" }]
   },
   {
     "id": "C-004",
@@ -41,7 +57,12 @@
     "totalSpending": 900,
     "ratingGiven": 3.2,
     "status": "suspended",
-    "createdAt": "2026-06-18"
+    "createdAt": "2026-06-18",
+    "email": "omar.fathy@example.com",
+    "cars": [{ "id": "CAR-005", "brand": "Mercedes-Benz", "model": "C180", "year": 2018, "plateNumber": "OFA 3302", "vin": "WDD2050401R123455", "lastServiceDate": "2026-07-03", "status": "Active" }],
+    "recentBookings": [{ "id": "BK-1083", "serviceCenter": "Mansour Center", "vehicle": "Mercedes-Benz C180", "service": "General Inspection", "date": "2026-07-03", "amount": 800, "status": "Completed" }, { "id": "BK-0992", "serviceCenter": "Mansour Center", "vehicle": "Mercedes-Benz C180", "service": "AC Service", "date": "2026-05-18", "amount": 1300, "status": "Cancelled" }],
+    "reviews": [{ "id": "CR-004", "serviceCenter": "Mansour Center", "rating": 3, "comment": "The waiting time was longer than expected.", "date": "2026-07-03", "reported": false }],
+    "activity": [{ "id": "ACT-004", "type": "account_suspended", "description": "Customer account was suspended by an administrator", "date": "2026-07-04" }, { "id": "ACT-017", "type": "booking_completed", "description": "Completed General Inspection at Mansour Center", "date": "2026-07-03" }]
   },
   {
     "id": "C-005",
@@ -52,7 +73,12 @@
     "totalSpending": 19600,
     "ratingGiven": 4.7,
     "status": "active",
-    "createdAt": "2026-05-22"
+    "createdAt": "2026-05-22",
+    "email": "laila.kamal@example.com",
+    "cars": [{ "id": "CAR-006", "brand": "BMW", "model": "X5", "year": 2022, "plateNumber": "LKA 1098", "vin": "WBAJU4108N9123456", "lastServiceDate": "2026-08-13", "status": "Active" }, { "id": "CAR-007", "brand": "Mini", "model": "Countryman", "year": 2021, "plateNumber": "LKA 7730", "vin": "WMWYU7102M3123457", "lastServiceDate": "2026-07-01", "status": "Active" }, { "id": "CAR-008", "brand": "BMW", "model": "520i", "year": 2019, "plateNumber": "LKA 2901", "vin": "WBAJA5105K7123458", "lastServiceDate": "2026-05-28", "status": "Active" }],
+    "recentBookings": [{ "id": "BK-1182", "serviceCenter": "BMW Station", "vehicle": "BMW X5", "service": "Periodic Maintenance", "date": "2026-08-13", "amount": 2800, "status": "Completed" }, { "id": "BK-1125", "serviceCenter": "Crank BMW & Mini", "vehicle": "Mini Countryman", "service": "Engine Inspection", "date": "2026-07-17", "amount": 1600, "status": "Completed" }, { "id": "BK-1030", "serviceCenter": "Bimmer's Egypt", "vehicle": "BMW 520i", "service": "Electrical Diagnostics", "date": "2026-05-28", "amount": 1400, "status": "Completed" }],
+    "reviews": [{ "id": "CR-005", "serviceCenter": "BMW Station", "rating": 5, "comment": "Consistently professional service.", "date": "2026-08-13", "reported": false }],
+    "activity": [{ "id": "ACT-005", "type": "payment_completed", "description": "Paid EGP 2,800 for booking BK-1182", "date": "2026-08-13" }, { "id": "ACT-018", "type": "booking_completed", "description": "Completed Periodic Maintenance at BMW Station", "date": "2026-08-13" }]
   },
   {
     "id": "C-006",
@@ -63,7 +89,12 @@
     "totalSpending": 0,
     "ratingGiven": null,
     "status": "new",
-    "createdAt": "2026-08-10"
+    "createdAt": "2026-08-10",
+    "email": "hossam.sabry@example.com",
+    "cars": [{ "id": "CAR-009", "brand": "BMW", "model": "318i", "year": 2024, "plateNumber": "HSB 4401", "vin": "WBA5A3104R9123459", "lastServiceDate": null, "status": "Active" }],
+    "recentBookings": [],
+    "reviews": [],
+    "activity": [{ "id": "ACT-006", "type": "account_created", "description": "Created a new customer account", "date": "2026-08-10" }, { "id": "ACT-019", "type": "vehicle_added", "description": "Added BMW 318i to the account", "date": "2026-08-10" }]
   },
   {
     "id": "C-007",
@@ -74,7 +105,12 @@
     "totalSpending": 6750,
     "ratingGiven": 4.3,
     "status": "active",
-    "createdAt": "2026-07-09"
+    "createdAt": "2026-07-09",
+    "email": "ahmed.hassan@example.com",
+    "cars": [{ "id": "CAR-010", "brand": "BMW", "model": "330i", "year": 2020, "plateNumber": "AHS 6612", "vin": "WBA5R7105L7123460", "lastServiceDate": "2026-08-14", "status": "Active" }, { "id": "CAR-011", "brand": "BMW", "model": "X1", "year": 2019, "plateNumber": "AHS 1090", "vin": "WBXHU7109K5123461", "lastServiceDate": "2026-06-12", "status": "Active" }],
+    "recentBookings": [{ "id": "BK-1179", "serviceCenter": "Bimmer's Egypt", "vehicle": "BMW 330i", "service": "Electrical Diagnostics", "date": "2026-08-14", "amount": 1400, "status": "Completed" }, { "id": "BK-1098", "serviceCenter": "BMW Club", "vehicle": "BMW X1", "service": "Periodic Maintenance", "date": "2026-06-30", "amount": 2200, "status": "Completed" }],
+    "reviews": [{ "id": "CR-007", "serviceCenter": "Bimmer's Egypt", "rating": 4, "comment": "Helpful team and clear communication.", "date": "2026-08-14", "reported": false }],
+    "activity": [{ "id": "ACT-007", "type": "review_added", "description": "Added a review for Bimmer's Egypt", "date": "2026-08-14" }]
   },
   {
     "id": "C-008",
@@ -85,7 +121,12 @@
     "totalSpending": 2450,
     "ratingGiven": 4.6,
     "status": "active",
-    "createdAt": "2026-08-01"
+    "createdAt": "2026-08-01",
+    "email": "mariam.tarek@example.com",
+    "cars": [{ "id": "CAR-012", "brand": "Mini", "model": "Countryman", "year": 2021, "plateNumber": "MTA 7412", "vin": "WMWYU7107M3123462", "lastServiceDate": "2026-08-11", "status": "Active" }],
+    "recentBookings": [{ "id": "BK-1172", "serviceCenter": "Crank BMW & Mini", "vehicle": "Mini Countryman", "service": "Engine Inspection", "date": "2026-08-11", "amount": 1600, "status": "Completed" }, { "id": "BK-1077", "serviceCenter": "BMW Station", "vehicle": "Mini Countryman", "service": "Oil Change", "date": "2026-06-15", "amount": 950, "status": "Completed" }],
+    "reviews": [{ "id": "CR-008", "serviceCenter": "Crank BMW & Mini", "rating": 4, "comment": "Good repair quality and a helpful mechanic.", "date": "2026-08-11", "reported": false }],
+    "activity": [{ "id": "ACT-008", "type": "booking_completed", "description": "Completed Engine Inspection at Crank BMW & Mini", "date": "2026-08-11" }]
   },
   {
     "id": "C-009",
@@ -96,7 +137,12 @@
     "totalSpending": 4300,
     "ratingGiven": 3.9,
     "status": "suspended",
-    "createdAt": "2026-04-17"
+    "createdAt": "2026-04-17",
+    "email": "mahmoud.samir@example.com",
+    "cars": [{ "id": "CAR-013", "brand": "Audi", "model": "A4", "year": 2018, "plateNumber": "MSA 9012", "vin": "WAUZZZF40JA123463", "lastServiceDate": "2026-07-28", "status": "Active" }, { "id": "CAR-014", "brand": "BMW", "model": "525i", "year": 2016, "plateNumber": "MSA 1187", "vin": "WBAFW1107GG123464", "lastServiceDate": "2026-04-30", "status": "Active" }],
+    "recentBookings": [{ "id": "BK-1109", "serviceCenter": "Mansour Center", "vehicle": "Audi A4", "service": "General Inspection", "date": "2026-07-28", "amount": 800, "status": "Cancelled" }, { "id": "BK-1014", "serviceCenter": "BMW Station", "vehicle": "BMW 525i", "service": "Computer Diagnostics", "date": "2026-05-07", "amount": 1200, "status": "Completed" }],
+    "reviews": [{ "id": "CR-009", "serviceCenter": "Mansour Center", "rating": 2, "comment": "The service took longer than expected.", "date": "2026-07-28", "reported": true }],
+    "activity": [{ "id": "ACT-009", "type": "account_suspended", "description": "Customer account was suspended after a reported review", "date": "2026-07-29" }]
   },
   {
     "id": "C-010",
@@ -107,7 +153,12 @@
     "totalSpending": 0,
     "ratingGiven": null,
     "status": "new",
-    "createdAt": "2026-08-08"
+    "createdAt": "2026-08-08",
+    "email": "salma.mostafa@example.com",
+    "cars": [{ "id": "CAR-015", "brand": "BMW", "model": "X2", "year": 2023, "plateNumber": "SMO 2218", "vin": "WBAYH1104P5123465", "lastServiceDate": null, "status": "Active" }],
+    "recentBookings": [],
+    "reviews": [],
+    "activity": [{ "id": "ACT-010", "type": "vehicle_added", "description": "Added BMW X2 to the account", "date": "2026-08-08" }, { "id": "ACT-020", "type": "account_created", "description": "Created a new customer account", "date": "2026-08-08" }]
   },
   {
     "id": "C-011",
@@ -118,7 +169,12 @@
     "totalSpending": 14800,
     "ratingGiven": 4.4,
     "status": "active",
-    "createdAt": "2026-03-11"
+    "createdAt": "2026-03-11",
+    "email": "mostafa.adel@example.com",
+    "cars": [{ "id": "CAR-016", "brand": "BMW", "model": "740Li", "year": 2022, "plateNumber": "MAD 7711", "vin": "WBA7U2108N7123466", "lastServiceDate": "2026-08-09", "status": "Active" }, { "id": "CAR-017", "brand": "Mini", "model": "Clubman", "year": 2020, "plateNumber": "MAD 8802", "vin": "WMWLV7102L2123467", "lastServiceDate": "2026-06-17", "status": "Active" }, { "id": "CAR-018", "brand": "BMW", "model": "X6", "year": 2021, "plateNumber": "MAD 4409", "vin": "WBAJU8105M9123468", "lastServiceDate": "2026-05-22", "status": "Active" }, { "id": "CAR-019", "brand": "BMW", "model": "Z4", "year": 2019, "plateNumber": "MAD 3001", "vin": "WBAHF1108K7123469", "lastServiceDate": "2026-04-12", "status": "Active" }],
+    "recentBookings": [{ "id": "BK-1160", "serviceCenter": "BMW Club", "vehicle": "BMW 740Li", "service": "Periodic Maintenance", "date": "2026-08-09", "amount": 2200, "status": "Completed" }, { "id": "BK-1091", "serviceCenter": "Crank BMW & Mini", "vehicle": "Mini Clubman", "service": "Engine Inspection", "date": "2026-06-25", "amount": 1600, "status": "Completed" }, { "id": "BK-0988", "serviceCenter": "BMW Station", "vehicle": "BMW X6", "service": "Computer Diagnostics", "date": "2026-04-20", "amount": 1200, "status": "Completed" }],
+    "reviews": [{ "id": "CR-011", "serviceCenter": "BMW Club", "rating": 4, "comment": "Reliable service and good communication.", "date": "2026-08-09", "reported": false }],
+    "activity": [{ "id": "ACT-011", "type": "payment_completed", "description": "Paid EGP 2,200 for booking BK-1160", "date": "2026-08-09" }]
   },
   {
     "id": "C-012",
@@ -129,6 +185,26 @@
     "totalSpending": 1750,
     "ratingGiven": 5,
     "status": "active",
-    "createdAt": "2026-08-07"
+    "createdAt": "2026-08-07",
+    "email": "aya.mohamed@example.com",
+    "cars": [{ "id": "CAR-020", "brand": "BMW", "model": "118i", "year": 2022, "plateNumber": "AMO 5184", "vin": "WBA1A1108N3123470", "lastServiceDate": "2026-08-09", "status": "Active" }],
+    "recentBookings": [{ "id": "BK-1155", "serviceCenter": "BMW Club", "vehicle": "BMW 118i", "service": "Periodic Maintenance", "date": "2026-08-09", "amount": 2200, "status": "Completed" }, { "id": "BK-1101", "serviceCenter": "BMW Station", "vehicle": "BMW 118i", "service": "Oil Change", "date": "2026-07-03", "amount": 950, "status": "Completed" }],
+    "reviews": [{ "id": "CR-012", "serviceCenter": "BMW Club", "rating": 5, "comment": "Professional team and excellent service.", "date": "2026-08-09", "reported": false }],
+    "activity": [{ "id": "ACT-012", "type": "review_added", "description": "Added a five-star review for BMW Club", "date": "2026-08-09" }]
   }
-]
+  ],
+  "lastActivityByCustomerId": {
+    "C-001": "2026-08-16T14:30:00Z",
+    "C-002": "2026-08-14T11:10:00Z",
+    "C-003": "2026-08-15T16:45:00Z",
+    "C-004": "2026-07-03T09:20:00Z",
+    "C-005": "2026-08-13T13:05:00Z",
+    "C-006": "2026-08-10T10:00:00Z",
+    "C-007": "2026-08-14T18:15:00Z",
+    "C-008": "2026-08-11T15:40:00Z",
+    "C-009": "2026-07-28T12:30:00Z",
+    "C-010": "2026-08-08T17:20:00Z",
+    "C-011": "2026-08-09T19:10:00Z",
+    "C-012": "2026-08-09T16:55:00Z"
+  }
+}

@@ -44,8 +44,8 @@ function Bookings() {
   }
 
   return (
-    <section className="flex flex-col space-y-8">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-2.5">
+    <section className="flex min-w-0 flex-col space-y-5 sm:space-y-8">
+      <div className="mb-1 flex flex-col gap-3 sm:mb-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-2.5">
         <div className="flex flex-wrap gap-2">
           {filteres.map((filter, i) => (
             <FilterButton
@@ -62,7 +62,7 @@ function Bookings() {
             </FilterButton>
           ))}
         </div>
-        <Button className="min-h-[42px] min-w-0 gap-2 !rounded-[9px] !border-[#1C1712] !bg-[#1C1712] !px-[14px] !py-2 !text-base !font-bold !text-white hover:!bg-[#332920]">
+        <Button className="min-h-[42px] w-full min-w-0 gap-2 !rounded-[9px] !border-[#1C1712] !bg-[#1C1712] !px-[14px] !py-2 !text-base !font-bold !text-white hover:!bg-[#332920] sm:w-auto">
           <Download size={16} strokeWidth={2.5} />
           Export
         </Button>
