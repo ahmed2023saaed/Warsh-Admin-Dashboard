@@ -1,0 +1,345 @@
+Warsha Admin Dashboard
+Backend Integration Checklist
+================================
+
+Goal
+----
+Prepare the current frontend so it can connect to a real backend without rewriting the UI.
+
+1. Create an API Layer
+-----------------------
+Add an API folder:
+
+src/api/
+  apiClient.js
+  authApi.js
+  customersApi.js
+  serviceCentersApi.js
+  bookingsApi.js
+  paymentsApi.js
+  reviewsApi.js
+  marketingApi.js
+
+Keep fetch or Axios calls out of page components.
+
+Example:
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+export async function getServiceCenters() {
+  const response = await fetch(`${API_URL}/service-centers`);
+
+  if (!response.ok) {
+    throw new Error("Failed to load service centers");
+  }
+
+  return response.json();
+}
+
+2. Replace Mock Data in Pages
+-----------------------------
+Pages currently import JSON files directly, for example:
+
+src/pages/ServiceCenters.jsx
+
+Change the data flow from:
+
+Page -> JSON file
+
+To:
+
+Page -> API function -> Backend
+
+Use loading and error states:
+
+const [centers, setCenters] = useState([]);
+const [loading, setLoading] = useState(true);
+const [error, setError] = useState(null);
+
+3. Convert Actions into API Mutations
+--------------------------------------
+Connect these actions to backend endpoints:
+
+- Approve service center
+- Reject service center
+- Suspend service center
+- Activate service center
+- Cancel booking
+- Delete review
+- Reply to review
+- Add, edit, and delete banners
+- Update settings
+- Create and edit admin users
+
+Example:
+
+async function confirmSuspendCenter() {
+  try {
+    await suspendServiceCenter(suspendCenterId, { days });
+
+    setCenters((currentCenters) =>
+      currentCenters.map((center) =>
+        center.id === suspendCenterId
+          ? { ...center, status: "suspended" }
+          : center,
+      ),
+    );
+
+    showSuccessToast("Service center suspended.");
+  } catch {
+    showErrorToast("Could not suspend service center.");
+  }
+}
+
+4. Add Authentication Tokens
+----------------------------
+The current authentication accepts every email and password.
+
+Backend authentication should include:
+
+- Login API request
+- Access-token storage
+- Refresh-token handling
+- Logout and token removal
+- Expired-session handling
+- User role and permissions
+- Failed-login messages
+- Protected API requests
+
+Do not use only localStorage user data for authorization.
+
+5. Add Environment Configuration
+---------------------------------
+Create these files:
+
+.env
+.env.example
+
+Example:
+
+VITE_API_URL=http://localhost:5000/api
+
+Use the variable in the API client:
+
+const API_URL = import.meta.env.VITE_API_URL;
+
+Never hardcode the backend URL inside page components.
+
+6. Agree on Backend Contracts
+------------------------------
+Before connecting, define:
+
+- Endpoint names
+- HTTP methods
+- Request bodies
+- Response shapes
+- Status values
+- Pagination format
+- Error format
+- Authentication method
+- Date format
+- Currency format
+
+Use one consistent status format across the whole project.
+
+Recommended status values:
+
+active
+suspended
+pending
+rejected
+expired
+expiring
+completed
+cancelled
+
+The project currently mixes uppercase and lowercase values such as Active, Suspended, active, and suspended.
+
+7. Improve the Service-Center Model
+------------------------------------
+For suspension, do not store only the number of days.
+
+Use real dates:
+
+{
+  "status": "suspended",
+  "suspensionStartedAt": "2026-08-22T10:00:00.000Z",
+  "suspensionUntil": "2026-08-29T10:00:00.000Z"
+}
+
+The backend should automatically reactivate the center after suspensionUntil.
+
+Also define how approval and rejection affect the pending list and active list.
+
+8. Add Server-Side Pagination and Filtering
+--------------------------------------------
+Current pages use fixed values such as:
+
+const currentPage = 1;
+
+The backend should receive parameters like:
+
+?page=1&limit=10&search=bmw&status=active
+
+Recommended response:
+
+{
+  "data": [],
+  "page": 1,
+  "limit": 10,
+  "total": 100,
+  "totalPages": 10
+}
+
+Apply this to customers, bookings, service centers, payments, reviews, and admin users.
+
+9. Add Shared Request States
+-----------------------------
+Create reusable handling for:
+
+- Loading state
+- Error state
+- Empty state
+- Retry action
+- Mutation pending state
+- Success notifications
+- Error notifications
+
+Disable action buttons while a request is being submitted to prevent duplicate requests.
+
+10. Centralize Shared Data
+--------------------------
+Dashboard statistics should come from backend responses instead of separate mock files.
+
+A service-center status change should update:
+
+- Service-center list
+- Dashboard statistics
+- Pending approvals count
+- Booking availability
+- Revenue and balance data
+
+Use a shared state solution or a server-state library when the API is connected.
+
+11. Complete Missing Admin Areas
+--------------------------------
+The current project is missing or incomplete in these areas:
+
+- Emergency requests
+- Services and categories
+- Complaints
+- Subscriptions
+- Reports
+- Notifications
+- Unauthorized page
+- Not-found page
+- Permission-based navigation
+- Admin user create and edit flows
+- Settings management flows
+
+Add routes, API functions, UI states, and permissions for each area.
+
+12. Complete Service-Center Lifecycle
+-------------------------------------
+The Service Centers page should support:
+
+- View details
+- Approve application
+- Reject application with a reason
+- Move approved centers into the active list
+- Suspend center with duration
+- Store suspension dates
+- Reactivate center
+- View suspension history
+- Edit center details
+- Manage services
+- View bookings and reviews
+- View and verify documents
+- Show API errors and loading states
+
+13. Fix Deployment Issues
+-------------------------
+Use exact file and folder casing in imports.
+
+For example, the project folder is named Data, so imports must use Data, not data.
+
+Windows is often case-insensitive, but Linux deployment systems are case-sensitive.
+
+Before deployment:
+
+- Run npm run build
+- Check all import casing
+- Remove console.log statements
+- Fix ESLint errors
+- Configure environment variables
+- Test production preview
+
+14. Improve Admin Permissions
+-----------------------------
+Define permissions such as:
+
+- dashboard.view
+- customers.view
+- customers.suspend
+- serviceCenters.view
+- serviceCenters.approve
+- serviceCenters.reject
+- serviceCenters.suspend
+- bookings.view
+- payments.view
+- reviews.moderate
+- marketing.manage
+- admins.manage
+- settings.manage
+
+Hide navigation items and disable actions when the current admin lacks permission.
+
+15. Add Testing
+---------------
+Add tests for:
+
+- Login success and failure
+- Protected routes
+- Logout
+- Role-based access
+- Service-center approval
+- Service-center rejection
+- Suspension duration validation
+- Service-center activation
+- Customer suspension
+- Booking cancellation
+- Review deletion and reply
+- Pagination and filtering
+- API error handling
+
+Recommended Migration Order
+----------------------------
+
+1. Fix data models and status naming.
+2. Fix import casing, especially Data versus data.
+3. Create apiClient.js.
+4. Add authentication API and token handling.
+5. Connect Service Centers first.
+6. Add loading, error, empty, and pending states.
+7. Connect Customers and Bookings.
+8. Connect Reviews, Payments, and Marketing.
+9. Connect Dashboard statistics to shared API data.
+10. Add permissions and role checks.
+11. Build missing emergency, reports, subscriptions, and notification areas.
+12. Add tests and production checks.
+
+Current Strengths
+-----------------
+
+- Reusable Modal component
+- Reusable DetailsDrawer component
+- Reusable DataTable component
+- Shared State status component
+- Responsive sidebar
+- Lazy-loaded routes
+- Existing mock data that can help define API contracts
+
+Main Principle
+--------------
+Keep the UI components focused on rendering and user interaction.
+Move API calls, business rules, authentication, and data transformations into shared API and service modules.

@@ -69,7 +69,7 @@ export function SeviceCenterTable({ onApprove, onReject }) {
   ];
 }
 
-export function CenterBox({ center, onView, onEdit }) {
+export function CenterBox({ center, onView, onSuspend }) {
   const { name, brand, rating, initials, location, bookings, revenue, status } =
     center;
 
@@ -133,16 +133,16 @@ export function CenterBox({ center, onView, onEdit }) {
         <Button
           onClick={() => onView(center)}
           aria-label={`View ${name}`}
-          className="!h-[34px] !w-full !rounded-[10px] !border-[#17120E] !bg-[#17120E] !py-0 !text-xs !text-white hover:!border-[#302923] hover:!bg-[#302923]"
+          className="!h-[34px] !w-full !rounded-[10px] !border-[#17120E] !bg-[#17120E] !py-0 !text-sm !text-white hover:!border-[#302923] hover:!bg-[#302923]"
         >
           View
         </Button>
         <Button
-          onClick={() => onEdit(center)}
+          onClick={() => onSuspend(center)}
           aria-label={`Edit ${name}`}
-          className="!h-[34px] !w-full !rounded-[10px] !border-[#E4DDD3] !bg-white !py-0 !text-xs !text-[#17120E] hover:!border-[#CFC4B7] hover:!bg-[#FFFCF8]"
+          className="!h-[34px] !w-full !rounded-[10px] !border-[#E4DDD3] !bg-white !py-0 !text-sm !text-[#D64545] hover:!border-[#CFC4B7] hover:!bg-[#FFFCF8]"
         >
-          Edit
+          {center.status !== "Suspended" ? "Suspend" : "UnSuspend"}
         </Button>
       </div>
     </article>

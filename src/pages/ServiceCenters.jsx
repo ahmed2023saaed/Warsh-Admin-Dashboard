@@ -3,6 +3,8 @@ import DataTable from "../components/UI/DataTable";
 import { CenterBox, SeviceCenterTable } from "../utils/SeviceCenterTable";
 import Input from "../components/UI/Input";
 import Modal from "../components/UI/Modal";
+import DetailsDrawer from "../components/UI/DetailsDrawer";
+import State from "../components/UI/State";
 import { CheckCircle2, Search, TriangleAlert } from "lucide-react";
 import { showSuccessToast } from "../components/UI/toastNotifications";
 import { useCallback, useMemo, useState } from "react";
@@ -11,6 +13,14 @@ import Button from "../components/UI/Button";
 function ServiceCenters() {
   const [centerIdToReject, setCenterIdToReject] = useState(null);
   const [centerIdToApprove, setCenterIdToApprove] = useState(null);
+
+  const [centers, setCenters] = useState(() => serviceCenters.serviceCenters);
+  const [suspendCenterId, setSuspendCenterId] = useState(null);
+  const [selectedCenter, setSelectedCenter] = useState(null);
+  const [suspensionOption, setSuspensionOption] = useState("1");
+  const [customSuspensionDays, setCustomSuspensionDays] = useState("");
+
+  // const [View, setView] = useState(false);
 
   const pendingColumns = useMemo(
     () =>
@@ -31,12 +41,49 @@ function ServiceCenters() {
     (currentPageSafe - 1) * perPage,
     currentPageSafe * perPage,
   );
+
   const centerToApprove = centerTable.find(
     (center) => center.id === centerIdToApprove,
   );
+
   const centerToReject = centerTable.find(
     (center) => center.id === centerIdToReject,
   );
+
+  const suspendCenter = centers.find((center) => center.id === suspendCenterId);
+
+  function updateCenterStatus(status, suspensionDays = null) {
+    if (!suspendCenterId) return;
+
+    setCenters((currentCenters) =>
+      currentCenters.map((center) =>
+        center.id === suspendCenterId
+          ? { ...center, status, suspensionDays }
+          : center,
+      ),
+    );
+    setSuspendCenterId(null);
+  }
+
+  function confirmSuspendCenter() {
+    const days =
+      suspensionOption === "custom"
+        ? Number(customSuspensionDays)
+        : Number(suspensionOption);
+
+    if (!Number.isInteger(days) || days < 1) {
+      showSuccessToast("Enter a valid number of days.");
+      return;
+    }
+
+    showSuccessToast(`Service center suspended for ${days} day(s).`);
+    updateCenterStatus("Suspended", days);
+  }
+
+  function confirmUnsuspendCenter() {
+    showSuccessToast("Service center is active.");
+    updateCenterStatus("Active");
+  }
 
   function confirmApproveCenter() {
     if (centerIdToApprove === null) return;
@@ -61,25 +108,147 @@ function ServiceCenters() {
   }
 
   const handleViewCenter = useCallback((center) => {
-    showSuccessToast(`Opening ${center.name}.`, "Loading center details...");
+    setSelectedCenter(center);
   }, []);
 
   const handleEditCenter = useCallback((center) => {
-    showSuccessToast(`Editing ${center.name}.`, "Preparing center form...");
+    setSuspendCenterId(center.id);
+    setSuspensionOption("1");
+    setCustomSuspensionDays("");
   }, []);
 
   const centerCards = useMemo(
     () =>
-      serviceCenters.serviceCenters.map((center) => (
+      centers.map((center) => (
         <CenterBox
           key={center.id}
           center={center}
           onView={handleViewCenter}
-          onEdit={handleEditCenter}
+          onSuspend={handleEditCenter}
         />
       )),
-    [handleEditCenter, handleViewCenter],
+    [centers, handleEditCenter, handleViewCenter],
   );
+
+  function CenterDetails({ center }) {
+    return (
+      <div className="space-y-6">
+        <section>
+          <h3 className="text-base font-bold text-[#1C1712]">
+            Center information
+          </h3>
+          <div className="mt-3 grid gap-4 sm:grid-cols-2">
+            <Detail label="Owner" value={center.owner?.name} />
+            <Detail label="Phone" value={center.owner?.phone} />
+            <Detail label="Email" value={center.owner?.email} />
+            <Detail
+              label="Location"
+              value={[
+                center.address?.street,
+                center.address?.district,
+                center.address?.city,
+                center.address?.country,
+              ]
+                .filter(Boolean)
+                .join(", ")}
+            />
+            <Detail label="Joined" value={center.joinedAt} />
+            <Detail label="License" value={center.licenseStatus} />
+            <div>
+              <p className="text-xs font-semibold uppercase text-[#8A8074]">
+                Status
+              </p>
+              <State
+                good={center.status === "Active"}
+                bad={["Expired", "Expiring", "Suspended"].includes(
+                  center.status,
+                )}
+                className="mt-1"
+              >
+                {center.status}
+              </State>
+            </div>
+          </div>
+          <p className="mt-4 text-sm leading-6 text-[#6F665C]">
+            {center.description}
+          </p>
+        </section>
+
+        <section>
+          <h3 className="text-base font-bold text-[#1C1712]">Performance</h3>
+          <div className="mt-3 grid gap-4 sm:grid-cols-2">
+            <Detail label="Bookings" value={center.bookings} />
+            <Detail
+              label="Revenue"
+              value={`${center.revenue.toLocaleString("en-US")} EGP`}
+            />
+            <Detail
+              label="Balance"
+              value={`${center.balance.toLocaleString("en-US")} EGP`}
+            />
+            <Detail label="Rating" value={`${center.rating} / 5`} />
+          </div>
+        </section>
+
+        <section>
+          <h3 className="text-base font-bold text-[#1C1712]">Services</h3>
+          <div className="mt-3 space-y-3">
+            {center.services?.map((service) => (
+              <div
+                key={service.id}
+                className="rounded-xl border border-[#E8E2D8] p-4"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <p className="font-bold text-[#1C1712]">{service.name}</p>
+                  <span className="text-sm font-semibold text-[#8A8074]">
+                    {service.price.toLocaleString("en-US")} EGP
+                  </span>
+                </div>
+                <p className="mt-1 text-sm text-[#8A8074]">
+                  {service.category} · {service.durationMinutes} minutes
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h3 className="text-base font-bold text-[#1C1712]">Documents</h3>
+          <div className="mt-3 space-y-3">
+            {center.documents?.map((document) => (
+              <div
+                key={document.id}
+                className="flex items-center justify-between gap-3 rounded-xl border border-[#E8E2D8] p-4"
+              >
+                <div>
+                  <p className="font-bold text-[#1C1712]">{document.name}</p>
+                  <p className="mt-1 text-sm text-[#8A8074]">
+                    Expires {document.expiresAt}
+                  </p>
+                </div>
+                <span className="text-sm font-semibold text-[#169447]">
+                  {document.status}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  function Detail({ label, value }) {
+    return (
+      <div>
+        <p className="text-xs font-semibold uppercase text-[#8A8074]">
+          {label}
+        </p>
+        <p className="mt-1 text-sm font-medium text-[#1C1712]">
+          {value || "Not available"}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -98,6 +267,7 @@ function ServiceCenters() {
             emptyMessage="No pending service centers."
           />
 
+          {/* ==================== APPROVE MODAL ==================== */}
           <Modal
             open={centerIdToApprove !== null}
             onClose={() => setCenterIdToApprove(null)}
@@ -140,6 +310,7 @@ function ServiceCenters() {
             </div>
           </Modal>
 
+          {/* ==================== REJECT MODAL ==================== */}
           <Modal
             open={centerIdToReject !== null}
             onClose={() => setCenterIdToReject(null)}
@@ -185,6 +356,112 @@ function ServiceCenters() {
               </div>
             </div>
           </Modal>
+
+          {/* ==================== SUSPEND / ACTIVATE MODAL ==================== */}
+          <Modal
+            open={suspendCenterId !== null}
+            onClose={() => setSuspendCenterId(null)}
+            title={
+              suspendCenter?.status === "Suspended"
+                ? "Activate service center"
+                : "Suspend service center"
+            }
+            size="md"
+            className={
+              suspendCenter?.status === "Suspended"
+                ? "border border-[#D7EBDD]"
+                : "border border-[#F0D2D2]"
+            }
+            contentClassName="!py-5"
+            footerClassName="!px-5 !py-4"
+            footer={
+              <>
+                <Button
+                  onClick={() => setSuspendCenterId(null)}
+                  className="min-w-24 !px-5 !py-2.5 !text-sm"
+                >
+                  Cancel
+                </Button>
+
+                {suspendCenter?.status === "Suspended" ? (
+                  <Button
+                    onClick={confirmUnsuspendCenter}
+                    className="min-w-28 !border-[#20A45B] !bg-[#20A45B] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#19894A] hover:!bg-[#19894A] focus-visible:!ring-[#20A45B]/40"
+                  >
+                    Activate Center
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={confirmSuspendCenter}
+                    className="min-w-28 !border-[#D64545] !bg-[#D64545] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#B93636] hover:!bg-[#B93636] focus-visible:!ring-[#D64545]/40"
+                  >
+                    Suspend Center
+                  </Button>
+                )}
+              </>
+            }
+          >
+            {suspendCenter?.status === "Suspended" ? (
+              <p className="text-sm leading-6 text-[#6F665C]">
+                Activate {suspendCenter.name} and allow it to receive customer
+                bookings again?
+              </p>
+            ) : (
+              <div className="space-y-4">
+                <p className="text-sm leading-6 text-[#8A8074]">
+                  Choose how long this service center should be suspended.
+                </p>
+
+                <div className="grid gap-2 sm:grid-cols-3">
+                  {["1", "3", "7"].map((days) => (
+                    <label
+                      key={days}
+                      className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-[#E4DDD3] px-3 py-2.5 text-sm font-medium text-[#1C1712] has-[:checked]:border-[#D64545] has-[:checked]:bg-[#FFF7F7]"
+                    >
+                      <input
+                        type="radio"
+                        name="suspension-duration"
+                        value={days}
+                        checked={suspensionOption === days}
+                        onChange={(event) =>
+                          setSuspensionOption(event.target.value)
+                        }
+                        className="accent-[#D64545]"
+                      />
+                      {days} day{days === "1" ? "" : "s"}
+                    </label>
+                  ))}
+                </div>
+
+                <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-[#1C1712]">
+                  <input
+                    type="radio"
+                    name="suspension-duration"
+                    value="custom"
+                    checked={suspensionOption === "custom"}
+                    onChange={() => setSuspensionOption("custom")}
+                    className="accent-[#D64545]"
+                  />
+                  Custom duration
+                </label>
+
+                {suspensionOption === "custom" && (
+                  <Input
+                    ID="custom-suspension-days"
+                    type="number"
+                    placeholder="Enter number of days"
+                    value={customSuspensionDays}
+                    onChange={(event) =>
+                      setCustomSuspensionDays(event.target.value)
+                    }
+                    dimensions={{ width: "100%", height: "40px" }}
+                    className="w-full"
+                  />
+                )}
+              </div>
+            )}
+          </Modal>
+          {/* end suspend modal */}
         </div>
       </section>
       <section className="overflow-hidden rounded-[14px] border border-[#E4DDD3] bg-white px-3 pb-4 pt-4 shadow-[0_1px_2px_rgba(28,23,18,0.02)] sm:rounded-[18px] sm:px-6 sm:pb-5 sm:pt-5">
@@ -208,6 +485,14 @@ function ServiceCenters() {
           {centerCards}
         </div>
       </section>
+      <DetailsDrawer
+        open={selectedCenter !== null}
+        onClose={() => setSelectedCenter(null)}
+        title={selectedCenter?.name}
+        subtitle={selectedCenter?.brand}
+      >
+        {selectedCenter && <CenterDetails center={selectedCenter} />}
+      </DetailsDrawer>
     </div>
   );
 }
