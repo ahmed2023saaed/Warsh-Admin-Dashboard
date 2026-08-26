@@ -1,7 +1,7 @@
 // constants/adminUserColumns.jsx
 
 import { MoreVertical } from 'lucide-react';
-import Avatar from '../components/ui/Avatar';
+import Avatar from '../components/UI/Avatar';
 import StatusBadge from '../components/widgets/statusBadge';
 
 const roleStyles = {

@@ -1,6 +1,6 @@
 // constants/paymentColumns.jsx
 
-import Avatar from '../components/ui/Avatar';
+import Avatar from '../components/UI/Avatar';
 import StatusBadge from '../components/widgets/statusBadge';
 
 const formatCurrency = (amount) =>
