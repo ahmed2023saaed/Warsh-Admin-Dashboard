@@ -3,13 +3,13 @@
 import { useState } from 'react';
 import SettingsSection from '../components/UI/SettingsSection';
 import SettingsRow from '../components/UI/SettingsRow';
-import ToggleSwitch from '../components/ui/Toggle';
+import ToggleSwitch from '../components/UI/Toggle';
 
 import {
   pricingSettings,
   catalogSettings,
   adminRoles,
-} from '../data/settingsData';
+} from '../Data/settingsData';
 
 export default function SettingsPage() {
   const [platformSettings, setPlatformSettings] = useState({

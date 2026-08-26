@@ -1,4 +1,4 @@
-import BarChartCard from "../components/Charts/barChartCard";
+import BarChartCard from "../components/Charts/BarChartCard";
 import StatCard from "../components/UI/StatCard";
 import { dailyBookingsData, revenueData } from "../Data/dashboardChartsData";
 import { mockStatCards } from "../Data/statusCardMocks";
