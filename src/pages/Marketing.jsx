@@ -244,8 +244,8 @@ function Marketing() {
   return (
     <div className="space-y-4">
       {/* Active banners */}
-      <section className="rounded-[14px] border border-[#E8E2D8] bg-white p-[18px]">
-        <div className="mb-4 flex items-center justify-between gap-4">
+      <section className="rounded-[14px] border border-[#E8E2D8] bg-white p-3.5 sm:p-[18px]">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
           <h2 className="text-base font-bold text-[#1C1712]">Active Banners</h2>
 
           <Button
@@ -270,8 +270,8 @@ function Marketing() {
       {/* Promo codes and featured centers */}
       <section className="grid gap-4 lg:grid-cols-2">
         {/* Promo codes */}
-        <div className="h-[320px] max-h-[320px] overflow-hidden rounded-[14px] border border-[#E8E2D8] bg-white p-[18px]">
-          <div className="flex items-center justify-between gap-4">
+        <div className="overflow-hidden rounded-[14px] border border-[#E8E2D8] bg-white p-3.5 sm:p-[18px] lg:h-[320px] lg:max-h-[320px]">
+          <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4">
             <h3 className="text-base font-bold text-[#1C1712]">Promo codes</h3>
 
             <Button
@@ -282,7 +282,7 @@ function Marketing() {
               + New Code
             </Button>
           </div>
-          <div className="mx-auto mt-5 h-[90%] w-[95%] overflow-hidden [&>div]:!h-full [&>div]:!w-full [&>div]:!overflow-hidden [&>div]:!rounded-none [&>div]:!border-0 [&_table]:!w-full [&_table]:table-auto [&_table]:border-collapse [&_thead]:!bg-transparent [&_th]:!px-2.5 [&_th]:!pb-3 [&_th]:!pt-0 [&_th]:!text-left [&_th]:!text-[11px] [&_th]:!font-bold [&_th]:!text-[#8A8074] [&_td]:!px-2.5 [&_td]:!py-[13px] [&_td]:!text-left [&_tr:last-child]:!border-b-0">
+          <div className="mx-auto mt-5 w-full overflow-x-auto sm:w-[95%] lg:h-[90%] lg:overflow-hidden [&>div]:!h-full [&>div]:!w-full [&>div]:!overflow-x-auto [&>div]:!rounded-none [&>div]:!border-0 [&_table]:!min-w-[520px] [&_table]:!w-full [&_table]:table-auto [&_table]:border-collapse [&_thead]:!bg-transparent [&_th]:!px-2.5 [&_th]:!pb-3 [&_th]:!pt-0 [&_th]:!text-left [&_th]:!text-[11px] [&_th]:!font-bold [&_th]:!text-[#8A8074] [&_td]:!px-2.5 [&_td]:!py-[13px] [&_td]:!text-left [&_tr:last-child]:!border-b-0 lg:[&_table]:!min-w-0">
             <DataTable
               columns={promoColumns}
               data={paginatedPromos}
@@ -341,8 +341,8 @@ function Marketing() {
         </div>
 
         {/* Featured service centers */}
-        <div className="flex h-[320px] max-h-[320px] flex-col overflow-hidden rounded-[14px] border border-[#E8E2D8] bg-white p-[18px]">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex max-h-[360px] min-h-[300px] flex-col overflow-hidden rounded-[14px] border border-[#E8E2D8] bg-white p-3.5 sm:p-[18px] lg:h-[320px] lg:max-h-[320px]">
+          <div className="flex flex-col items-stretch justify-between gap-3 sm:flex-row sm:flex-wrap sm:items-center">
             <h3 className="text-base font-bold text-[#1C1712]">
               Featured service centers
             </h3>
@@ -356,6 +356,7 @@ function Marketing() {
                 width: "220px",
                 height: "40px",
               }}
+              className="w-full sm:w-[220px]"
             />
           </div>
 

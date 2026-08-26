@@ -38,7 +38,30 @@
       "location": "Maadi, Cairo",
       "bookings": 120,
       "revenue": 42800,
-      "status": "Active"
+      "status": "Active",
+      "balance": 2400,
+      "joinedAt": "2024-02-12",
+      "description": "Premium BMW and Mini service center with certified technicians and advanced diagnostic equipment.",
+      "owner": { "name": "Ahmed El-Sayed", "phone": "+20 100 555 1201", "email": "ahmed@bmwstation.com" },
+      "address": { "street": "24 Road 9", "district": "Maadi", "city": "Cairo", "country": "Egypt" },
+      "openingHours": { "saturdayToThursday": "09:00 AM - 07:00 PM", "friday": "Closed" },
+      "supportedBrands": ["BMW", "Mini"],
+      "licenseStatus": "Verified",
+      "services": [
+        { "id": "SVC-001", "name": "Oil Change", "category": "Maintenance", "durationMinutes": 45, "price": 950, "active": true },
+        { "id": "SVC-002", "name": "Computer Diagnostics", "category": "Diagnostics", "durationMinutes": 60, "price": 1200, "active": true }
+      ],
+      "recentBookings": [
+        { "id": "BK-1201", "customer": "Yasmine Adel", "vehicle": "BMW 320i", "service": "Oil Change", "date": "2026-08-15", "amount": 950, "status": "Completed" },
+        { "id": "BK-1198", "customer": "Seif Fawzy", "vehicle": "Mini Cooper", "service": "Computer Diagnostics", "date": "2026-08-12", "amount": 1200, "status": "Completed" }
+      ],
+      "reviews": [
+        { "id": "REV-SC-001", "customer": "Yasmine Adel", "rating": 5, "comment": "Fast service and transparent pricing.", "date": "2026-08-15", "reported": false }
+      ],
+      "documents": [
+        { "id": "DOC-001", "name": "Commercial Registration", "status": "Verified", "uploadedAt": "2024-02-10", "expiresAt": "2027-02-10" },
+        { "id": "DOC-002", "name": "Operating License", "status": "Verified", "uploadedAt": "2025-01-20", "expiresAt": "2027-01-20" }
+      ]
     },
     {
       "id": "SC-002",
@@ -49,7 +72,29 @@
       "location": "New Cairo",
       "bookings": 85,
       "revenue": 27600,
-      "status": "Active"
+      "status": "Active",
+      "balance": 1350,
+      "joinedAt": "2024-06-05",
+      "description": "Independent BMW specialist offering scheduled maintenance, electrical repair, and performance diagnostics.",
+      "owner": { "name": "Karim Hassan", "phone": "+20 101 440 2288", "email": "karim@bimmersegypt.com" },
+      "address": { "street": "18 North 90 Street", "district": "New Cairo", "city": "Cairo", "country": "Egypt" },
+      "openingHours": { "saturdayToThursday": "10:00 AM - 08:00 PM", "friday": "02:00 PM - 08:00 PM" },
+      "supportedBrands": ["BMW"],
+      "licenseStatus": "Verified",
+      "services": [
+        { "id": "SVC-003", "name": "Brake Service", "category": "Repair", "durationMinutes": 90, "price": 1800, "active": true },
+        { "id": "SVC-004", "name": "Electrical Diagnostics", "category": "Diagnostics", "durationMinutes": 75, "price": 1400, "active": true }
+      ],
+      "recentBookings": [
+        { "id": "BK-1187", "customer": "Nour El-Din", "vehicle": "BMW X3", "service": "Brake Service", "date": "2026-08-14", "amount": 1800, "status": "Completed" }
+      ],
+      "reviews": [
+        { "id": "REV-SC-002", "customer": "Ahmed Hassan", "rating": 4, "comment": "Helpful team and clear communication.", "date": "2026-08-14", "reported": false }
+      ],
+      "documents": [
+        { "id": "DOC-003", "name": "Commercial Registration", "status": "Verified", "uploadedAt": "2024-06-01", "expiresAt": "2027-06-01" },
+        { "id": "DOC-004", "name": "Tax Card", "status": "Verified", "uploadedAt": "2024-06-01", "expiresAt": "2028-06-01" }
+      ]
     },
     {
       "id": "SC-003",
@@ -60,7 +105,29 @@
       "location": "New Cairo",
       "bookings": 64,
       "revenue": 18300,
-      "status": "Expiring"
+      "status": "Expiring",
+      "balance": 3200,
+      "joinedAt": "2025-01-18",
+      "description": "BMW and Mini repair workshop focused on engine, transmission, and preventive maintenance services.",
+      "owner": { "name": "Omar Nabil", "phone": "+20 122 300 9182", "email": "omar@crankbmw.com" },
+      "address": { "street": "7 Industrial Zone", "district": "New Cairo", "city": "Cairo", "country": "Egypt" },
+      "openingHours": { "saturdayToThursday": "09:30 AM - 07:30 PM", "friday": "Closed" },
+      "supportedBrands": ["BMW", "Mini"],
+      "licenseStatus": "Expiring Soon",
+      "services": [
+        { "id": "SVC-005", "name": "Engine Inspection", "category": "Diagnostics", "durationMinutes": 90, "price": 1600, "active": true },
+        { "id": "SVC-006", "name": "Transmission Service", "category": "Repair", "durationMinutes": 180, "price": 4200, "active": true }
+      ],
+      "recentBookings": [
+        { "id": "BK-1172", "customer": "Mariam Tarek", "vehicle": "Mini Countryman", "service": "Engine Inspection", "date": "2026-08-11", "amount": 1600, "status": "Completed" }
+      ],
+      "reviews": [
+        { "id": "REV-SC-003", "customer": "Mariam Hany", "rating": 3, "comment": "Good repair quality but the appointment started late.", "date": "2026-08-11", "reported": false }
+      ],
+      "documents": [
+        { "id": "DOC-005", "name": "Commercial Registration", "status": "Verified", "uploadedAt": "2025-01-15", "expiresAt": "2028-01-15" },
+        { "id": "DOC-006", "name": "Operating License", "status": "Expiring", "uploadedAt": "2025-01-15", "expiresAt": "2026-09-01" }
+      ]
     },
     {
       "id": "SC-004",
@@ -71,7 +138,29 @@
       "location": "6th October",
       "bookings": 52,
       "revenue": 14900,
-      "status": "Active"
+      "status": "Active",
+      "balance": 780,
+      "joinedAt": "2025-04-03",
+      "description": "Community-focused BMW workshop providing inspections, maintenance, detailing, and emergency repairs.",
+      "owner": { "name": "Mostafa Samir", "phone": "+20 106 901 4420", "email": "mostafa@bmwclub.com" },
+      "address": { "street": "41 Central Axis", "district": "6th October", "city": "Giza", "country": "Egypt" },
+      "openingHours": { "saturdayToThursday": "09:00 AM - 06:00 PM", "friday": "Closed" },
+      "supportedBrands": ["BMW"],
+      "licenseStatus": "Verified",
+      "services": [
+        { "id": "SVC-007", "name": "Periodic Maintenance", "category": "Maintenance", "durationMinutes": 120, "price": 2200, "active": true },
+        { "id": "SVC-008", "name": "Exterior Detailing", "category": "Detailing", "durationMinutes": 150, "price": 1750, "active": true }
+      ],
+      "recentBookings": [
+        { "id": "BK-1155", "customer": "Aya Mohamed", "vehicle": "BMW 118i", "service": "Periodic Maintenance", "date": "2026-08-09", "amount": 2200, "status": "Completed" }
+      ],
+      "reviews": [
+        { "id": "REV-SC-004", "customer": "Aya Mohamed", "rating": 5, "comment": "Professional team and excellent service.", "date": "2026-08-09", "reported": false }
+      ],
+      "documents": [
+        { "id": "DOC-007", "name": "Commercial Registration", "status": "Verified", "uploadedAt": "2025-04-01", "expiresAt": "2028-04-01" },
+        { "id": "DOC-008", "name": "Operating License", "status": "Verified", "uploadedAt": "2025-04-01", "expiresAt": "2027-04-01" }
+      ]
     },
     {
       "id": "SC-005",
@@ -82,7 +171,29 @@
       "location": "Zamalek",
       "bookings": 29,
       "revenue": 9100,
-      "status": "Suspended"
+      "status": "Suspended",
+      "balance": 5100,
+      "joinedAt": "2025-09-22",
+      "description": "Multi-brand neighborhood service center offering general maintenance and mechanical repair.",
+      "owner": { "name": "Mansour Adel", "phone": "+20 155 221 0977", "email": "mansour@mansourcenter.com" },
+      "address": { "street": "12 Brazil Street", "district": "Zamalek", "city": "Cairo", "country": "Egypt" },
+      "openingHours": { "saturdayToThursday": "10:00 AM - 07:00 PM", "friday": "Closed" },
+      "supportedBrands": ["BMW", "Mercedes-Benz", "Audi"],
+      "licenseStatus": "Under Review",
+      "services": [
+        { "id": "SVC-009", "name": "General Inspection", "category": "Diagnostics", "durationMinutes": 60, "price": 800, "active": false },
+        { "id": "SVC-010", "name": "AC Service", "category": "Repair", "durationMinutes": 90, "price": 1300, "active": false }
+      ],
+      "recentBookings": [
+        { "id": "BK-1109", "customer": "Mahmoud Samir", "vehicle": "Audi A4", "service": "General Inspection", "date": "2026-07-28", "amount": 800, "status": "Cancelled" }
+      ],
+      "reviews": [
+        { "id": "REV-SC-005", "customer": "Mahmoud Samir", "rating": 2, "comment": "The service took longer than expected.", "date": "2026-07-28", "reported": true }
+      ],
+      "documents": [
+        { "id": "DOC-009", "name": "Commercial Registration", "status": "Verified", "uploadedAt": "2025-09-20", "expiresAt": "2028-09-20" },
+        { "id": "DOC-010", "name": "Operating License", "status": "Under Review", "uploadedAt": "2026-07-20", "expiresAt": "2026-09-20" }
+      ]
     }
   ]
 }

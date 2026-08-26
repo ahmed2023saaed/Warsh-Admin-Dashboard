@@ -9,7 +9,7 @@ export default function SettingsRow({
   children,
 }) {
   return (
-    <div className="flex min-h-[49px] items-center justify-between gap-4 border-b border-[#E7DED4] py-3 last:border-b-0">
+    <div className="flex min-h-[49px] flex-col items-start justify-between gap-2 border-b border-[#E7DED4] py-3 last:border-b-0 sm:flex-row sm:items-center sm:gap-4">
       <div className="min-w-0">
         <h3 className="text-sm font-semibold text-[#17120E]">
           {title}
@@ -22,7 +22,7 @@ export default function SettingsRow({
         )}
       </div>
 
-      <div className="shrink-0">
+      <div className="shrink-0 self-end sm:self-auto">
         {children}
 
         {!children && action && (

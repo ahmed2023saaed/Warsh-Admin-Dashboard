@@ -44,8 +44,8 @@ export default function Register() {
     };
 
     return(
-        <div className="flex min-h-screen items-center justify-center bg-slate-100" >
-            <div className="w-full min-w-md border border-gray-300 shadow-lg bg-white p-8 rounded-xl">
+        <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-6" >
+            <div className="w-full max-w-md border border-gray-300 bg-white p-5 shadow-lg rounded-xl sm:p-8">
                 <form className="space-y-4" onSubmit={handleSubmit} >
                     {error && (
                         <div className="text-red-500 bg-red-100 p-4 rounded-lg">

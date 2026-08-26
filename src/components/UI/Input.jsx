@@ -6,6 +6,7 @@ function Input({
   icon: Icon = null,
   value,
   onChange,
+  className = "",
 }) {
   return (
     <div
@@ -13,17 +14,19 @@ function Input({
         "--search-width": dimensions.width,
         "--search-height": dimensions.height,
       }}
-      className="
+      className={`
         flex items-center gap-2
         h-[var(--search-height)]
         w-[var(--search-width)]
+        max-w-full
         rounded-[10px]
         border border-[#E8E2D8]
         bg-white
         px-[14px]
         focus-within:border-[#E08B2F]
         focus-within:ring-[3px] focus-within:ring-[#E08B2F]/15
-      "
+        ${className}
+      `}
     >
       {Icon && (
         <Icon
