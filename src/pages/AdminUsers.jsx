@@ -6,7 +6,7 @@ import { Search } from 'lucide-react';
 import FilterSelect from '../components/UI/FilterSelect';
 import { filterAdminUsers } from '../utils/filterAdminUsers';
 import DataTable from '../components/UI/DataTable';
-
+import UserActionsMenu from '../components/UI/UserActionsMenu'
 
 
 
@@ -14,20 +14,19 @@ import DataTable from '../components/UI/DataTable';
 function AdminUsers() {
 
   const cards = rolesPermissionsMockData.summary
-  const [selectedUser, setselectedUser] = useState(null)
+  const [actionMenu, setActionMenu] = useState({
+    user: null,
+    position: null,
+  });
   const [selectedRole, setSelectedRole] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [currentPage, setCurrentPage] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
   const [search, setSearch] = useState('')
 
   const users = rolesPermissionsMockData.users
   const roleOptions = rolesPermissionsMockData.roles
   const statusOptions = rolesPermissionsMockData.statuses
-  const adminColumns = useMemo(
-    () => getAdminUserColumns({ onOpenActions: setselectedUser }),
-    []
-  )
-
+  
   const filteredUsers = useMemo(
     () =>
       filterAdminUsers(users, {
@@ -37,6 +36,73 @@ function AdminUsers() {
       }),
     [users, search, selectedRole, selectedStatus]
   );
+
+
+  const handleOpenActions  = (user, event) => {
+    const buttonRect =
+    event.currentTarget.getBoundingClientRect();
+    
+    const menuWidth = 210
+    const menuHeight = 210
+    const screenPadding = 12
+    
+    let top = buttonRect.bottom + 6
+    let left = buttonRect.right - menuWidth
+    
+    // Prevent menu from leaving the left side
+    left = Math.max(left, screenPadding)
+    // Prevent menu from leaving the right side
+    left = Math.min(left, window.innerWidth - menuWidth - screenPadding)
+
+
+    // Open upward if there isn't enough space below
+    if (top + menuHeight > window.innerHeight) {
+      top = buttonRect.top - menuHeight - 6
+    }
+    
+  setActionMenu({
+    user,
+    position: {
+      top,
+      left,
+    },
+  });
+
+  }
+
+
+    const adminColumns = useMemo(
+      () => getAdminUserColumns({ onOpenActions: handleOpenActions }),
+      []
+    )
+
+    const handleChangeRole = (user) => {
+    console.log('Change role:', user);
+
+    // Later:
+    // setRoleModalUser(user);
+  };
+
+  const handleManagePermissions = (user) => {
+    console.log('Manage permissions:', user);
+
+    // Later:
+    // navigate(`/admin-users/${user.id}/permissions`);
+  };
+
+  const handleViewDetails = (user) => {
+    console.log('View user:', user);
+
+    // Later:
+    // setDetailsUser(user);
+  };
+
+  const handleToggleUserStatus = (user) => {
+    console.log('Toggle status:', user);
+
+    // Later, call your API or context:
+    // updateUserStatus(user.id);
+  };
 
   console.log("inside admin", filteredUsers)
   return (
@@ -99,6 +165,23 @@ function AdminUsers() {
         cellClassName="text-sm"
       />
 
+
+      <UserActionsMenu
+        user={actionMenu.user}
+        position={actionMenu.position}
+        onClose={() =>
+          setActionMenu({
+            user: null,
+            position: null,
+          })
+        }
+        onChangeRole={handleChangeRole}
+        onManagePermissions={handleManagePermissions}
+        onViewDetails={handleViewDetails}
+        onDeactivate={handleToggleUserStatus}
+      />
+
+      
     </div>
   );
 }

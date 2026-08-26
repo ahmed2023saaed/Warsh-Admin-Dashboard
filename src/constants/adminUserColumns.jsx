@@ -106,10 +106,11 @@ export function getAdminUserColumns({ onOpenActions }) {
           type="button"
           onClick={(event) => {
             event.stopPropagation();
-            onOpenActions(user);
+            onOpenActions(user, event);
           }}
           className="inline-flex rounded-md p-1.5 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900"
           aria-label={`Open actions for ${user.fullName}`}
+          aria-haspopup="menu"
         >
           <MoreVertical className="h-4 w-4" />
         </button>
