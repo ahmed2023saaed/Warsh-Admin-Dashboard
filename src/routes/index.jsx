@@ -16,7 +16,7 @@ export const router = createBrowserRouter([
 
     {
         path: '/',
-        loader: () => redirect('/ar/login')
+        loader: () => redirect('/en/login')
     },
 
 
