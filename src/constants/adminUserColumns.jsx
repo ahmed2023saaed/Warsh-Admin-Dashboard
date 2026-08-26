@@ -17,6 +17,7 @@ const roleStyles = {
     label: 'Manager',
     className: 'bg-gray-100 text-gray-700',
   },
+  
   finance: {
     label: 'Finance',
     className: 'bg-emerald-100 text-emerald-700',
