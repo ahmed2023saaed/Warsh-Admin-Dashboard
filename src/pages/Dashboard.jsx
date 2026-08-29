@@ -2,23 +2,19 @@ import BarChartCard from "../components/Charts/BarChartCard";
 import StatCard from "../components/UI/StatCard";
 import { dailyBookingsData, revenueData } from "../Data/dashboardChartsData";
 import { mockStatCards } from "../Data/statusCardMocks";
-import { RecentBookingColumns } from '../constants/recentBookingColumns'
-import DataTable from '../components/UI/DataTable'
-import MockBookings from '../Data/bookingsMock.json'
+import { RecentBookingColumns } from "../constants/recentBookingColumns";
+import DataTable from "../components/UI/DataTable";
+import MockBookings from "../Data/bookingsMock.json";
 import { useState } from "react";
-import { Link } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import serviceCenters from "../Data/serviceCenters.json";
 
-
-
 function Dashboard() {
-
-  const [bookings, setBookings] = useState(MockBookings['bookings'])
-  const { lang } = useParams()
+  const [bookings, setBookings] = useState(MockBookings["bookings"]);
+  const { lang } = useParams();
   const centerTable = serviceCenters.pendingServiceCenters;
   const allServiceCenters = serviceCenters.serviceCenters;
-
 
   return (
     <div className="min-w-0 space-y-4">
@@ -44,35 +40,26 @@ function Dashboard() {
           data={revenueData}
           color="#EF9D32"
           unit="EGP"
-          valueFormatter={(value) =>
-            `${value.toLocaleString('en-EG')} EGP`
-          }
+          valueFormatter={(value) => `${value.toLocaleString("en-EG")} EGP`}
         />
 
         <BarChartCard
           title="Daily Bookings — This Week"
           data={dailyBookingsData}
           color="#4E7FE5"
-          valueFormatter={(value) =>
-            `${value} bookings`
-          }
+          valueFormatter={(value) => `${value} bookings`}
         />
       </div>
 
-      <div className='grid grid-cols-1 gap-4 xl:grid-cols-2'>
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <div className="rounded-2xl w-full bg-white border border-gray-200 p-4 overflow-hidden space-y-4 ">
-
           <div className=" flex items-center justify-between ">
-            <h2 className=" font-bold text-sm sm:text-bs ">
-              Recent Bookings
-            </h2>
+            <h2 className=" font-bold text-sm sm:text-bs ">Recent Bookings</h2>
 
             <Link className="text-[#EF9D32] text-xs " to={`/${lang}/bookings`}>
               View all →
             </Link>
-
           </div>
-
 
           <DataTable
             columns={RecentBookingColumns}
@@ -84,31 +71,36 @@ function Dashboard() {
 
         <div className="bg-white rounded-2xl border border-gray-100 flex flex-col p-4">
           <div className="">
-
             <div className="flex items-center w-full justify-between mb-2">
               <h2 className="font-bold text-sm">Pending Approvals</h2>
-              <span className="bg-red-400 px-2 rounded-full text-white text-xs">{centerTable.length}</span>
+              <span className="bg-red-400 px-2 rounded-full text-white text-xs">
+                {centerTable.length}
+              </span>
             </div>
 
             <div className="mb-4">
               {centerTable.map((pending) => (
                 <div className="">
-
                   <hr className="text-gray-300 " />
 
                   <div className="flex items-center justify-between gap-3">
-
                     <div className="my-2 min-w-0">
-                      <h2 className="font-bold text-sm ">{pending.name}--{pending.location}</h2>
-                      <p className="text-gray-500 text-xs ">Review submission</p>
+                      <h2 className="font-bold text-sm ">
+                        {pending.name}--{pending.location}
+                      </h2>
+                      <p className="text-gray-500 text-xs ">
+                        Review submission
+                      </p>
                     </div>
 
-                    <Link to={`/${lang}/serviceCenters`} className="shrink-0 rounded-lg bg-black px-3 py-1 text-xs text-white">Review</Link>
+                    <Link
+                      to={`/${lang}/serviceCenters`}
+                      className="shrink-0 rounded-lg bg-black px-3 py-1 text-xs text-white"
+                    >
+                      Review
+                    </Link>
                   </div>
-
                 </div>
-
-
               ))}
             </div>
 
@@ -121,30 +113,27 @@ function Dashboard() {
             </div>
 
             <div className="mb-4">
-              {allServiceCenters.map((center) => (
-                <div className="">
+              {allServiceCenters
+                .map((center) => (
+                  <div className="">
+                    <hr className="text-gray-300 " />
 
-                  <hr className="text-gray-300 " />
+                    <div className="flex items-center justify-between gap-3 my-2">
+                      <h2 className="min-w-0 font-bold text-sm ">
+                        {center.name}
+                      </h2>
 
-                  <div className="flex items-center justify-between gap-3 my-2">
-
-                      <h2 className="min-w-0 font-bold text-sm ">{center.name}</h2>
-
-
-                    <h2  className="shrink-0 text-sm font-bold">{center.revenue.toLocaleString("en-EG")} EGP</h2>
+                      <h2 className="shrink-0 text-sm font-bold">
+                        {center.revenue.toLocaleString("en-EG")} EGP
+                      </h2>
+                    </div>
                   </div>
-
-                </div>
-
-
-              )).slice(0,3)}
+                ))
+                .slice(0, 3)}
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 }

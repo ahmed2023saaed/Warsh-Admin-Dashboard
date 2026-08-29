@@ -7,6 +7,7 @@ import MockBookings from "../Data/bookingsMock.json";
 import DataTable from "../components/UI/DataTable";
 import DetailsDrawer from "../components/UI/DetailsDrawer";
 import StatusBadge from "../components/widgets/statusBadge";
+import Pagination from "../utils/Pagination";
 import { showSuccessToast } from "../components/UI/toastNotifications";
 
 function CancellationForm({ booking, setSelectedBooking }) {
@@ -132,7 +133,7 @@ function Bookings() {
   const [isActive, setIsActive] = useState("all");
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [bookings] = useState(MockBookings["bookings"]);
-  const currentPage = 1;
+  const [paginatedBookings, setPaginatedBookings] = useState([]);
 
   const bookingColumns = useMemo(
     () =>
@@ -150,13 +151,7 @@ function Bookings() {
     [bookings, isActive],
   );
 
-  const perPage = 10;
-  const totalPages = Math.max(1, Math.ceil(filteredBookings.length / perPage));
-  const currentPageSafe = Math.min(currentPage, totalPages);
-  const paginatedBookings = filteredBookings.slice(
-    (currentPageSafe - 1) * perPage,
-    currentPageSafe * perPage,
-  );
+
 
   const coutn = [10, 2560, 10, 520, 1];
   const filteres = ["all", "pending", "active", "completed", "cancelled"];
@@ -275,6 +270,7 @@ function Bookings() {
         emptyMessage="No bookings found."
         minWidth="800px"
       />
+      <Pagination data={filteredBookings} perPage={10} onPaginate={setPaginatedBookings} />
       <DetailsDrawer
         open={selectedBooking !== null}
         onClose={() => setSelectedBooking(null)}

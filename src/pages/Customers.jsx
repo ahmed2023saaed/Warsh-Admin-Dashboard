@@ -3,31 +3,32 @@ import {
   filters,
   createCustomerColumns,
   creatActivityTable,
-} from "../utils/CustomerFilters";
-import DetailsDrawer from "../components/UI/DetailsDrawer";
-import useAppTranslation from "../hooks/useAppTranslation";
-import { Search } from "lucide-react";
-import FilterButton from "../components/UI/FilterButton";
-import { useCallback, useMemo, useState } from "react";
-import customerData from "../Data/customers.json";
-import State from "../components/UI/State";
-import DataTable from "../components/UI/DataTable";
-import { showSuccessToast } from "../components/UI/toastNotifications";
-import Modal from "../components/UI/Modal";
-import Button from "../components/UI/Button";
+} from '../utils/CustomerFilters';
+import DetailsDrawer from '../components/UI/DetailsDrawer';
+import useAppTranslation from '../hooks/useAppTranslation';
+import { Search } from 'lucide-react';
+import FilterButton from '../components/UI/FilterButton';
+import { useCallback, useMemo, useState } from 'react';
+import customerData from '../Data/customers.json';
+import State from '../components/UI/State';
+import DataTable from '../components/UI/DataTable';
+import { showSuccessToast } from '../components/UI/toastNotifications';
+import Modal from '../components/UI/Modal';
+import Button from '../components/UI/Button';
+import Pagination from '../utils/Pagination';
 
 function Customers() {
-  const { t } = useAppTranslation("customers");
-  const [isActive, setIsActive] = useState("all");
+  const { t } = useAppTranslation('customers');
+  const [isActive, setIsActive] = useState('all');
   const [customers] = useState(customerData.customers);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [suspendedAcctount, setSuspendedAcctount] = useState(null);
 
+  const [customersData, setCustomersData] = useState([]);
+
   const requestSuspended = useCallback((customerId) => {
-    const customer = customerData.customers.find(
-      (item) => item.id === customerId,
-    );
+    const customer = customerData.customers.find((item) => item.id === customerId);
 
     setSuspendedAcctount(customer ?? null);
   }, []);
@@ -38,7 +39,7 @@ function Customers() {
         onView: setSelectedCustomer,
         onSuspend: requestSuspended,
       }),
-    [requestSuspended],
+    [requestSuspended]
   );
 
   function cancelPromoDelete() {
@@ -48,23 +49,19 @@ function Customers() {
   function confirmSuspendedAccount() {
     if (!suspendedAcctount) return;
 
-    suspendedAcctount.status = "suspended";
+    suspendedAcctount.status = 'suspended';
     cancelPromoDelete();
 
-    showSuccessToast(
-      `${suspendedAcctount.fullName + " " + suspendedAcctount.id} SUSPENDED`,
-    );
+    showSuccessToast(`${suspendedAcctount.fullName + ' ' + suspendedAcctount.id} SUSPENDED`);
   }
 
   function confirmUnSuspendedAccount() {
     if (!suspendedAcctount) return;
 
-    suspendedAcctount.status = "active";
+    suspendedAcctount.status = 'active';
     cancelPromoDelete();
 
-    showSuccessToast(
-      `${suspendedAcctount.fullName + " " + suspendedAcctount.id} is now ACTIVE`,
-    );
+    showSuccessToast(`${suspendedAcctount.fullName + ' ' + suspendedAcctount.id} is now ACTIVE`);
   }
 
   /*********** */
@@ -72,66 +69,35 @@ function Customers() {
 
   const FilterCount = {
     all: customers.length,
-    // active: customers.filter( customer => customer.status === 'active').length,
-    // suspended: customers.filter( customer => customer.status === 'suspended').length,
+
     ...Object.fromEntries(
-      ["active", "suspended", "new"].map((filter) => [
+      ['active', 'suspended', 'new'].map((filter) => [
         filter,
         customers.filter((c) => c.status === filter).length,
-      ]),
+      ])
     ),
   };
 
   const filtered = useMemo(
     () => filters(customers, { search, tap: isActive }),
-    [customers, isActive, search],
+    [customers, isActive, search]
   );
 
-  const customersCurrentPage = 1;
-  const customersperPage = 8;
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / customersperPage));
-  const customerscurrentPageSafe = Math.min(customersCurrentPage, totalPages);
-  const customerpaginated = filtered.slice(
-    (customerscurrentPageSafe - 1) * customersperPage,
-    customerscurrentPageSafe * customersperPage,
-  );
-
-  const activtyCurrentPage = 1;
-  const activtyperPage = 4;
-
-  const activityTotalPages = Math.max(
-    1,
-    Math.ceil(filtered.length / activtyperPage),
-  );
-  const activtycurrentPageSafe = Math.min(
-    activtyCurrentPage,
-    activityTotalPages,
-  );
-
+  /****** View Customer ******* */
+  const [paginatedActivities, setPaginatedActivities] = useState([]);
   const currentCustomerActivities = selectedCustomer?.activity || [];
-
-  const paginated = currentCustomerActivities.slice(
-    (activtycurrentPageSafe - 1) * activtyperPage,
-    activtycurrentPageSafe * activtyperPage,
-  );
 
   /** */
   function CustomerDetails({ customer }) {
     return (
       <div className="space-y-6">
         <section>
-          <h3 className="text-base font-bold text-[#1C1712]">
-            Customer information
-          </h3>
+          <h3 className="text-base font-bold text-[#1C1712]">Customer information</h3>
 
           <div className="mt-3 grid gap-4 sm:grid-cols-2">
             <Detail label="Email" value={customer.email} />
             <Detail label="Phone" value={customer.phone} />
-            <State
-              good={customer.status === "active"}
-              bad={customer.status === "suspended"}
-            >
+            <State good={customer.status === 'active'} bad={customer.status === 'suspended'}>
               {customer.status}
             </State>
 
@@ -140,16 +106,11 @@ function Customers() {
         </section>
 
         <section>
-          <h3 className="text-base font-bold text-[#1C1712]">
-            Registered cars
-          </h3>
+          <h3 className="text-base font-bold text-[#1C1712]">Registered cars</h3>
 
           <div className="mt-3 space-y-3">
             {customer.cars.map((car) => (
-              <div
-                key={car.id}
-                className="rounded-xl border border-[#E8E2D8] p-4"
-              >
+              <div key={car.id} className="rounded-xl border border-[#E8E2D8] p-4">
                 <p className="font-bold text-[#1C1712]">
                   {car.brand} {car.model}
                 </p>
@@ -163,15 +124,18 @@ function Customers() {
         </section>
         <section>
           <div>
-            <h3 className="text-base font-bold text-[#1C1712] mb-4">
-              Customer History
-            </h3>
+            <h3 className="mb-4 text-base font-bold text-[#1C1712]">Customer History</h3>
           </div>
           <DataTable
             columns={activityColumns}
-            data={paginated}
+            data={paginatedActivities}
             emptyMessage="No Activiyes were found."
             cellClassName="text-sm"
+          />
+          <Pagination
+            data={currentCustomerActivities}
+            perPage={4}
+            onPaginate={setPaginatedActivities}
           />
         </section>
       </div>
@@ -181,13 +145,9 @@ function Customers() {
   function Detail({ label, value }) {
     return (
       <div>
-        <p className="text-xs font-semibold uppercase text-[#8A8074]">
-          {label}
-        </p>
+        <p className="text-xs font-semibold text-[#8A8074] uppercase">{label}</p>
 
-        <p className="mt-1 text-sm font-medium text-[#1C1712]">
-          {value || "Not available"}
-        </p>
+        <p className="mt-1 text-sm font-medium text-[#1C1712]">{value || 'Not available'}</p>
       </div>
     );
   }
@@ -211,14 +171,11 @@ function Customers() {
         </div>
 
         <div className="relative w-full md:w-auto">
-          <Search
-            className=" absolute left-2 text-gray-500 top-1/2 -translate-y-1/2 "
-            size={18}
-          />
+          <Search className="absolute top-1/2 left-2 -translate-y-1/2 text-gray-500" size={18} />
           <input
             type="search"
-            className="h-[42px] w-full rounded-xl border border-gray-300 bg-white py-2 pl-8 pr-3 md:w-[260px]"
-            placeholder={t("placeholder")}
+            className="h-[42px] w-full rounded-xl border border-gray-300 bg-white py-2 pr-3 pl-8 md:w-[260px]"
+            placeholder={t('placeholder')}
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -234,46 +191,41 @@ function Customers() {
     cellClassName */}
       <DataTable
         columns={customerColumns}
-        data={customerpaginated}
+        data={customersData}
         emptyMessage="No customers found."
         minWidth="800px"
       />
+      <Pagination data={filtered} perPage={8} onPaginate={setCustomersData} />
       <Modal
         open={suspendedAcctount !== null}
         onClose={cancelPromoDelete}
-        title={
-          suspendedAcctount?.status === "suspended"
-            ? "Activate Account"
-            : "Suspend Account"
-        }
+        title={suspendedAcctount?.status === 'suspended' ? 'Activate Account' : 'Suspend Account'}
         size="sm"
         footer={
           <>
             <Button onClick={cancelPromoDelete}>Cancel</Button>
             <Button
               className={
-                suspendedAcctount?.status === "suspended"
-                  ? "min-w-[140px] !rounded-[10px] !border-[#16A34A] !bg-[#16A34A] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#15803D] hover:!bg-[#15803D]"
-                  : "min-w-[140px] !rounded-[10px] !border-[#D64545] !bg-[#D64545] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#B93632] hover:!bg-[#B93632]"
+                suspendedAcctount?.status === 'suspended'
+                  ? 'min-w-[140px] !rounded-[10px] !border-[#16A34A] !bg-[#16A34A] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#15803D] hover:!bg-[#15803D]'
+                  : 'min-w-[140px] !rounded-[10px] !border-[#D64545] !bg-[#D64545] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#B93632] hover:!bg-[#B93632]'
               }
               onClick={() => {
-                if (suspendedAcctount?.status === "suspended") {
+                if (suspendedAcctount?.status === 'suspended') {
                   confirmUnSuspendedAccount();
                 } else {
                   confirmSuspendedAccount();
                 }
               }}
             >
-              {suspendedAcctount?.status === "suspended"
-                ? "Activate Account"
-                : "Suspend Account"}
+              {suspendedAcctount?.status === 'suspended' ? 'Activate Account' : 'Suspend Account'}
             </Button>
           </>
         }
       >
         <p className="text-sm leading-6 text-[#6F665C]">
           Are you sure you want to suspend
-          {suspendedAcctount ? ` ${suspendedAcctount.id}` : " this customer"}?
+          {suspendedAcctount ? ` ${suspendedAcctount.id}` : ' this customer'}?
         </p>
       </Modal>
       <DetailsDrawer

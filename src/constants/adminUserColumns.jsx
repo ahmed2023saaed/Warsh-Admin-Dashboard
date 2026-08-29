@@ -44,21 +44,12 @@ export function getAdminUserColumns({ onOpenActions }) {
       cellClassName: '!text-left min-w-[230px]',
       render: (user) => (
         <div className="flex items-center gap-2.5">
-          <Avatar
-            initials={user.initials}
-            name={user.fullName}
-            image={user.avatar}
-            size={34}
-          />
+          <Avatar initials={user.initials} name={user.fullName} image={user.avatar} size={34} />
 
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium text-[#17120E]">
-              {user.fullName}
-            </p>
+            <p className="truncate text-sm font-medium text-[#17120E]">{user.fullName}</p>
 
-            <p className="truncate text-xs text-[#6B625C]">
-              {user.email}
-            </p>
+            <p className="truncate text-xs text-[#6B625C]">{user.email}</p>
           </div>
         </div>
       ),
@@ -85,15 +76,12 @@ export function getAdminUserColumns({ onOpenActions }) {
       key: 'status',
       header: 'Status',
       cellClassName: 'min-w-[110px]',
-      render: (user) => (
-        <StatusBadge status={user.status} />
-      ),
+      render: (user) => <StatusBadge status={user.status} />,
     },
     {
       key: 'lastActive',
       header: 'Last Active',
-      cellClassName:
-        'min-w-[130px] whitespace-nowrap text-sm text-[#5A6968]',
+      cellClassName: 'min-w-[130px] whitespace-nowrap text-sm text-[#5A6968]',
       render: (user) => user.lastActive,
     },
     {

@@ -14,6 +14,7 @@ import { Search, Pencil, Trash2, TriangleAlert } from "lucide-react";
 import { Banner } from "../utils/Banner";
 import { AddBannerModal } from "../utils/AddBannerModal";
 import { EditBannerModal } from "../utils/EditBannerModal";
+import Pagination from "../utils/Pagination";
 
 function Marketing() {
   const [banners, setBanners] = useState(marketingMock.banners);
@@ -25,7 +26,7 @@ function Marketing() {
   const [selectedBanner, setSelectedBanner] = useState(null);
   const [isActionsModalOpen, setIsActionsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [paginatedPromos, setPaginatedPromos] = useState([]);
   const {
     cancelPromoDelete,
     closePromoModal,
@@ -40,13 +41,7 @@ function Marketing() {
     promoToDelete,
   } = usePromoManagement(marketingMock.promoCodes);
 
-  const perPage = 3;
-  const totalPages = Math.max(1, Math.ceil(promoTable.length / perPage));
-  const currentPageSafe = Math.min(currentPage, totalPages);
-  const paginatedPromos = promoTable.slice(
-    (currentPageSafe - 1) * perPage,
-    currentPageSafe * perPage,
-  );
+
 
   function openAddModal() {
     setSelectedBanner(null);
@@ -121,7 +116,6 @@ function Marketing() {
 
   function handlePromoSubmit(event) {
     handleSubmitPromoForm(event);
-    setCurrentPage(1);
   }
 
   function renderNewPromoForm({ formData, onChange, onSubmit }) {
@@ -288,6 +282,9 @@ function Marketing() {
               data={paginatedPromos}
               emptyMessage="No promo codes found."
             />
+            <div className="mt-4">
+              <Pagination data={promoTable} perPage={3} onPaginate={setPaginatedPromos} />
+            </div>
           </div>
 
           <Modal

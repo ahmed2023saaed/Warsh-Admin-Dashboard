@@ -5,6 +5,7 @@ import Button from "../components/UI/Button";
 import { useMemo, useState } from "react";
 import { ArrowRight, Flag, Star, Trash2 } from "lucide-react";
 import Modal from "../components/UI/Modal";
+import Pagination from "../utils/Pagination";
 import {
   showErrorToast,
   showSuccessToast,
@@ -39,6 +40,8 @@ function Reviews() {
       }),
     [reviews, isActive],
   );
+
+  const [paginatedReviews, setPaginatedReviews] = useState([]);
 
   function handleDelete(reviewId) {
     try {
@@ -133,7 +136,7 @@ function Reviews() {
       </div>
       <div className="overflow-hidden rounded-[14px] border border-[#E8E2D8] bg-white px-3 sm:px-[18px]">
         {filterReviews.length > 0 ? (
-          filterReviews.map((review) => (
+          paginatedReviews.map((review) => (
             <ReviewBox
               handleDelete={handleDelete}
               handleReply={handleReply}
@@ -155,6 +158,9 @@ function Reviews() {
             </p>
           </div>
         )}
+      </div>
+      <div className="mt-4">
+        <Pagination data={filterReviews} onPaginate={setPaginatedReviews} />
       </div>
     </div>
   );

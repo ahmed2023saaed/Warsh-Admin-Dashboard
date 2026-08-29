@@ -1,13 +1,13 @@
 // constants/recentBookingColumns.jsx
 
-import Avatar from '../components/ui/Avatar';
-import StatusBadge from '../components/widgets/statusBadge';
+import Avatar from "../components/UI/Avatar";
+import StatusBadge from "../components/widgets/statusBadge";
 
 export const RecentBookingColumns = [
   {
-    key: 'customer',
-    header: 'Customer',
-    cellClassName: 'min-w-[165px]',
+    key: "customer",
+    header: "Customer",
+    cellClassName: "min-w-[165px]",
     render: (booking) => (
       <div className="flex items-center gap-2.5">
         <Avatar
@@ -23,29 +23,26 @@ export const RecentBookingColumns = [
     ),
   },
   {
-    key: 'center',
-    header: 'Center',
-    cellClassName: 'whitespace-nowrap text-sm text-[#15201F]',
+    key: "center",
+    header: "Center",
+    cellClassName: "whitespace-nowrap text-sm text-[#15201F]",
     render: (booking) => booking.center,
   },
   {
-    key: 'service',
-    header: 'Service',
-    cellClassName: 'whitespace-nowrap text-sm text-[#15201F]',
+    key: "service",
+    header: "Service",
+    cellClassName: "whitespace-nowrap text-sm text-[#15201F]",
     render: (booking) => booking.service,
   },
   {
-    key: 'price',
-    header: 'Amount',
-    cellClassName: 'whitespace-nowrap text-sm font-medium text-[#15201F]',
-    render: (booking) =>
-      `${booking.price.toLocaleString('en-EG')} EGP`,
+    key: "price",
+    header: "Amount",
+    cellClassName: "whitespace-nowrap text-sm font-medium text-[#15201F]",
+    render: (booking) => `${booking.price.toLocaleString("en-EG")} EGP`,
   },
   {
-    key: 'status',
-    header: 'Status',
-    render: (booking) => (
-      <StatusBadge status={booking.status} />
-    ),
+    key: "status",
+    header: "Status",
+    render: (booking) => <StatusBadge status={booking.status} />,
   },
 ];

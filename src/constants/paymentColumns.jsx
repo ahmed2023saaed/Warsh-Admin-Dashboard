@@ -49,7 +49,7 @@ const serviceCenterColumn = {
         size={32}
       />
 
-      <span className="whitespace-nowrap text-sm font-medium text-[#15201F]">
+      <span className="text-sm font-medium whitespace-nowrap text-[#15201F]">
         {payment.serviceCenter}
       </span>
     </div>
@@ -79,13 +79,9 @@ export function getPaymentColumns(activeTab) {
         cellClassName: 'min-w-[170px]',
         render: (payment) => (
           <div className="flex items-center gap-2.5">
-            <Avatar
-              initials={getInitials(payment.customer)}
-              name={payment.customer}
-              size={32}
-            />
+            <Avatar initials={getInitials(payment.customer)} name={payment.customer} size={32} />
 
-            <span className="whitespace-nowrap text-sm font-medium text-[#15201F]">
+            <span className="text-sm font-medium whitespace-nowrap text-[#15201F]">
               {payment.customer}
             </span>
           </div>
@@ -94,8 +90,7 @@ export function getPaymentColumns(activeTab) {
       {
         key: 'bookingFee',
         header: 'Booking Fee',
-        cellClassName:
-          'whitespace-nowrap text-sm font-semibold text-[#15201F]',
+        cellClassName: 'whitespace-nowrap text-sm font-semibold text-[#15201F]',
         render: (payment) => formatCurrency(payment.bookingFee),
       },
       paymentMethodColumn,
@@ -108,8 +103,7 @@ export function getPaymentColumns(activeTab) {
       {
         key: 'amount',
         header: 'Amount',
-        cellClassName:
-          'whitespace-nowrap text-sm font-semibold text-[#15201F]',
+        cellClassName: 'whitespace-nowrap text-sm font-semibold text-[#15201F]',
         render: (payment) => formatCurrency(payment.amount),
       },
       paymentMethodColumn,
@@ -133,8 +127,7 @@ export function getPaymentColumns(activeTab) {
       {
         key: 'amount',
         header: 'Amount',
-        cellClassName:
-          'whitespace-nowrap text-sm font-semibold text-[#15201F]',
+        cellClassName: 'whitespace-nowrap text-sm font-semibold text-[#15201F]',
         render: (payment) => formatCurrency(payment.amount),
       },
       paymentMethodColumn,
@@ -147,23 +140,20 @@ export function getPaymentColumns(activeTab) {
       {
         key: 'commissionRate',
         header: 'Commission Rate',
-        cellClassName:
-          'whitespace-nowrap text-sm font-medium text-[#15201F]',
+        cellClassName: 'whitespace-nowrap text-sm font-medium text-[#15201F]',
         render: (payment) => `${payment.commissionRate}%`,
       },
       {
         key: 'commissionAmount',
         header: 'Commission Amount',
-        cellClassName:
-          'whitespace-nowrap text-sm font-semibold text-[#15201F]',
+        cellClassName: 'whitespace-nowrap text-sm font-semibold text-[#15201F]',
         render: (payment) => formatCurrency(payment.commissionAmount),
       },
       statusColumn,
       {
         key: 'totalPrice',
         header: 'Total Price',
-        cellClassName:
-          'whitespace-nowrap text-sm font-semibold text-[#15201F]',
+        cellClassName: 'whitespace-nowrap text-sm font-semibold text-[#15201F]',
         render: (payment) => formatCurrency(payment.totalPrice),
       },
     ],
@@ -182,13 +172,9 @@ export function getPaymentColumns(activeTab) {
 
           return (
             <div className="flex items-center gap-2.5">
-              <Avatar
-                initials={getInitials(payment.customer)}
-                name={payment.customer}
-                size={32}
-              />
+              <Avatar initials={getInitials(payment.customer)} name={payment.customer} size={32} />
 
-              <span className="whitespace-nowrap text-sm font-medium text-[#15201F]">
+              <span className="text-sm font-medium whitespace-nowrap text-[#15201F]">
                 {payment.customer}
               </span>
             </div>
@@ -203,14 +189,12 @@ export function getPaymentColumns(activeTab) {
       {
         key: 'originalTransactionId',
         header: 'Transaction ID',
-        cellClassName:
-          'whitespace-nowrap text-sm font-semibold text-[#5A6968]',
+        cellClassName: 'whitespace-nowrap text-sm font-semibold text-[#5A6968]',
       },
       {
         key: 'refundAmount',
         header: 'Amount',
-        cellClassName:
-          'whitespace-nowrap text-sm font-semibold text-[var(--red)]',
+        cellClassName: 'whitespace-nowrap text-sm font-semibold text-[var(--red)]',
         render: (payment) => formatCurrency(payment.refundAmount),
       },
       paymentMethodColumn,
@@ -218,8 +202,7 @@ export function getPaymentColumns(activeTab) {
       {
         key: 'reason',
         header: 'Reason',
-        cellClassName:
-          'min-w-[250px] max-w-[320px] text-sm text-[#5A6968]',
+        cellClassName: 'min-w-[250px] max-w-[320px] text-sm text-[#5A6968]',
       },
     ],
   };

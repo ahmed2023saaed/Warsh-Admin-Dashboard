@@ -8,6 +8,7 @@ import { Download } from "lucide-react";
 import Button from "../components/UI/Button";
 import { getPaymentColumns } from "../constants/paymentColumns";
 import DataTable from "../components/UI/DataTable";
+import Pagination from "../utils/Pagination";
 
 
 
@@ -15,6 +16,7 @@ function Payments() {
 
   const [isActive, setIsActive] = useState('bookingFees')
   const activeData = paymentsMockData[isActive]
+  const [paginatedPayments, setPaginatedPayments] = useState([]);
 
   const paymentColumns = useMemo(
     () => getPaymentColumns(isActive),
@@ -67,10 +69,11 @@ function Payments() {
 
         <DataTable
           columns={paymentColumns}
-          data={activeData}
+          data={paginatedPayments}
           emptyMessage="No payment records found."
           minWidth={isActive === 'refunds' ? '1450px' : '1000px'}
         />
+        <Pagination data={activeData} perPage={10} onPaginate={setPaginatedPayments} />
 
 
     </div>

@@ -5,11 +5,7 @@ import SettingsSection from '../components/UI/SettingsSection';
 import SettingsRow from '../components/UI/SettingsRow';
 import ToggleSwitch from '../components/UI/Toggle';
 
-import {
-  pricingSettings,
-  catalogSettings,
-  adminRoles,
-} from '../Data/settingsData';
+import { pricingSettings, catalogSettings, adminRoles } from '../Data/settingsData';
 
 export default function SettingsPage() {
   const [platformSettings, setPlatformSettings] = useState({
@@ -54,11 +50,7 @@ export default function SettingsPage() {
               key={setting.id}
               title={setting.title}
               description={setting.description}
-              action={
-                setting.count !== undefined
-                  ? `Manage (${setting.count})`
-                  : 'Manage'
-              }
+              action={setting.count !== undefined ? `Manage (${setting.count})` : 'Manage'}
               onAction={() => handleCatalogAction(setting)}
             />
           ))}
@@ -66,48 +58,29 @@ export default function SettingsPage() {
 
         {/* Platform */}
         <SettingsSection title="Platform">
-          <SettingsRow
-            title="App version"
-            description="Current live version"
-            value="1.4.2"
-          />
+          <SettingsRow title="App version" description="Current live version" value="1.4.2" />
 
-          <SettingsRow
-            title="Maintenance mode"
-            description="Temporarily disable bookings"
-          >
+          <SettingsRow title="Maintenance mode" description="Temporarily disable bookings">
             <ToggleSwitch
               label="Maintenance mode"
               checked={platformSettings.maintenanceMode}
-              onChange={(value) =>
-                updatePlatformSetting('maintenanceMode', value)
-              }
+              onChange={(value) => updatePlatformSetting('maintenanceMode', value)}
             />
           </SettingsRow>
 
-          <SettingsRow
-            title="Arabic / RTL"
-            description="Default app language"
-          >
+          <SettingsRow title="Arabic / RTL" description="Default app language">
             <ToggleSwitch
               label="Arabic and RTL mode"
               checked={platformSettings.arabicRtl}
-              onChange={(value) =>
-                updatePlatformSetting('arabicRtl', value)
-              }
+              onChange={(value) => updatePlatformSetting('arabicRtl', value)}
             />
           </SettingsRow>
 
-          <SettingsRow
-            title="Emergency SOS"
-            description="Enable roadside requests"
-          >
+          <SettingsRow title="Emergency SOS" description="Enable roadside requests">
             <ToggleSwitch
               label="Emergency SOS"
               checked={platformSettings.emergencySos}
-              onChange={(value) =>
-                updatePlatformSetting('emergencySos', value)
-              }
+              onChange={(value) => updatePlatformSetting('emergencySos', value)}
             />
           </SettingsRow>
         </SettingsSection>
@@ -119,9 +92,7 @@ export default function SettingsPage() {
               key={role.id}
               title={role.title}
               description={role.description}
-              value={`${role.users} ${
-                role.users === 1 ? 'user' : 'users'
-              }`}
+              value={`${role.users} ${role.users === 1 ? 'user' : 'users'}`}
             />
           ))}
         </SettingsSection>

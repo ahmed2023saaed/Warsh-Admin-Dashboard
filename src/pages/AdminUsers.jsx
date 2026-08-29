@@ -7,6 +7,7 @@ import FilterSelect from '../components/UI/FilterSelect';
 import { filterAdminUsers } from '../utils/filterAdminUsers';
 import DataTable from '../components/UI/DataTable';
 import UserActionsMenu from '../components/UI/UserActionsMenu'
+import Pagination from '../utils/Pagination';
 
 
 
@@ -20,8 +21,8 @@ function AdminUsers() {
   });
   const [selectedRole, setSelectedRole] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1)
   const [search, setSearch] = useState('')
+  const [paginatedUsers, setPaginatedUsers] = useState([])
 
   const users = rolesPermissionsMockData.users
   const roleOptions = rolesPermissionsMockData.roles
@@ -128,7 +129,6 @@ function AdminUsers() {
           value={search}
           onChange={(event) => {
             setSearch(event.target.value);
-            setCurrentPage(1);
           }}
           placeholder="Search user..."
           className="h-10 w-full rounded-lg border border-[#DED2C6] bg-white px-3 text-sm outline-none focus:border-[#E4790B] focus:ring-2 focus:ring-[#E4790B]/10 sm:max-w-[280px]"
@@ -138,7 +138,6 @@ function AdminUsers() {
           value={selectedRole}
           onChange={(role) => {
             setSelectedRole(role);
-            setCurrentPage(1);
           }}
           options={roleOptions}
           ariaLabel="Filter users by role"
@@ -149,7 +148,6 @@ function AdminUsers() {
           value={selectedStatus}
           onChange={(status) => {
             setSelectedStatus(status);
-            setCurrentPage(1);
           }}
           options={statusOptions}
           ariaLabel="Filter users by status"
@@ -159,11 +157,12 @@ function AdminUsers() {
 
       <DataTable
         columns={adminColumns}
-        data={filteredUsers}
+        data={paginatedUsers}
         emptyMessage="No users match the selected filters."
         minWidth="850px"
         cellClassName="text-sm"
       />
+      <Pagination data={filteredUsers} perPage={10} onPaginate={setPaginatedUsers} />
 
 
       <UserActionsMenu
