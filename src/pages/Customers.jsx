@@ -13,9 +13,9 @@ import customerData from '../Data/customers.json';
 import State from '../components/UI/State';
 import DataTable from '../components/UI/DataTable';
 import { showSuccessToast } from '../components/UI/toastNotifications';
-import Modal from '../components/UI/Modal';
 import Button from '../components/UI/Button';
 import Pagination from '../utils/Pagination';
+import SuspendModal from '../components/UI/SuspendModal';
 
 function Customers() {
   const { t } = useAppTranslation('customers');
@@ -46,13 +46,17 @@ function Customers() {
     setSuspendedAcctount(null);
   }
 
-  function confirmSuspendedAccount() {
+  function confirmSuspendedAccount(reason, durationDays = 1) {
     if (!suspendedAcctount) return;
 
     suspendedAcctount.status = 'suspended';
+    suspendedAcctount.suspensionReason = reason;
+    suspendedAcctount.suspensionDays = durationDays;
     cancelPromoDelete();
 
-    showSuccessToast(`${suspendedAcctount.fullName + ' ' + suspendedAcctount.id} SUSPENDED`);
+    showSuccessToast(
+      `${suspendedAcctount.fullName + ' ' + suspendedAcctount.id} suspended for ${durationDays} day(s)`
+    );
   }
 
   function confirmUnSuspendedAccount() {
@@ -196,38 +200,38 @@ function Customers() {
         minWidth="800px"
       />
       <Pagination data={filtered} perPage={8} onPaginate={setCustomersData} />
-      <Modal
+      <SuspendModal
         open={suspendedAcctount !== null}
         onClose={cancelPromoDelete}
-        title={suspendedAcctount?.status === 'suspended' ? 'Activate Account' : 'Suspend Account'}
-        size="sm"
-        footer={
-          <>
-            <Button onClick={cancelPromoDelete}>Cancel</Button>
-            <Button
-              className={
-                suspendedAcctount?.status === 'suspended'
-                  ? 'min-w-[140px] !rounded-[10px] !border-[#16A34A] !bg-[#16A34A] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#15803D] hover:!bg-[#15803D]'
-                  : 'min-w-[140px] !rounded-[10px] !border-[#D64545] !bg-[#D64545] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#B93632] hover:!bg-[#B93632]'
-              }
-              onClick={() => {
-                if (suspendedAcctount?.status === 'suspended') {
-                  confirmUnSuspendedAccount();
-                } else {
-                  confirmSuspendedAccount();
-                }
-              }}
-            >
-              {suspendedAcctount?.status === 'suspended' ? 'Activate Account' : 'Suspend Account'}
-            </Button>
-          </>
+        isSuspended={suspendedAcctount?.status === 'suspended'}
+        itemName={suspendedAcctount ? suspendedAcctount.fullName : 'this customer'}
+        showDurationOptions={true}
+        durationLabel="Choose how long this customer should be suspended."
+        onConfirm={(payload) => {
+          if (suspendedAcctount?.status === 'suspended') {
+            confirmUnSuspendedAccount();
+            return;
+          }
+
+          if (
+            !payload?.reason ||
+            !Number.isInteger(payload?.durationDays) ||
+            payload.durationDays < 1
+          ) {
+            return;
+          }
+
+          confirmSuspendedAccount(payload.reason, payload.durationDays);
+        }}
+        confirmLabel={
+          suspendedAcctount?.status === 'suspended' ? 'Activate Account' : 'Suspend Account'
         }
       >
-        <p className="text-sm leading-6 text-[#6F665C]">
+        <p className="text-sm leading-6 text-[#8A8074]">
           Are you sure you want to suspend
           {suspendedAcctount ? ` ${suspendedAcctount.id}` : ' this customer'}?
         </p>
-      </Modal>
+      </SuspendModal>
       <DetailsDrawer
         open={selectedCustomer !== null}
         onClose={() => setSelectedCustomer(null)}

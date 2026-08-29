@@ -3,8 +3,9 @@ import State from "../components/UI/State";
 import FilterButton from "../components/UI/FilterButton";
 import Button from "../components/UI/Button";
 import { useMemo, useState } from "react";
-import { ArrowRight, Flag, Star, Trash2 } from "lucide-react";
+import { ArrowRight, Flag, Search, Star, Trash2 } from "lucide-react";
 import Modal from "../components/UI/Modal";
+import Input from "../components/UI/Input";
 import Pagination from "../utils/Pagination";
 import {
   showErrorToast,
@@ -103,36 +104,43 @@ function Reviews() {
 
   return (
     <div>
-      <div className="mb-4 flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
-        {filteres.map((filter) => {
-          const isReported = filter === "reported";
-
-          return (
-            <FilterButton
-              key={filter}
-              active={isActive === filter}
-              count={filterCounts[filter]}
-              onClick={() => setIsActive(filter)}
-              className={`shrink-0 ${
-                isReported && isActive !== "reported" ? "!text-[#D64545]" : ""
-              }`}
-            >
-              {filter === "all" ? (
-                "All"
-              ) : isReported ? (
-                <>
-                  <Flag aria-hidden="true" size={14} />
-                  Reported
-                </>
-              ) : (
-                <>
-                  {filter}
-                  <Star aria-hidden="true" size={14} fill="currentColor" />
-                </>
-              )}
-            </FilterButton>
-          );
-        })}
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible">
+          {filteres.map((filter) => {
+            const isReported = filter === "reported";
+            return (
+              <FilterButton
+                key={filter}
+                active={isActive === filter}
+                count={filterCounts[filter]}
+                onClick={() => setIsActive(filter)}
+                className={`shrink-0 ${isReported && isActive !== "reported" ? "!text-[#D64545]" : ""}`}
+              >
+                {filter === "all" ? (
+                  "All"
+                ) : isReported ? (
+                  <>
+                    <Flag aria-hidden="true" size={14} />
+                    Reported
+                  </>
+                ) : (
+                  <>
+                    {filter}
+                    <Star aria-hidden="true" size={14} fill="currentColor" />
+                  </>
+                )}
+              </FilterButton>
+            );
+          })}
+        </div>
+        <Input
+          ID="reviews-search"
+          icon={Search}
+          type="search"
+          placeholder="Search reviews..."
+          dimensions={{ width: "260px", height: "40px" }}
+          className="w-full sm:w-[260px] shrink-0"
+        />
       </div>
       <div className="overflow-hidden rounded-[14px] border border-[#E8E2D8] bg-white px-3 sm:px-[18px]">
         {filterReviews.length > 0 ? (

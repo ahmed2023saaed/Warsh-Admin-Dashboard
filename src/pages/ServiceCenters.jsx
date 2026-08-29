@@ -10,6 +10,7 @@ import { showSuccessToast } from '../components/UI/toastNotifications';
 import { useCallback, useMemo, useState } from 'react';
 import Button from '../components/UI/Button';
 import Pagination from '../utils/Pagination';
+import SuspendModal from '../components/UI/SuspendModal';
 
 function ServiceCenters() {
   const [centerIdToReject, setCenterIdToReject] = useState(null);
@@ -18,8 +19,6 @@ function ServiceCenters() {
   const [centers, setCenters] = useState(() => serviceCenters.serviceCenters);
   const [suspendCenterId, setSuspendCenterId] = useState(null);
   const [selectedCenter, setSelectedCenter] = useState(null);
-  const [suspensionOption, setSuspensionOption] = useState('1');
-  const [customSuspensionDays, setCustomSuspensionDays] = useState('');
 
   // const [View, setView] = useState(false);
 
@@ -53,17 +52,20 @@ function ServiceCenters() {
     setSuspendCenterId(null);
   }
 
-  function confirmSuspendCenter() {
-    const days =
-      suspensionOption === 'custom' ? Number(customSuspensionDays) : Number(suspensionOption);
-
-    if (!Number.isInteger(days) || days < 1) {
+  function confirmSuspendCenter({ reason, durationDays }) {
+    if (!Number.isInteger(durationDays) || durationDays < 1) {
       showSuccessToast('Enter a valid number of days.');
       return;
     }
 
-    showSuccessToast(`Service center suspended for ${days} day(s).`);
-    updateCenterStatus('Suspended', days);
+    if (!reason || !reason.trim()) {
+      showSuccessToast('Please add a reason for the suspension.');
+      return;
+    }
+
+    showSuccessToast(`Service center suspended for ${durationDays} day(s).`);
+    updateCenterStatus('Suspended', durationDays);
+    setSuspendCenterId(null);
   }
 
   function confirmUnsuspendCenter() {
@@ -93,13 +95,11 @@ function ServiceCenters() {
 
   const handleEditCenter = useCallback((center) => {
     setSuspendCenterId(center.id);
-    setSuspensionOption('1');
-    setCustomSuspensionDays('');
   }, []);
 
   const centerCards = useMemo(
     () =>
-      centers.map((center) => (
+      paginatedCentersGrid.map((center) => (
         <CenterBox
           key={center.id}
           center={center}
@@ -107,7 +107,7 @@ function ServiceCenters() {
           onSuspend={handleEditCenter}
         />
       )),
-    [centers, handleEditCenter, handleViewCenter]
+    [paginatedCentersGrid, handleEditCenter, handleViewCenter]
   );
 
   function CenterDetails({ center }) {
@@ -310,104 +310,24 @@ function ServiceCenters() {
           </Modal>
 
           {/* ==================== SUSPEND / ACTIVATE MODAL ==================== */}
-          <Modal
+          <SuspendModal
             open={suspendCenterId !== null}
             onClose={() => setSuspendCenterId(null)}
-            title={
-              suspendCenter?.status === 'Suspended'
-                ? 'Activate service center'
-                : 'Suspend service center'
+            isSuspended={suspendCenter?.status === 'Suspended'}
+            itemName={suspendCenter ? suspendCenter.name : 'this service center'}
+            showDurationOptions={true}
+            onConfirm={(payload) => {
+              if (suspendCenter?.status === 'Suspended') {
+                confirmUnsuspendCenter();
+                return;
+              }
+
+              confirmSuspendCenter(payload);
+            }}
+            confirmLabel={
+              suspendCenter?.status === 'Suspended' ? 'Activate Center' : 'Suspend Center'
             }
-            size="md"
-            className={
-              suspendCenter?.status === 'Suspended'
-                ? 'border border-[#D7EBDD]'
-                : 'border border-[#F0D2D2]'
-            }
-            contentClassName="!py-5"
-            footerClassName="!px-5 !py-4"
-            footer={
-              <>
-                <Button
-                  onClick={() => setSuspendCenterId(null)}
-                  className="min-w-24 !px-5 !py-2.5 !text-sm"
-                >
-                  Cancel
-                </Button>
-
-                {suspendCenter?.status === 'Suspended' ? (
-                  <Button
-                    onClick={confirmUnsuspendCenter}
-                    className="min-w-28 !border-[#20A45B] !bg-[#20A45B] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#19894A] hover:!bg-[#19894A] focus-visible:!ring-[#20A45B]/40"
-                  >
-                    Activate Center
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={confirmSuspendCenter}
-                    className="min-w-28 !border-[#D64545] !bg-[#D64545] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#B93636] hover:!bg-[#B93636] focus-visible:!ring-[#D64545]/40"
-                  >
-                    Suspend Center
-                  </Button>
-                )}
-              </>
-            }
-          >
-            {suspendCenter?.status === 'Suspended' ? (
-              <p className="text-sm leading-6 text-[#6F665C]">
-                Activate {suspendCenter.name} and allow it to receive customer bookings again?
-              </p>
-            ) : (
-              <div className="space-y-4">
-                <p className="text-sm leading-6 text-[#8A8074]">
-                  Choose how long this service center should be suspended.
-                </p>
-
-                <div className="grid gap-2 sm:grid-cols-3">
-                  {['1', '3', '7'].map((days) => (
-                    <label
-                      key={days}
-                      className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-[#E4DDD3] px-3 py-2.5 text-sm font-medium text-[#1C1712] has-[:checked]:border-[#D64545] has-[:checked]:bg-[#FFF7F7]"
-                    >
-                      <input
-                        type="radio"
-                        name="suspension-duration"
-                        value={days}
-                        checked={suspensionOption === days}
-                        onChange={(event) => setSuspensionOption(event.target.value)}
-                        className="accent-[#D64545]"
-                      />
-                      {days} day{days === '1' ? '' : 's'}
-                    </label>
-                  ))}
-                </div>
-
-                <label className="flex cursor-pointer items-center gap-2 text-sm font-medium text-[#1C1712]">
-                  <input
-                    type="radio"
-                    name="suspension-duration"
-                    value="custom"
-                    checked={suspensionOption === 'custom'}
-                    onChange={() => setSuspensionOption('custom')}
-                    className="accent-[#D64545]"
-                  />
-                  Custom duration
-                </label>
-
-                {suspensionOption === 'custom' && (
-                  <Input
-                    ID="custom-suspension-days"
-                    type="number"
-                    placeholder="Enter number of days"
-                    value={customSuspensionDays}
-                    onChange={(event) => setCustomSuspensionDays(event.target.value)}
-                    dimensions={{ width: '100%', height: '40px' }}
-                    className="w-full"
-                  />
-                )}
-              </div>
-            )}
-          </Modal>
+          />
           {/* end suspend modal */}
         </div>
       </section>
@@ -428,16 +348,7 @@ function ServiceCenters() {
           />
         </div>
 
-        <div className="grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {paginatedCentersGrid.map((center) => (
-            <CenterBox
-              key={center.id}
-              center={center}
-              onView={handleViewCenter}
-              onSuspend={handleEditCenter}
-            />
-          ))}
-        </div>
+        <div className="grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-3">{centerCards}</div>
         <div className="mt-4">
           <Pagination data={centers} perPage={6} onPaginate={setPaginatedCentersGrid} />
         </div>

@@ -276,15 +276,15 @@ function Marketing() {
               + New Code
             </Button>
           </div>
-          <div className="mx-auto mt-5 w-full overflow-x-auto sm:w-[95%] lg:h-[90%] lg:overflow-hidden [&>div]:!h-full [&>div]:!w-full [&>div]:!overflow-x-auto [&>div]:!rounded-none [&>div]:!border-0 [&_table]:!min-w-[520px] [&_table]:!w-full [&_table]:table-auto [&_table]:border-collapse [&_thead]:!bg-transparent [&_th]:!px-2.5 [&_th]:!pb-3 [&_th]:!pt-0 [&_th]:!text-left [&_th]:!text-[11px] [&_th]:!font-bold [&_th]:!text-[#8A8074] [&_td]:!px-2.5 [&_td]:!py-[13px] [&_td]:!text-left [&_tr:last-child]:!border-b-0 lg:[&_table]:!min-w-0">
+          <div className="mx-auto mt-5 w-full overflow-x-auto sm:w-[95%] lg:h-[55%] lg:max-h-[155px] lg:overflow-hidden [&>div]:!h-full [&>div]:!w-full [&>div]:!overflow-x-auto [&>div]:!rounded-none [&>div]:!border-0 [&_table]:!min-w-[520px] [&_table]:!w-full [&_table]:table-auto [&_table]:border-collapse [&_thead]:!bg-transparent [&_th]:!px-2.5 [&_th]:!pb-3 [&_th]:!pt-0 [&_th]:!text-left [&_th]:!text-[11px] [&_th]:!font-bold [&_th]:!text-[#8A8074] [&_td]:!px-2.5 [&_td]:!py-[13px] [&_td]:!text-left [&_tr:last-child]:!border-b-0 lg:[&_table]:!min-w-0">
             <DataTable
               columns={promoColumns}
               data={paginatedPromos}
               emptyMessage="No promo codes found."
             />
-            <div className="mt-4">
-              <Pagination data={promoTable} perPage={3} onPaginate={setPaginatedPromos} />
-            </div>
+          </div>
+          <div className="mt-4">
+            <Pagination data={promoTable} perPage={3} onPaginate={setPaginatedPromos} />
           </div>
 
           <Modal

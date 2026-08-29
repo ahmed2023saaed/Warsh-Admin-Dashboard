@@ -1,41 +1,72 @@
-import { useMemo, useState } from "react";
-import { Download } from "lucide-react";
-import Button from "../components/UI/Button";
-import FilterButton from "../components/UI/FilterButton";
-import { createBookingColumns, FilterBookings } from "../utils/BookingHelpers";
-import MockBookings from "../Data/bookingsMock.json";
-import DataTable from "../components/UI/DataTable";
-import DetailsDrawer from "../components/UI/DetailsDrawer";
-import StatusBadge from "../components/widgets/statusBadge";
-import Pagination from "../utils/Pagination";
-import { showSuccessToast } from "../components/UI/toastNotifications";
+import { useMemo, useState } from 'react';
+import { Download } from 'lucide-react';
+import Button from '../components/UI/Button';
+import FilterButton from '../components/UI/FilterButton';
+import { createBookingColumns, FilterBookings } from '../utils/BookingHelpers';
+import MockBookings from '../Data/bookingsMock.json';
+import DataTable from '../components/UI/DataTable';
+import DetailsDrawer from '../components/UI/DetailsDrawer';
+import StatusBadge from '../components/widgets/statusBadge';
+import Pagination from '../utils/Pagination';
+import { showSuccessToast } from '../components/UI/toastNotifications';
 
 function CancellationForm({ booking, setSelectedBooking }) {
-  const [reason, setReason] = useState("");
-  const [cancelledBy, setCancelledBy] = useState("customer");
-  const [refundRecipient, setRefundRecipient] = useState("customer");
-  const [refundAmount, setRefundAmount] = useState(String(booking.fee));
+  const [reason, setReason] = useState('');
+  const [cancelledBy, setCancelledBy] = useState('customer');
+  const [refundRecipients, setRefundRecipients] = useState(['customer']);
+  const [customerRefundAmount, setCustomerRefundAmount] = useState(String(booking.fee));
+  const [serviceCenterRefundAmount, setServiceCenterRefundAmount] = useState('');
 
-  function handleRefundRecipientChange({ event }) {
+  const hasCustomerRefund = refundRecipients.includes('customer');
+  const hasServiceCenterRefund = refundRecipients.includes('serviceCenter');
+
+  function handleRefundRecipientChange(event) {
     const recipient = event.target.value;
-    setRefundRecipient(recipient);
-    setRefundAmount(recipient === "customer" ? String(booking.fee) : "");
+    const checked = event.target.checked;
+
+    setRefundRecipients((currentRecipients) => {
+      if (checked) {
+        const nextRecipients = currentRecipients.includes(recipient)
+          ? currentRecipients
+          : [...currentRecipients, recipient];
+
+        if (recipient === 'customer') {
+          setCustomerRefundAmount(String(booking.fee));
+        }
+
+        if (recipient === 'serviceCenter') {
+          setServiceCenterRefundAmount('');
+        }
+
+        return nextRecipients;
+      }
+
+      const nextRecipients = currentRecipients.filter((item) => item !== recipient);
+
+      if (recipient === 'customer') {
+        setCustomerRefundAmount('');
+      }
+
+      if (recipient === 'serviceCenter') {
+        setServiceCenterRefundAmount('');
+      }
+
+      return nextRecipients;
+    });
   }
+
   function handleSubmit(event) {
     event.preventDefault();
 
-    booking.status = "cancelled";
-    showSuccessToast("Booking is cancelled");
+    booking.status = 'cancelled';
+    showSuccessToast('Booking is cancelled');
     setSelectedBooking(null);
   }
 
   return (
     <form onSubmit={handleSubmit} className="mt-3 space-y-4">
       <div>
-        <label
-          htmlFor="cancellation-reason"
-          className="text-sm font-semibold text-[#1C1712]"
-        >
+        <label htmlFor="cancellation-reason" className="text-sm font-semibold text-[#1C1712]">
           Reason for cancellation
         </label>
         <textarea
@@ -44,17 +75,15 @@ function CancellationForm({ booking, setSelectedBooking }) {
           onChange={(event) => setReason(event.target.value)}
           placeholder="Enter the reason for cancelling this booking"
           rows={4}
-          className="mt-2 w-full resize-none rounded-[10px] border border-[#E8E2D8] bg-white px-3 py-2.5 text-sm text-[#1C1712] outline-none transition focus:border-[#E08B2F] focus:ring-[3px] focus:ring-[#E08B2F]/15"
+          className="mt-2 w-full resize-none rounded-[10px] border border-[#E8E2D8] bg-white px-3 py-2.5 text-sm text-[#1C1712] transition outline-none focus:border-[#E08B2F] focus:ring-[3px] focus:ring-[#E08B2F]/15"
           required
         />
       </div>
 
       <fieldset>
-        <legend className="text-sm font-semibold text-[#1C1712]">
-          Who cancelled the booking?
-        </legend>
+        <legend className="text-sm font-semibold text-[#1C1712]">Who cancelled the booking?</legend>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
-          {["customer", "serviceCenter"].map((party) => (
+          {['customer', 'serviceCenter'].map((party) => (
             <label
               key={party}
               className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-[#E8E2D8] px-3 py-2.5 text-sm text-[#1C1712] transition has-[:checked]:border-[#0E5C5B] has-[:checked]:bg-teal-50"
@@ -67,7 +96,7 @@ function CancellationForm({ booking, setSelectedBooking }) {
                 onChange={(event) => setCancelledBy(event.target.value)}
                 className="h-4 w-4 accent-[#0E5C5B]"
               />
-              {party === "customer" ? "Customer" : "Service center"}
+              {party === 'customer' ? 'Customer' : 'Service center'}
             </label>
           ))}
         </div>
@@ -78,50 +107,67 @@ function CancellationForm({ booking, setSelectedBooking }) {
           Who should receive the refund?
         </legend>
         <div className="mt-2 grid gap-2 sm:grid-cols-2">
-          {["customer", "serviceCenter"].map((party) => (
+          {['customer', 'serviceCenter'].map((party) => (
             <label
               key={party}
               className="flex cursor-pointer items-center gap-2 rounded-[10px] border border-[#E8E2D8] px-3 py-2.5 text-sm text-[#1C1712] transition has-[:checked]:border-[#0E5C5B] has-[:checked]:bg-teal-50"
             >
               <input
-                type="radio"
+                type="checkbox"
                 name="refund-recipient"
                 value={party}
-                checked={refundRecipient === party}
+                checked={refundRecipients.includes(party)}
                 onChange={handleRefundRecipientChange}
                 className="h-4 w-4 accent-[#0E5C5B]"
               />
-              {party === "customer" ? "Customer" : "Service center"}
+              {party === 'customer' ? 'Customer' : 'Service center'}
             </label>
           ))}
         </div>
       </fieldset>
 
-      <div>
-        <label
-          htmlFor="refund-amount"
-          className="text-sm font-semibold text-[#1C1712]"
-        >
-          Refund amount (EGP)
-        </label>
-        <input
-          id="refund-amount"
-          type="number"
-          min="0"
-          step="0.01"
-          value={refundAmount}
-          onChange={(event) => setRefundAmount(event.target.value)}
-          placeholder="Enter refund amount"
-          className="mt-2 w-full rounded-[10px] border border-[#E8E2D8] bg-white px-3 py-2.5 text-sm text-[#1C1712] outline-none transition focus:border-[#E08B2F] focus:ring-[3px] focus:ring-[#E08B2F]/15"
-        />
-      </div>
+      {hasCustomerRefund && (
+        <div>
+          <label htmlFor="customer-refund-amount" className="text-sm font-semibold text-[#1C1712]">
+            Customer refund amount (EGP)
+          </label>
+          <input
+            id="customer-refund-amount"
+            type="number"
+            min="0"
+            step="0.01"
+            value={customerRefundAmount}
+            onChange={(event) => setCustomerRefundAmount(event.target.value)}
+            placeholder="Enter customer refund amount"
+            className="mt-2 w-full rounded-[10px] border border-[#E8E2D8] bg-white px-3 py-2.5 text-sm text-[#1C1712] transition outline-none focus:border-[#E08B2F] focus:ring-[3px] focus:ring-[#E08B2F]/15"
+          />
+        </div>
+      )}
+
+      {hasServiceCenterRefund && (
+        <div>
+          <label
+            htmlFor="service-center-refund-amount"
+            className="text-sm font-semibold text-[#1C1712]"
+          >
+            Service center refund amount (EGP)
+          </label>
+          <input
+            id="service-center-refund-amount"
+            type="number"
+            min="0"
+            step="0.01"
+            value={serviceCenterRefundAmount}
+            onChange={(event) => setServiceCenterRefundAmount(event.target.value)}
+            placeholder="Enter service center refund amount"
+            className="mt-2 w-full rounded-[10px] border border-[#E8E2D8] bg-white px-3 py-2.5 text-sm text-[#1C1712] transition outline-none focus:border-[#E08B2F] focus:ring-[3px] focus:ring-[#E08B2F]/15"
+          />
+        </div>
+      )}
 
       <Button
         type="submit"
         className="w-full !rounded-[9px] !border-[#1C1712] !bg-[#1C1712] !text-white hover:!bg-[#332920]"
-        onClick={() => {
-          handleSubmit();
-        }}
       >
         Cancel Booking
       </Button>
@@ -130,9 +176,9 @@ function CancellationForm({ booking, setSelectedBooking }) {
 }
 
 function Bookings() {
-  const [isActive, setIsActive] = useState("all");
+  const [isActive, setIsActive] = useState('all');
   const [selectedBooking, setSelectedBooking] = useState(null);
-  const [bookings] = useState(MockBookings["bookings"]);
+  const [bookings] = useState(MockBookings['bookings']);
   const [paginatedBookings, setPaginatedBookings] = useState([]);
 
   const bookingColumns = useMemo(
@@ -140,7 +186,7 @@ function Bookings() {
       createBookingColumns({
         onView: setSelectedBooking,
       }),
-    [],
+    []
   );
 
   const filteredBookings = useMemo(
@@ -148,27 +194,22 @@ function Bookings() {
       FilterBookings(bookings, {
         tab: isActive,
       }),
-    [bookings, isActive],
+    [bookings, isActive]
   );
 
-
-
   const coutn = [10, 2560, 10, 520, 1];
-  const filteres = ["all", "pending", "active", "completed", "cancelled"];
+  const filteres = ['all', 'pending', 'active', 'completed', 'cancelled'];
 
   function handelClick(name) {
     setIsActive(name);
   }
 
   function BookingDetails({ booking }) {
-    const canCancel =
-      booking.status !== "completed" && booking.status !== "cancelled";
+    const canCancel = booking.status !== 'completed' && booking.status !== 'cancelled';
     return (
       <div className="space-y-6">
         <section>
-          <h3 className="text-base font-bold text-[#1C1712]">
-            Booking information
-          </h3>
+          <h3 className="text-base font-bold text-[#1C1712]">Booking information</h3>
 
           <div className="mt-3 grid gap-4 sm:grid-cols-2">
             <Detail label="Booking ID" value={booking.id} />
@@ -178,9 +219,7 @@ function Bookings() {
             <Detail label="Service" value={booking.service} />
             <Detail label="Payment" value={booking.paymentMethod} />
             <div>
-              <p className="text-xs font-semibold uppercase text-[#8A8074]">
-                Status
-              </p>
+              <p className="text-xs font-semibold text-[#8A8074] uppercase">Status</p>
               <div className="mt-1">
                 <StatusBadge status={booking.status} />
               </div>
@@ -189,30 +228,20 @@ function Bookings() {
         </section>
 
         <section>
-          <h3 className="text-base font-bold text-[#1C1712]">
-            Payment summary
-          </h3>
+          <h3 className="text-base font-bold text-[#1C1712]">Payment summary</h3>
 
           <div className="mt-3 grid gap-4 sm:grid-cols-3">
-            <Detail
-              label="Price"
-              value={`${booking.price.toLocaleString("en-EG")} EGP`}
-            />
-            <Detail
-              label="Fees"
-              value={`${booking.fee.toLocaleString("en-EG")} EGP`}
-            />
+            <Detail label="Price" value={`${booking.price.toLocaleString('en-EG')} EGP`} />
+            <Detail label="Fees" value={`${booking.fee.toLocaleString('en-EG')} EGP`} />
             <Detail
               label="Commission"
-              value={`${booking.commission.toLocaleString("en-EG")} EGP`}
+              value={`${booking.commission.toLocaleString('en-EG')} EGP`}
             />
           </div>
         </section>
         {canCancel && (
           <section>
-            <h3 className="text-base font-bold text-[#1C1712]">
-              Cancel Booking
-            </h3>
+            <h3 className="text-base font-bold text-[#1C1712]">Cancel Booking</h3>
             <CancellationForm
               key={booking.id}
               booking={booking}
@@ -227,13 +256,9 @@ function Bookings() {
   function Detail({ label, value }) {
     return (
       <div>
-        <p className="text-xs font-semibold uppercase text-[#8A8074]">
-          {label}
-        </p>
+        <p className="text-xs font-semibold text-[#8A8074] uppercase">{label}</p>
 
-        <p className="mt-1 text-sm font-medium text-[#1C1712]">
-          {value || "Not available"}
-        </p>
+        <p className="mt-1 text-sm font-medium text-[#1C1712]">{value || 'Not available'}</p>
       </div>
     );
   }
@@ -247,11 +272,7 @@ function Bookings() {
               key={filter}
               active={isActive === filter}
               onClick={() => handelClick(filter)}
-              count={
-                filter == "all"
-                  ? coutn.reduce((acc, cur) => acc + cur, 0)
-                  : coutn[i]
-              }
+              count={filter == 'all' ? coutn.reduce((acc, cur) => acc + cur, 0) : coutn[i]}
             >
               {filter}
             </FilterButton>
