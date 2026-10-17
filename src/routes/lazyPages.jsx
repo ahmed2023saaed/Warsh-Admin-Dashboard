@@ -5,6 +5,7 @@ export const AdminUsers = lazy(() => import("../pages/AdminUsers"));
 export const Bookings = lazy(() => import("../pages/Bookings"));
 export const Customers = lazy(() => import("../pages/Customers"));
 export const Marketing = lazy(() => import("../pages/Marketing"));
+export const Loyalty = lazy(() => import("../pages/Loyalty"));
 export const Payments = lazy(() => import("../pages/Payments"));
 export const Reviews = lazy(() => import("../pages/Reviews"));
 export const ServiceCenters = lazy(() => import("../pages/ServiceCenters"));

@@ -1,12 +1,12 @@
-import { Star } from "lucide-react";
-import Avatar from "../components/UI/Avatar";
-import StatusBadge from "../components/widgets/statusBadge";
+import { Star } from 'lucide-react';
+import Avatar from '../components/UI/Avatar';
+import StatusBadge from '../components/widgets/statusBadge';
 
 export const customerFilters = [
-  { key: "all", label: "All" },
-  { key: "active", label: "Active" },
-  { key: "suspended", label: "Suspended" },
-  { key: "new", label: "New This Month" },
+  { key: 'all', label: 'All' },
+  { key: 'active', label: 'Active' },
+  { key: 'suspended', label: 'Suspended' },
+  { key: 'new', label: 'New This Month' },
 ];
 
 export function createCustomerColumns({ onView, onSuspend }) {
@@ -18,14 +18,14 @@ export function createCustomerColumns({ onView, onSuspend }) {
     //   render: (customer) => customer.id,
     // },
     {
-      key: "fullName",
-      header: "Customer",
+      key: 'fullName',
+      header: 'Customer',
       render: (customer) => {
         const initials = customer.fullName
-          .split(" ")
+          .split(' ')
           .map((name) => name[0])
           .slice(0, 2)
-          .join("")
+          .join('')
           .toUpperCase();
 
         return (
@@ -40,12 +40,12 @@ export function createCustomerColumns({ onView, onSuspend }) {
       },
     },
     {
-      key: "phone",
-      header: "Phone",
-      cellClassName: "text-sm whitespace-nowrap text-[#5A6968]",
+      key: 'phone',
+      header: 'Phone',
+      cellClassName: 'text-sm whitespace-nowrap text-[#5A6968]',
       render: (customer) => (
         <a
-          href={`tel:${customer.phone.replace(/\s/g, "")}`}
+          href={`tel:${customer.phone.replace(/\s/g, '')}`}
           className="transition-colors hover:text-[#0E5C5B]"
         >
           {customer.phone}
@@ -53,57 +53,34 @@ export function createCustomerColumns({ onView, onSuspend }) {
       ),
     },
     {
-      key: "carsCount",
-      header: "Cars",
-      align: "center",
-      cellClassName: "text-sm font-medium text-[#15201F]",
+      key: 'carsCount',
+      header: 'Cars',
+      align: 'center',
+      cellClassName: 'text-sm font-medium text-[#15201F]',
       render: (customer) => customer.carsCount,
     },
     {
-      key: "bookingsCount",
-      header: "Bookings",
-      align: "center",
-      cellClassName: "text-sm font-medium text-[#15201F]",
+      key: 'bookingsCount',
+      header: 'Bookings',
+      align: 'center',
+      cellClassName: 'text-sm font-medium text-[#15201F]',
       render: (customer) => customer.bookingsCount,
     },
     {
-      key: "totalSpending",
-      header: "Total Spending",
-      cellClassName: "text-sm font-semibold whitespace-nowrap text-[#15201F]",
+      key: 'totalSpending',
+      header: 'Total Spending',
+      cellClassName: 'text-sm font-semibold whitespace-nowrap text-[#15201F]',
       render: (customer) =>
-        new Intl.NumberFormat("en-EG", {
-          style: "currency",
-          currency: "EGP",
+        new Intl.NumberFormat('en-EG', {
+          style: 'currency',
+          currency: 'EGP',
           maximumFractionDigits: 0,
         }).format(customer.totalSpending),
     },
-    {
-      key: "ratingGiven",
-      header: "Rating",
-      align: "center",
-      cellClassName: "text-sm",
-      render: (customer) => {
-        if (customer.ratingGiven === null) {
-          return <span className="text-gray-400">Not rated</span>;
-        }
 
-        return (
-          <div className="inline-flex items-center gap-1">
-            <Star
-              className="h-4 w-4 fill-amber-400 text-amber-400"
-              aria-hidden="true"
-            />
-
-            <span className="font-semibold text-[#15201F]">
-              {customer.ratingGiven.toFixed(1)}
-            </span>
-          </div>
-        );
-      },
-    },
     {
-      key: "status",
-      header: "Status",
+      key: 'status',
+      header: 'Status',
       render: (customer) => <StatusBadge status={customer.status} />,
     },
     // {
@@ -118,9 +95,9 @@ export function createCustomerColumns({ onView, onSuspend }) {
     //     }).format(new Date(`${customer.createdAt}T00:00:00`)),
     // },
     {
-      key: "actions",
-      header: "Actions",
-      align: "right",
+      key: 'actions',
+      header: 'Actions',
+      align: 'right',
       render: (customer) => (
         <div className="flex items-center justify-end gap-2">
           <button
@@ -129,7 +106,7 @@ export function createCustomerColumns({ onView, onSuspend }) {
               event.stopPropagation();
               onView(customer);
             }}
-            className=" cursor-pointer rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-[#0E5C5B] transition-colors hover:border-[#0E5C5B] hover:bg-teal-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0E5C5B]/30"
+            className="cursor-pointer rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-[#0E5C5B] transition-colors hover:border-[#0E5C5B] hover:bg-teal-50 focus-visible:ring-2 focus-visible:ring-[#0E5C5B]/30 focus-visible:outline-none"
             aria-label={`View ${customer.fullName}`}
           >
             View
@@ -141,10 +118,10 @@ export function createCustomerColumns({ onView, onSuspend }) {
               event.stopPropagation();
               onSuspend(customer.id);
             }}
-            className=" cursor-pointer rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 transition-colors hover:border-red-300 hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30 disabled:cursor-not-allowed disabled:opacity-40"
+            className="cursor-pointer rounded-lg border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 transition-colors hover:border-red-300 hover:bg-red-50 focus-visible:ring-2 focus-visible:ring-red-500/30 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-40"
             aria-label={`Suspend ${customer.fullName}`}
           >
-            {customer.status === "suspended" ? "Unsuspend" : "Suspend"}
+            {customer.status === 'suspended' ? 'Unsuspend' : 'Suspend'}
           </button>
         </div>
       ),
@@ -155,40 +132,37 @@ export function createCustomerColumns({ onView, onSuspend }) {
 export function creatActivityTable() {
   return [
     {
-      key: "id",
-      header: "id",
+      key: 'id',
+      header: 'id',
       // cellClassName: "text-[8px] leading-5 break-words whitespace-normal",
       render: (activity) => {
         return <p>{activity.id}</p>;
       },
     },
     {
-      key: "type",
-      header: "type",
+      key: 'type',
+      header: 'type',
       // cellClassName: "text-sm",/
       render: (activity) => {
-        return <p>{activity.type.split("_").join(" ")}</p>;
+        return <p>{activity.type.split('_').join(' ')}</p>;
       },
     },
     {
-      key: "description",
-      header: "description",
-      cellClassName: "max-w-[220px] leading-5 break-words whitespace-normal",
+      key: 'description',
+      header: 'description',
+      cellClassName: 'max-w-[220px] leading-5 break-words whitespace-normal',
       render: (activity) => {
         return (
-          <p
-            className="mx-auto max-w-[220px] truncate"
-            title={activity.description}
-          >
+          <p className="mx-auto max-w-[220px] truncate" title={activity.description}>
             {activity.description}
           </p>
         );
       },
     },
     {
-      key: "date",
-      header: "date",
-      className: "text-[8px]! leading-5 break-words whitespace-normal",
+      key: 'date',
+      header: 'date',
+      className: 'text-[8px]! leading-5 break-words whitespace-normal',
       render: (activity) => {
         return <p>{activity.date}</p>;
       },
@@ -197,20 +171,20 @@ export function creatActivityTable() {
 }
 
 export const normalizeText = (value) =>
-  String(value ?? "")
+  String(value ?? '')
     .trim()
     .toLowerCase();
 
-export const filters = (customers, { search = "", tap = "all" }) => {
+export const filters = (customers, { search = '', tap = 'all' }) => {
   const normalizedSearch = normalizeText(search);
 
   return customers.filter((customer) => {
-    const currentTap = customer.status === tap || tap === "all";
+    const currentTap = customer.status === tap || tap === 'all';
 
     const matchedSearch =
       !normalizedSearch ||
       [customer.fullName, customer.phone].some((item) =>
-        normalizeText(item).includes(normalizedSearch),
+        normalizeText(item).includes(normalizedSearch)
       );
 
     return currentTap && matchedSearch;

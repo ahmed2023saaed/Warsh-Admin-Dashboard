@@ -1,58 +1,157 @@
-import {createBrowserRouter, redirect} from 'react-router-dom'
-// import { Dashboard, Login,  } from './lazyPages'
-import {  Login, Register} from './lazyPages'
-import { RouteFallback } from '../components/UI/fallback'
-import AuthLayout from '../components/layouts/AuthLayout'
+import { createBrowserRouter, redirect } from 'react-router-dom';
 import { Suspense } from 'react';
-import ProtectedRoutes from './protectedRoutes';
+
+import {
+  Login,
+  Register,
+  Dashboard,
+  Customers,
+  ServiceCenters,
+  Bookings,
+  Payments,
+  Reviews,
+  Marketing,
+  Loyalty,
+  Settings,
+  AdminUsers,
+} from './lazyPages';
+
+import { RouteFallback } from '../components/UI/fallback';
+import AuthLayout from '../components/layouts/AuthLayout';
 import AppLayout from '../components/layouts/AppLayout';
-import { Dashboard, Customers, ServiceCenters, Bookings, Payments, Reviews, Marketing, Settings, AdminUsers } from './lazyPages'
+import ProtectedRoutes from './protectedRoutes';
+import PermissionRoute from './PermissionRoute';
 
-
-
-const withSuspense = (node)=> <Suspense fallback={<RouteFallback />}>{node}</Suspense>
+const withSuspense = (node) => <Suspense fallback={<RouteFallback />}>{node}</Suspense>;
 
 export const router = createBrowserRouter([
+  {
+    path: '/',
+    loader: () => {
+      const accessToken = localStorage.getItem('accessToken');
+      const adminUser = localStorage.getItem('adminUser');
 
-    {
-        path: '/',
-        loader: () => redirect('/en/login')
+      if (accessToken && adminUser) {
+        return redirect('/en');
+      }
+
+      return redirect('/en/login');
     },
+  },
 
+  {
+    path: ':lang',
+    children: [
+      // Login
+      {
+        path: 'login',
+        element: withSuspense(
+          <AuthLayout>
+            <Login />
+          </AuthLayout>
+        ),
+      },
 
-    {
-        path: ':lang',
+      // Register
+      {
+        path: 'register',
+        element: withSuspense(
+          <AuthLayout>
+            <Register />
+          </AuthLayout>
+        ),
+      },
+
+      // Protected pages
+      {
+        element: (
+          <ProtectedRoutes>
+            <AppLayout />
+          </ProtectedRoutes>
+        ),
+
         children: [
-             //       Public routes AuthLayout
-            {
-                path: 'login',
-                element: withSuspense(<AuthLayout><Login /></AuthLayout>),
-            },
-            {
-                path: 'register',
-                element: withSuspense(<AuthLayout><Register /></AuthLayout>),
-            },
+          // Dashboard - permission 1
+          {
+            index: true,
+            element: (
+              <PermissionRoute permissionId={1}>{withSuspense(<Dashboard />)}</PermissionRoute>
+            ),
+          },
 
+          // Customers - permission 2
+          {
+            path: 'customers',
+            element: (
+              <PermissionRoute permissionId={2}>{withSuspense(<Customers />)}</PermissionRoute>
+            ),
+          },
 
-            //       Protected routes AppLayout
-            {
-                element:(
-                    <ProtectedRoutes>
-                        <AppLayout />
-                    </ProtectedRoutes>
-                ),
-                children: [
-                    {index: true, element: withSuspense(<Dashboard />)},
-                    {path: 'customers', element: withSuspense(<Customers />)},
-                    {path: 'serviceCenters', element: withSuspense(<ServiceCenters />)},
-                    {path: 'bookings', element: withSuspense(<Bookings />)},
-                    {path: 'payments', element: withSuspense(<Payments />)},
-                    {path: 'reviews', element: withSuspense(<Reviews />)},
-                    {path: 'marketing', element: withSuspense(<Marketing />)},
-                    {path: 'settings', element: withSuspense(<Settings />)},
-                    {path: 'adminUsers', element: withSuspense(<AdminUsers />)}
-                ]
-            }
-        ]
-    }
-])
+          // Service Centers - permission 3
+          {
+            path: 'serviceCenters',
+            element: (
+              <PermissionRoute permissionId={3}>{withSuspense(<ServiceCenters />)}</PermissionRoute>
+            ),
+          },
+
+          // Bookings - permission 4
+          {
+            path: 'bookings',
+            element: (
+              <PermissionRoute permissionId={4}>{withSuspense(<Bookings />)}</PermissionRoute>
+            ),
+          },
+
+          // Payments - permission 5
+          {
+            path: 'payments',
+            element: (
+              <PermissionRoute permissionId={5}>{withSuspense(<Payments />)}</PermissionRoute>
+            ),
+          },
+
+          // Reviews - permission 6
+          {
+            path: 'reviews',
+            element: (
+              <PermissionRoute permissionId={6}>{withSuspense(<Reviews />)}</PermissionRoute>
+            ),
+          },
+
+          // Marketing - permission 7
+          {
+            path: 'marketing',
+            element: (
+              <PermissionRoute permissionId={7}>{withSuspense(<Marketing />)}</PermissionRoute>
+            ),
+          },
+
+          // Loyalty management. Permission 10 is provisional and must match the backend.
+          {
+            path: 'loyalty',
+            element: (
+              <PermissionRoute permissionId={10}>{withSuspense(<Loyalty />)}</PermissionRoute>
+            ),
+          },
+
+          // Settings - permission 8
+          {
+            path: 'settings',
+            element: (
+              <PermissionRoute permissionId={8}>{withSuspense(<Settings />)}</PermissionRoute>
+            ),
+          },
+
+          // Admin Users - permission 9
+          {
+            path: 'adminUsers',
+            element: (
+              <PermissionRoute permissionId={9}>{withSuspense(<AdminUsers />)}</PermissionRoute>
+            ),
+          },
+        ],
+      },
+    ],
+  },
+]);
