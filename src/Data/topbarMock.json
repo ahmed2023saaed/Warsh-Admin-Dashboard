@@ -9,6 +9,7 @@
   "Payments": ["Payments", "Income, commission and payout tracking"],
   "Reviews": ["Reviews", "2,140 customer reviews across all centers"],
   "Marketing": ["Marketing", "Banners, promo codes and featured centers"],
+  "Loyalty": ["Loyalty & Rewards", "Create rewards and adjust customer points"],
   "Emergency": ["Emergency", "Live roadside assistance requests"],
   "Settings": ["Settings", "Platform configuration and admin roles"],
   "Reports": ["Reports", "Exportable business reports"],

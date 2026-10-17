@@ -1,12 +1,7 @@
 // components/UI/UserActionsMenu.jsx
 
 import { useEffect, useRef } from 'react';
-import {
-  Eye,
-  Power,
-  ShieldCheck,
-  UserRoundCog,
-} from 'lucide-react';
+import { Eye, Power, ShieldCheck, UserRoundCog } from 'lucide-react';
 
 export default function UserActionsMenu({
   user,
@@ -21,10 +16,7 @@ export default function UserActionsMenu({
 
   useEffect(() => {
     function handleOutsideClick(event) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
         onClose();
       }
     }
@@ -35,18 +27,13 @@ export default function UserActionsMenu({
 
     return () => {
       clearTimeout(timeoutId);
-      document.removeEventListener(
-        'mousedown',
-        handleOutsideClick
-      );
+      document.removeEventListener('mousedown', handleOutsideClick);
     };
   }, [onClose]);
 
-  
   if (!user || !position) return null;
 
-  const isProtected =
-    user.isProtected || user.currentRole === 'super_admin';
+  const isProtected = user.isProtected || user.currentRole === 'super_admin';
 
   return (
     <div
@@ -91,11 +78,7 @@ export default function UserActionsMenu({
       <div className="border-t border-[#E7DED4] p-1.5">
         <MenuButton
           icon={Power}
-          label={
-            user.status === 'active'
-              ? 'Deactivate User'
-              : 'Activate User'
-          }
+          label={user.status === 'active' ? 'Deactivate User' : 'Activate User'}
           danger={user.status === 'active'}
           disabled={isProtected}
           onClick={() => {
@@ -108,13 +91,7 @@ export default function UserActionsMenu({
   );
 }
 
-function MenuButton({
-  icon: Icon,
-  label,
-  onClick,
-  danger = false,
-  disabled = false,
-}) {
+function MenuButton({ icon: Icon, label, onClick, danger = false, disabled = false }) {
   return (
     <button
       type="button"
@@ -122,15 +99,10 @@ function MenuButton({
       disabled={disabled}
       onClick={onClick}
       className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left text-sm transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
-        danger
-          ? 'text-red-500 hover:bg-red-50'
-          : 'text-[#17120E] hover:bg-[#F7F3EF]'
+        danger ? 'text-red-500 hover:bg-red-50' : 'text-[#17120E] hover:bg-[#F7F3EF]'
       }`}
     >
-      <Icon
-        className="h-4 w-4 shrink-0"
-        aria-hidden="true"
-      />
+      <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
 
       <span>{label}</span>
     </button>
