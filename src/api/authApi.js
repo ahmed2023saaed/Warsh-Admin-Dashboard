@@ -1,4 +1,42 @@
 import apiClient from './apiClient';
+import { PERMISSION_IDS_BY_CODE } from '../constants/permissions';
+
+// GET /Admin/permissions groups permissions by module:
+// [{ module: 'Bookings', permissions: [{ id: 5, name: 'View Bookings', code, module }] }]
+// Flat lists, plain ids and codes ('Permissions.Bookings.View') are accepted too.
+// Returns a flat list: [{ id, label, module }]
+function normalizePermissions(data) {
+  const list = Array.isArray(data)
+    ? data
+    : data?.permissions || data?.permissionIds || data?.items || [];
+
+  return list
+    .flatMap((group) =>
+      Array.isArray(group?.permissions)
+        ? group.permissions.map((permission) => ({ module: group.module, ...permission }))
+        : [group]
+    )
+    .map((item) => {
+      if (typeof item === 'number') item = { id: item };
+      if (typeof item === 'string') item = { code: item };
+
+      const id = Number(item?.id ?? item?.permissionId ?? PERMISSION_IDS_BY_CODE[item?.code]);
+
+      if (!Number.isInteger(id)) return null;
+
+      return {
+        id,
+        label: item?.name || item?.displayName || item?.code || `Permission ${id}`,
+        module: item?.module || '',
+      };
+    })
+    .filter(Boolean);
+}
+
+// Turn any permissions response (or what login saved earlier) into [5, 6, 11]
+export function toPermissionIds(data) {
+  return [...new Set(normalizePermissions(data).map((permission) => permission.id))];
+}
 
 export async function getPermissions() {
   try {
@@ -9,7 +47,7 @@ export async function getPermissions() {
       throw new Error(data.message || 'Failed to get permissions');
     }
 
-    return data.data;
+    return normalizePermissions(data.data);
   } catch (error) {
     console.error('Get permissions failed:', error);
 
@@ -91,9 +129,12 @@ export async function loginAdmin({ email, password }) {
     let userPermissions = [];
 
     try {
-      userPermissions = await getUserPermissions(adminData.id);
+      const response = await getUserPermissions(adminData.id);
 
-      console.log('USER PERMISSIONS:', userPermissions);
+      console.log('USER PERMISSIONS:', response);
+
+      // Saved as ids, e.g. [5, 6, 11]
+      userPermissions = toPermissionIds(response);
 
       localStorage.setItem('adminPermissions', JSON.stringify(userPermissions));
     } catch (error) {

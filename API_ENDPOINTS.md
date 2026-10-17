@@ -30,7 +30,7 @@ what each one needs from the backend. Today most pages run on mock data in `src/
 | 🆕 | `POST /Admin/logout` | Logout button |
 | 🆕 | `GET /Admin/me` | Topbar name and role (currently hardcoded "Saif Fawzy / Super Admin") |
 | ✅ | `GET /Admin/user-permissions/{id}` | Permissions after login |
-| ✅ | `GET /Admin/permissions` | Permission list for Add Employee (not wired yet) |
+| ✅ | `GET /Admin/permissions` | Permission list for Add Employee |
 
 - **Login** body `{ email, password }` → `{ id, email, accessToken, refreshToken, expiresAt }`.
   Please also return `name` and `role` so the topbar can show them.
@@ -276,7 +276,7 @@ All lists take `page, pageSize, status, from, to, search`.
 | 🆕 | `PUT /Admin/settings/pricing` | Its Edit → Save |
 | 🆕 | `GET /Admin/settings/platform` | "Platform" section |
 | 🆕 | `PATCH /Admin/settings/platform` | The toggles |
-| 🆕 | `GET /Admin/roles` | "Admin Roles & Permissions" section, role select in Add Employee |
+| 🆕 | `GET /Admin/roles` | "Admin Roles & Permissions" section |
 | | **Catalog** ("Manage" buttons; those pages aren't built yet) | |
 | 🆕 | `GET / POST / PUT / DELETE /Admin/service-categories` | Service categories |
 | ✅ | `GET /CarCatalog/car-brands` · `POST /CarCatalog/brands` | Car brands (list, add) |
@@ -302,7 +302,7 @@ All lists take `page, pageSize, status, from, to, search`.
 |---|---|---|
 | 🆕 | `GET /Admin/users` | Users table, search, role and status filters |
 | 🆕 | `GET /Admin/users/summary` | 4 stat cards |
-| ⚠️ | `POST /Admin/create-admin` · `POST /Admin/create-employee` | "Add Employee" form |
+| ✅ | `POST /Admin/create-admin` · `POST /Admin/create-employee` | "Add Employee" form |
 | 🆕 | `GET /Admin/users/{id}` | "View Details" |
 | 🆕 | `PUT /Admin/users/{id}/role` | "Change Role" |
 | 🆕 | `PUT /Admin/users/{id}/permissions` | "Manage Permissions" |
@@ -311,9 +311,7 @@ All lists take `page, pageSize, status, from, to, search`.
 - **List** query `page, pageSize, search, role, status = active | inactive` → item
   `{ id, fullName, email, role, status, lastActiveAt, isProtected, createdAt }`
 - **Summary** → `{ totalUsers, admins, customRoles, activeUsers }`
-- **Create:** today it accepts `{ name, email, password, permissionIds }`, but the form also
-  collects **`nationalId` (14 digits), `phoneNumber`, and `role`**, which are currently dropped.
-  The backend should accept them.
+- **Create:** body `{ name, email, password, permissionIds }`. The form sends only these fields.
 - **Role** body `{ role }` · **Permissions** body `{ permissionIds: [] }` · **Status** body `{ status }`
 
 ---
@@ -346,5 +344,5 @@ These are in `PLAN.md` / the topbar titles and will need endpoints when they're 
 | Marketing | 0 | 0 | 9 |
 | Loyalty | 2 | 0 | 5 |
 | Settings | 4 | 0 | 19 |
-| Admin Users | 0 | 2 | 6 |
-| **Total** | **10** | **4** | **69** |
+| Admin Users | 2 | 0 | 6 |
+| **Total** | **12** | **2** | **69** |

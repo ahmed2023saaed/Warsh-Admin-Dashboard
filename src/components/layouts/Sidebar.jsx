@@ -11,10 +11,10 @@ export default function Sidebar({ collapsed, onCollapse, onMobileSidebarClose, m
   const { lang } = useParams();
   const { t } = UseAppTranslation('common');
 
-  const { hasPermission } = useAuth();
+  const { canAccessPage } = useAuth();
 
   // Keep only navigation items the user has permission to access
-  const visibleNavItems = navItems.filter((item) => hasPermission(item.permissionId));
+  const visibleNavItems = navItems.filter((item) => canAccessPage(item.key));
 
   return (
     <aside

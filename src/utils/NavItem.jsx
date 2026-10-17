@@ -11,13 +11,13 @@ import {
   Users,
 } from 'lucide-react';
 
+// Page access comes from PAGE_PERMISSIONS in constants/permissions.js, matched by key
 const navItems = [
   {
     key: 'dashboard',
     title: 'Dashboard',
     path: '',
     icon: LayoutDashboard,
-    permissionId: 1,
   },
 
   {
@@ -25,7 +25,6 @@ const navItems = [
     title: 'Customers',
     path: 'customers',
     icon: Users,
-    permissionId: 2,
   },
 
   {
@@ -33,7 +32,6 @@ const navItems = [
     title: 'Service Centers',
     path: 'serviceCenters',
     icon: Building2,
-    permissionId: 3,
   },
 
   {
@@ -41,7 +39,6 @@ const navItems = [
     title: 'Bookings',
     path: 'bookings',
     icon: CalendarCheck,
-    permissionId: 4,
   },
 
   {
@@ -49,7 +46,6 @@ const navItems = [
     title: 'Payments',
     path: 'payments',
     icon: CreditCard,
-    permissionId: 5,
   },
 
   {
@@ -57,7 +53,6 @@ const navItems = [
     title: 'Reviews',
     path: 'reviews',
     icon: Star,
-    permissionId: 6,
   },
 
   {
@@ -65,7 +60,6 @@ const navItems = [
     title: 'Marketing',
     path: 'marketing',
     icon: Megaphone,
-    permissionId: 7,
   },
 
   {
@@ -73,8 +67,6 @@ const navItems = [
     title: 'Loyalty & Rewards',
     path: 'loyalty',
     icon: Gift,
-    // Provisional until the backend defines and assigns a loyalty permission ID.
-    permissionId: 10,
   },
 
   {
@@ -82,7 +74,6 @@ const navItems = [
     title: 'Settings',
     path: 'settings',
     icon: Settings,
-    permissionId: 8,
   },
 
   {
@@ -90,7 +81,6 @@ const navItems = [
     title: 'Admin Users',
     path: 'adminUsers',
     icon: ShieldUser,
-    permissionId: 9,
   },
 ];
 
