@@ -14,7 +14,11 @@ import { Search, Pencil, Trash2, TriangleAlert } from "lucide-react";
 import { Banner } from "../utils/Banner";
 import { AddBannerModal } from "../utils/AddBannerModal";
 import { EditBannerModal } from "../utils/EditBannerModal";
-import Pagination from "../utils/Pagination";
+import Pagination from "../components/UI/Pagination";
+import { paginate, usePaginationParams } from "../hooks/usePaginationParams";
+
+// The promo codes card is sized for 3 rows
+const PROMO_PAGE_SIZES = [3];
 
 function Marketing() {
   const [banners, setBanners] = useState(marketingMock.banners);
@@ -26,7 +30,8 @@ function Marketing() {
   const [selectedBanner, setSelectedBanner] = useState(null);
   const [isActionsModalOpen, setIsActionsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [paginatedPromos, setPaginatedPromos] = useState([]);
+  // ?promosPage=2
+  const promosPagination = usePaginationParams("promos", PROMO_PAGE_SIZES);
   const {
     cancelPromoDelete,
     closePromoModal,
@@ -40,6 +45,12 @@ function Marketing() {
     promoTable,
     promoToDelete,
   } = usePromoManagement(marketingMock.promoCodes);
+
+  const paginatedPromos = paginate(
+    promoTable,
+    promosPagination.page,
+    promosPagination.pageSize,
+  );
 
 
 
@@ -284,7 +295,14 @@ function Marketing() {
             />
           </div>
           <div className="mt-4">
-            <Pagination data={promoTable} perPage={3} onPaginate={setPaginatedPromos} />
+            {promoTable.length > 0 && (
+              <Pagination
+                currentPage={promosPagination.page}
+                totalItems={promoTable.length}
+                pageSize={promosPagination.pageSize}
+                onPageChange={promosPagination.setPage}
+              />
+            )}
           </div>
 
           <Modal

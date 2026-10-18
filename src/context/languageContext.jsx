@@ -28,8 +28,9 @@ export function LanguageProvider({children}) {
     const changeLanguage =  useCallback((newLang) => {
         const currentPath = location.pathname;
         const newPath = currentPath.replace(/^\/(ar|en)/, `/${newLang}`);
-        navigate(newPath);
-    }, [location.pathname, navigate]);
+        // Keep ?page=2&tab=... so switching language doesn't reset the view
+        navigate(newPath + location.search);
+    }, [location.pathname, location.search, navigate]);
 
     const toggleLanguage = useCallback(() => {
         changeLanguage(urlLang === 'ar' ? 'en' : 'ar');

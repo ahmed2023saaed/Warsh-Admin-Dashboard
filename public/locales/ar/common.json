@@ -46,5 +46,13 @@
     "reviews": "المراجعات",
     "marketing": "التسويق",
     "loyalty": "الولاء والمكافآت"
+  },
+  "pagination": {
+    "navigation": "التنقل بين الصفحات",
+    "showing": "عرض",
+    "of": "من",
+    "rowsPerPage": "عدد الصفوف",
+    "previous": "الصفحة السابقة",
+    "next": "الصفحة التالية"
   }
 }

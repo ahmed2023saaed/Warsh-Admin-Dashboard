@@ -45,5 +45,13 @@
     "reviews": "Reviews",
     "marketing": "Marketing",
     "loyalty": "Loyalty & Rewards"
+  },
+  "pagination": {
+    "navigation": "Pagination",
+    "showing": "Showing",
+    "of": "of",
+    "rowsPerPage": "Rows per page",
+    "previous": "Previous page",
+    "next": "Next page"
   }
 }

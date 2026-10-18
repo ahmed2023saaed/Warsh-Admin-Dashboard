@@ -81,13 +81,15 @@ what each one needs from the backend. Today most pages run on mock data in `src/
 
 | | Method & path | Used for |
 |---|---|---|
-| 🆕 | `GET /Admin/clients` | Customers table, search, filter tabs |
+| ✅ | `GET /Admin/clients` | Customers table, search, filter tabs |
 | 🆕 | `GET /Admin/clients/{id}` | "View" drawer: info and cars |
 | 🆕 | `GET /Admin/clients/{id}/activity` | "Customer History" table in the drawer |
 | 🆕 | `POST /Admin/clients/{id}/suspend` | Suspend modal |
 | 🆕 | `POST /Admin/clients/{id}/activate` | Unsuspend |
 
-- **List** query `page, pageSize, search (name/phone), status = active | suspended | new`
+- **List** query `Page, PageSize, Search, Status` (Status is a number 0-3). The dashboard sends
+  1 = active, 2 = suspended, 3 = new, and no Status for "All", following the order of `counts`.
+  Please confirm these numbers, since Swagger doesn't name them.
   - item `{ id, fullName, phone, email, carsCount, bookingsCount, totalSpending, status, createdAt }`
   - `counts: { all, active, suspended, new }`. "New" means joined this month. It could be a
     separate filter instead of a status.
@@ -336,7 +338,7 @@ These are in `PLAN.md` / the topbar titles and will need endpoints when they're 
 |---|---|---|---|
 | Auth & admin | 3 | 1 | 2 |
 | Dashboard | 0 | 0 | 4 |
-| Customers | 0 | 0 | 5 |
+| Customers | 1 | 0 | 4 |
 | Service Centers | 1 | 1 | 5 |
 | Bookings | 0 | 0 | 4 |
 | Payments | 0 | 0 | 7 |
@@ -345,4 +347,4 @@ These are in `PLAN.md` / the topbar titles and will need endpoints when they're 
 | Loyalty | 2 | 0 | 5 |
 | Settings | 4 | 0 | 19 |
 | Admin Users | 2 | 0 | 6 |
-| **Total** | **12** | **2** | **69** |
+| **Total** | **13** | **2** | **68** |

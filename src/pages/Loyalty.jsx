@@ -10,6 +10,8 @@ import SettingsSection from '../components/UI/SettingsSection';
 import State from '../components/UI/State';
 import { showPromiseToast } from '../components/UI/toastNotifications';
 import { adjustClientPoints, createLoyaltyReward } from '../api/loyaltyApi';
+import Pagination from '../components/UI/Pagination';
+import { paginate, usePaginationParams } from '../hooks/usePaginationParams';
 
 const labelClass = 'block text-sm font-bold text-[#1C1712]';
 const errorClass = 'mt-1.5 text-xs font-medium text-[#D64545]';
@@ -341,6 +343,8 @@ const activityColumns = [
 
 export default function Loyalty() {
   const [activity, setActivity] = useState([]);
+  const { page, pageSize, setPage, setPageSize, sizeOptions } = usePaginationParams();
+  const paginatedActivity = paginate(activity, page, pageSize);
 
   function addActivity(entry) {
     const createdAt = new Date();
@@ -349,6 +353,8 @@ export default function Loyalty() {
       { ...entry, id: `${entry.type}-${createdAt.getTime()}`, createdAt },
       ...current,
     ]);
+    // The newest change is added at the top, so show the first page
+    setPage(1);
   }
 
   return (
@@ -399,10 +405,21 @@ export default function Loyalty() {
 
         <DataTable
           columns={activityColumns}
-          data={activity}
+          data={paginatedActivity}
           emptyMessage="Rewards and point adjustments you make will appear here."
           minWidth="640px"
         />
+
+        {activity.length > 0 && (
+          <Pagination
+            currentPage={page}
+            totalItems={activity.length}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            pageSizeOptions={sizeOptions}
+            onPageSizeChange={setPageSize}
+          />
+        )}
       </section>
     </div>
   );

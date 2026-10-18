@@ -7,11 +7,18 @@ import FilterSelect from '../components/UI/FilterSelect';
 import { filterAdminUsers } from '../utils/filterAdminUsers';
 import DataTable from '../components/UI/DataTable';
 import UserActionsMenu from '../components/UI/UserActionsMenu';
-import Pagination from '../utils/Pagination';
+import Pagination from '../components/UI/Pagination';
 import Input from '../components/UI/Input';
 import Button from '../components/UI/Button';
 import Modal from '../components/UI/Modal';
 import AddEmployee from '../utils/AddEmployee';
+import { paginate, usePaginationParams } from '../hooks/usePaginationParams';
+import { useUrlParams } from '../hooks/useUrlParams';
+
+// A URL value, or 'all' when it's missing or not one of the options
+function pickOption(value, options) {
+  return options.some((option) => option.key === value) ? value : 'all';
+}
 
 function AdminUsers() {
   const cards = rolesPermissionsMockData.summary;
@@ -19,15 +26,18 @@ function AdminUsers() {
     user: null,
     position: null,
   });
-  const [selectedRole, setSelectedRole] = useState('all');
-  const [selectedStatus, setSelectedStatus] = useState('all');
-  const [search, setSearch] = useState('');
-  const [paginatedUsers, setPaginatedUsers] = useState([]);
   const [openAddEmployee, setOpenAddEmployee] = useState(false);
 
   const users = rolesPermissionsMockData.users;
   const roleOptions = rolesPermissionsMockData.roles;
   const statusOptions = rolesPermissionsMockData.statuses;
+
+  // Filters live in the URL: ?q=sara&role=finance&status=active&page=2&size=20
+  const [searchParams, updateParams] = useUrlParams();
+  const { page, pageSize, setPage, setPageSize, sizeOptions } = usePaginationParams();
+  const search = searchParams.get('q') ?? '';
+  const selectedRole = pickOption(searchParams.get('role'), roleOptions);
+  const selectedStatus = pickOption(searchParams.get('status'), statusOptions);
 
   const filteredUsers = useMemo(
     () =>
@@ -38,6 +48,8 @@ function AdminUsers() {
       }),
     [users, search, selectedRole, selectedStatus]
   );
+
+  const paginatedUsers = paginate(filteredUsers, page, pageSize);
 
   const handleOpenActions = (user, event) => {
     const buttonRect = event.currentTarget.getBoundingClientRect();
@@ -98,7 +110,6 @@ function AdminUsers() {
     // updateUserStatus(user.id);
   };
 
-  console.log('inside admin', filteredUsers);
   return (
     <div className="min-w-0 space-y-6">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -121,18 +132,16 @@ function AdminUsers() {
           icon={Search}
           type="search"
           value={search}
-          onChange={(event) => {
-            setSearch(event.target.value);
-          }}
+          onChange={(event) => updateParams({ q: event.target.value }, { resetPage: true })}
           placeholder="Search user..."
           className="h-10 w-full rounded-lg border border-[#DED2C6] bg-white px-3 text-sm outline-none focus:border-[#E4790B] focus:ring-2 focus:ring-[#E4790B]/10 sm:max-w-[280px]"
         />
 
         <FilterSelect
           value={selectedRole}
-          onChange={(role) => {
-            setSelectedRole(role);
-          }}
+          onChange={(role) =>
+            updateParams({ role: role === 'all' ? null : role }, { resetPage: true })
+          }
           options={roleOptions}
           ariaLabel="Filter users by role"
           className="w-full sm:w-[150px]"
@@ -140,9 +149,9 @@ function AdminUsers() {
 
         <FilterSelect
           value={selectedStatus}
-          onChange={(status) => {
-            setSelectedStatus(status);
-          }}
+          onChange={(status) =>
+            updateParams({ status: status === 'all' ? null : status }, { resetPage: true })
+          }
           options={statusOptions}
           ariaLabel="Filter users by status"
           className="w-full sm:w-[150px]"
@@ -176,7 +185,16 @@ function AdminUsers() {
         minWidth="850px"
         cellClassName="text-sm"
       />
-      <Pagination data={filteredUsers} perPage={10} onPaginate={setPaginatedUsers} />
+      {filteredUsers.length > 0 && (
+        <Pagination
+          currentPage={page}
+          totalItems={filteredUsers.length}
+          pageSize={pageSize}
+          onPageChange={setPage}
+          pageSizeOptions={sizeOptions}
+          onPageSizeChange={setPageSize}
+        />
+      )}
 
       <UserActionsMenu
         user={actionMenu.user}

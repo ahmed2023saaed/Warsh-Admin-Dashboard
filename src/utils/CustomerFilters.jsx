@@ -21,7 +21,7 @@ export function createCustomerColumns({ onView, onSuspend }) {
       key: 'fullName',
       header: 'Customer',
       render: (customer) => {
-        const initials = customer.fullName
+        const initials = (customer.fullName || '')
           .split(' ')
           .map((name) => name[0])
           .slice(0, 2)
@@ -45,7 +45,7 @@ export function createCustomerColumns({ onView, onSuspend }) {
       cellClassName: 'text-sm whitespace-nowrap text-[#5A6968]',
       render: (customer) => (
         <a
-          href={`tel:${customer.phone.replace(/\s/g, '')}`}
+          href={`tel:${(customer.phone || '').replace(/\s/g, '')}`}
           className="transition-colors hover:text-[#0E5C5B]"
         >
           {customer.phone}
