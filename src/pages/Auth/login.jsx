@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import useAppTranslation from '../../hooks/useAppTranslation';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { loginAdmin } from '../../api/authApi';
@@ -128,12 +127,6 @@ export default function Login() {
             )}
           </button>
         </form>
-
-        <p className="mt-5 text-center text-sm text-gray-600">
-          <Link to={`/${lang}/register`} className="ml-1 text-sm text-blue-500 hover:text-blue-700">
-            {t('login.registerLink')}
-          </Link>
-        </p>
       </div>
     </div>
   );

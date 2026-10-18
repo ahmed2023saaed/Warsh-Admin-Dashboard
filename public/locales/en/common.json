@@ -9,7 +9,6 @@
     "passwordPlaceholder": "Enter your password",
     "passwordRequired": "Password is required.",
     "rememberMe": "Remember me",
-    "registerLink": "Forgot password?",
     "failed": "Unable to sign in. Please check your email and password.",
     "loading": "Signing in...",
     "submit": "Sign in"

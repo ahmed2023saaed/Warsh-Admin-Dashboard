@@ -9,9 +9,7 @@
     "passwordPlaceholder": "أدخل كلمة المرور",
     "passwordRequired": "كلمة المرور مطلوبة.",
     "rememberMe": "تذكرني",
-    "forgotPassword": "هل نسيت كلمة المرور؟",
     "noAccount": "ليس لديك حساب؟",
-    "registerLink": "إنشاء حساب",
     "failed": "تعذر تسجيل الدخول. يرجى التحقق من البريد الإلكتروني وكلمة المرور.",
     "loading": "جارٍ تسجيل الدخول...",
     "submit": "تسجيل الدخول"
