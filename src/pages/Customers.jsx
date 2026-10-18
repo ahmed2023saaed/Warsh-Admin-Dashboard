@@ -19,6 +19,9 @@ import { useUrlParams } from '../hooks/useUrlParams';
 
 const emptyResult = { items: [], totalCount: 0, counts: {} };
 
+// How often the customers list refreshes in the background
+const REFRESH_INTERVAL_MS = 15000;
+
 function formatDate(value) {
   if (!value) return '';
 
@@ -114,6 +117,46 @@ function Customers() {
       ignore = true;
     };
   }, [page, pageSize, debouncedSearch, isActive, reloadKey, queryKey]);
+
+  // Refresh the list every 15 seconds without the loading state. Paused while the browser tab
+  // is hidden, or while a drawer or the suspend modal is open, so rows don't move under the user.
+  const isRefreshPaused = Boolean(selectedCustomerId || suspendedAcctount);
+
+  useEffect(() => {
+    if (isRefreshPaused || isLoading) return undefined;
+
+    let ignore = false;
+    let inFlight = false;
+
+    const timer = setInterval(async () => {
+      if (inFlight || document.visibilityState !== 'visible') return;
+
+      inFlight = true;
+
+      try {
+        const data = await getClients({
+          page,
+          pageSize,
+          search: debouncedSearch,
+          status: isActive,
+        });
+
+        if (!ignore) {
+          setResult({ ...emptyResult, ...data, items: data?.items || [], queryKey });
+          setLoadError('');
+        }
+      } catch {
+        // Keep showing the last list; the next refresh tries again
+      } finally {
+        inFlight = false;
+      }
+    }, REFRESH_INTERVAL_MS);
+
+    return () => {
+      ignore = true;
+      clearInterval(timer);
+    };
+  }, [isRefreshPaused, isLoading, page, pageSize, debouncedSearch, isActive, queryKey]);
 
   // ?page=9 when there are only 3 pages: go to the last page instead of an empty table
   useEffect(() => {
