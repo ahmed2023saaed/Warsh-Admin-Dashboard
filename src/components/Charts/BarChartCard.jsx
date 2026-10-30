@@ -39,7 +39,7 @@ export default function BarChartCard({
     title,
     color = '#EF9D32',
     unit,
-    valueFormater = (value) => value.toLocaleString('en-EG')
+    valueFormatter = (value) => value.toLocaleString('en-EG')
 }) {
     return (
         <div className='bg-white rounded-2xl border border-gray-100 shadow-sm '>
@@ -68,19 +68,18 @@ export default function BarChartCard({
                             left: 0
                         }}
                     >
-                        <CartesianGrid vertical horizontal={false} fill='text-gray-400' />
+                        <CartesianGrid vertical horizontal={false} stroke='#f0ebe4' />
                         <XAxis
                             dataKey='label'
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: "#ee42", fontSize: 11 }}
-                            by={8}
+                            tick={{ fill: "#a39a90", fontSize: 11 }}
                         />
                         <YAxis hide />
 
                         <Tooltip
-                            cursor={{ fill: "rgba(44, 49, 45, 0.8)" }}
-                            content={<CustomTooltip valueFormatter={valueFormater} />}
+                            cursor={{ fill: "rgba(28, 23, 18, 0.05)" }}
+                            content={<CustomTooltip valueFormatter={valueFormatter} />}
                         />
 
                         <Bar

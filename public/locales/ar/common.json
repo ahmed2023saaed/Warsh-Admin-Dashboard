@@ -4,8 +4,10 @@
     "subtitle": "تسجيل الدخول إلى لوحة التحكم الخاصة بك",
     "email": "البريد الإلكتروني",
     "emailPlaceholder": "you@example.com",
+    "emailRequired": "البريد الإلكتروني مطلوب.",
     "password": "كلمة المرور",
     "passwordPlaceholder": "أدخل كلمة المرور",
+    "passwordRequired": "كلمة المرور مطلوبة.",
     "rememberMe": "تذكرني",
     "forgotPassword": "هل نسيت كلمة المرور؟",
     "noAccount": "ليس لديك حساب؟",
@@ -33,17 +35,18 @@
     "failed": "تعذر إنشاء الحساب. يرجى المحاولة مرة أخرى.",
     "submit": "إنشاء حساب"
   },
-  "sidebar":{
-    "title":"ورشـة",
-    "subtitle":"لوحة تحكم المسؤول",
-    "dashboard":"لوحة التحكم",
-    "adminUsers":"المستخدمون الإداريون",
-    "settings":"الإعدادات",
-    "serviceCenter":"مركز الخدمة",
-    "customers":"العملاء",
-    "bookings":"الحجوزات",
-    "payments":"المدفوعات",
-    "reviews":"المراجعات",
-    "marketing":"التسويق"
+  "sidebar": {
+    "title": "ورشـة",
+    "subtitle": "لوحة تحكم المسؤول",
+    "dashboard": "لوحة التحكم",
+    "adminUsers": "المستخدمون الإداريون",
+    "settings": "الإعدادات",
+    "serviceCenter": "مركز الخدمة",
+    "customers": "العملاء",
+    "bookings": "الحجوزات",
+    "payments": "المدفوعات",
+    "reviews": "المراجعات",
+    "marketing": "التسويق",
+    "loyalty": "الولاء والمكافآت"
   }
 }

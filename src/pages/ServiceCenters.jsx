@@ -12,6 +12,9 @@ import Button from '../components/UI/Button';
 import Pagination from '../utils/Pagination';
 import SuspendModal from '../components/UI/SuspendModal';
 
+import { verifyWorkshop, unverifyWorkshop } from '../api/serviceCenterApi';
+import { toast } from 'react-hot-toast';
+
 function ServiceCenters() {
   const [centerIdToReject, setCenterIdToReject] = useState(null);
   const [centerIdToApprove, setCenterIdToApprove] = useState(null);
@@ -71,22 +74,6 @@ function ServiceCenters() {
   function confirmUnsuspendCenter() {
     showSuccessToast('Service center is active.');
     updateCenterStatus('Active');
-  }
-
-  function confirmApproveCenter() {
-    if (centerIdToApprove === null) return;
-
-    // Send centerIdToApprove to the backend here.
-    showSuccessToast('Service center approved successfully.', 'Approving service center...');
-    setCenterIdToApprove(null);
-  }
-
-  function confirmRejectCenter() {
-    if (centerIdToReject === null) return;
-
-    // Send centerIdToReject to the backend here.
-    showSuccessToast('Service center rejected successfully.', 'Rejecting service center...');
-    setCenterIdToReject(null);
   }
 
   const handleViewCenter = useCallback((center) => {
@@ -205,6 +192,31 @@ function ServiceCenters() {
     );
   }
 
+  /*************API**********/
+  async function handleVerifyWorkshop(id) {
+    try {
+      await verifyWorkshop(id);
+
+      toast.success('Workshop accepted successfully');
+
+      // Update your UI here
+    } catch (error) {
+      toast.error(error.message || 'Failed to accept workshop');
+    }
+  }
+
+  async function handleUnverifyWorkshop(id) {
+    try {
+      await unverifyWorkshop(id);
+
+      toast.success('Workshop rejected successfully');
+
+      // Update your UI here
+    } catch (error) {
+      toast.error(error.message || 'Failed to reject workshop');
+    }
+  }
+
   return (
     <div className="space-y-4">
       <section className="overflow-hidden rounded-[14px] border border-[#E4DDD3] bg-white px-3 pt-4 pb-4 shadow-[0_1px_2px_rgba(28,23,18,0.02)] sm:rounded-[18px] sm:px-6 sm:pt-5 sm:pb-5">
@@ -233,7 +245,7 @@ function ServiceCenters() {
             size="sm"
             className="border border-[#D7EBDD]"
             contentClassName="!py-5"
-            footerClassName="!px-5 !py-4"
+            footerClassNamae="!px-5 !py-4"
             footer={
               <>
                 <Button
@@ -244,7 +256,7 @@ function ServiceCenters() {
                 </Button>
 
                 <Button
-                  onClick={confirmApproveCenter}
+                  onClick={() => handleVerifyWorkshop(centerIdToApprove)}
                   className="min-w-28 !border-[#20A45B] !bg-[#20A45B] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#19894A] hover:!bg-[#19894A] focus-visible:!ring-[#20A45B]/40"
                 >
                   Approve Center
@@ -286,7 +298,8 @@ function ServiceCenters() {
                 </Button>
 
                 <Button
-                  onClick={confirmRejectCenter}
+                  onClick={() => handleUnverifyWorkshop(centerIdToReject)}
+
                   className="min-w-28 !border-[#D64545] !bg-[#D64545] !px-5 !py-2.5 !text-sm !text-white hover:!border-[#B93636] hover:!bg-[#B93636] focus-visible:!ring-[#D64545]/40"
                 >
                   Reject Center

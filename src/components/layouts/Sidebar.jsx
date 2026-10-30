@@ -1,106 +1,148 @@
-import {useLanguage} from "../../context/languageContext";
-import { useParams, NavLink } from "react-router-dom";
-import { X , ChevronLeft, ChevronRight} from "lucide-react";
-import logo from "../../assets/warsha_logo.png";
-import UseAppTranslation  from "../../hooks/useAppTranslation";
-import navItems from "../../utils/NavItem";
-
+import { useLanguage } from '../../context/languageContext';
+import { useAuth } from '../../context/AuthContext';
+import { useParams, NavLink } from 'react-router-dom';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import logo from '../../assets/warsha_logo.png';
+import UseAppTranslation from '../../hooks/useAppTranslation';
+import navItems from '../../utils/NavItem';
 
 export default function Sidebar({ collapsed, onCollapse, onMobileSidebarClose, mobileOpen }) {
-    const { isRTL } = useLanguage();
-    const { lang } = useParams();
-    const { t } = UseAppTranslation('common');
-    
+  const { isRTL } = useLanguage();
+  const { lang } = useParams();
+  const { t } = UseAppTranslation('common');
 
-    return (
-        <aside 
-        className={[
-            "flex h-full w-[min(82vw,280px)] flex-col bg-[#1c1712] text-[#a89a8a] shadow-2xl transition-all duration-300 ease-in-out lg:shadow-none",
-            collapsed ? "lg:w-20" : "lg:w-[240px]",
-            "fixed inset-y-0 z-50 lg:static",
-            isRTL ? `right-0 transition-transform ${mobileOpen ? "translate-x-0" : "translate-x-full"} lg:translate-x-0`
-            : `left-0 transition-transform ${mobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`
-        ].join(" ")}
-        aria-label="Main navigation"
-        >
+  const { hasPermission } = useAuth();
 
-        <div
+  // Keep only navigation items the user has permission to access
+  const visibleNavItems = navItems.filter((item) => hasPermission(item.permissionId));
+
+  return (
+    <aside
+      className={[
+        'flex h-full w-[min(82vw,280px)] flex-col bg-[#1c1712] text-[#a89a8a] shadow-2xl transition-all duration-300 ease-in-out lg:shadow-none',
+        collapsed ? 'lg:w-20' : 'lg:w-[240px]',
+        'fixed inset-y-0 z-50 lg:static',
+        isRTL
+          ? `right-0 transition-transform ${
+              mobileOpen ? 'translate-x-0' : 'translate-x-full'
+            } lg:translate-x-0`
+          : `left-0 transition-transform ${
+              mobileOpen ? 'translate-x-0' : '-translate-x-full'
+            } lg:translate-x-0`,
+      ].join(' ')}
+      aria-label="Main navigation"
+    >
+      <div
         className={[
-            "flex h-24 items-center justify-between border-b border-white/10 px-4",
-            collapsed ? "lg:justify-center lg:px-2" : "px-5",
-        ].join(" ")}
-        >
-            <div className="flex items-center gap-2">
-                <div className="flex-shrink-0">
-                    <img src={logo} alt="Logo" className="h-8 w-8" />
-                </div>
-                <div className={collapsed ? "min-w-0 lg:hidden" : "min-w-0"}>
-                        <p className="truncate text-lg font-semibold text-white">
-                            {t("sidebar.title", { defaultValue: "Warsha" })}
-                        </p>
-                        <p className="truncate text-xs text-gray-300">
-                            {t("sidebar.subtitle", { defaultValue: "Admin Panel" })}
-                        </p>
-                </div>
-            </div>
-            <button className="text-white/70 hover:bg-white/10 p-2 lg:hidden rounded-full" onClick={onMobileSidebarClose} aria-label="Close menu">
-                <X className="h-5 w-5" />   
-            </button>
+          'flex h-24 items-center justify-between border-b border-white/10 px-4',
+          collapsed ? 'lg:justify-center lg:px-2' : 'px-5',
+        ].join(' ')}
+      >
+        <div className="flex items-center gap-2">
+          <div className="flex-shrink-0">
+            <img src={logo} alt="Logo" className="h-8 w-8" />
+          </div>
+
+          <div className={collapsed ? 'min-w-0 lg:hidden' : 'min-w-0'}>
+            <p className="truncate text-lg font-semibold text-white">
+              {t('sidebar.title', {
+                defaultValue: 'Warsha',
+              })}
+            </p>
+
+            <p className="truncate text-xs text-gray-300">
+              {t('sidebar.subtitle', {
+                defaultValue: 'Admin Panel',
+              })}
+            </p>
+          </div>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-4">
-            <ul className="space-y-2 px-2">
-                {navItems.map((item) => {
-                    const Icon = item.icon;
-                    return (
-                        <li key={item.key}>
-                            <NavLink
-                                end={item.path === ''}
-                                onClick={onMobileSidebarClose}
-                                title={t(`sidebar.${item.key}`, { defaultValue: item.title })}
-                                to={`/${lang}/${item.path}`}
-                                className={({ isActive }) =>
-                                    `flex items-center gap-3 rounded-lg px-3 relative py-2 text-sm font-medium transition-colors duration-200 ${
-                                        isActive ? "bg-[#2a2119] text-white" : "text-[#a89a8a] hover:bg-white/10 hover:text-white"
-                                    } ${collapsed ? "lg:justify-center" : ""}`
-                                }
-                            >
-                                {({ isActive }) =>
-                                (
-                                    <>
-                                    {isActive && (
-                                        <span
-                                            aria-hidden="true"
-                                            className={`absolute inset-y-0 w-1 rounded-full overflow:hidden bg-[#e08b2f] ${isRTL ? 'right-0' : 'left-0'}`}
-                                        />
-                                    )}
+        <button
+          className="rounded-full p-2 text-white/70 hover:bg-white/10 lg:hidden"
+          onClick={onMobileSidebarClose}
+          aria-label="Close menu"
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </div>
 
-                                    <Icon className={`h-5 w-5 ${isActive ? 'text-[#e08b2f]' : '' } `} />
-                                    <span className={collapsed ? "truncate lg:hidden" : "truncate"}>{t(`sidebar.${item.key}`, { defaultValue: item.title })}</span>
+      <nav className="flex-1 overflow-y-auto py-4">
+        <ul className="space-y-2 px-2">
+          {visibleNavItems.map((item) => {
+            const Icon = item.icon;
 
-                                    </>
-                                )
-                                }
-                                
-                            </NavLink>
-                        </li>
-                    );
-                })}
-            </ul>
-        </nav>
+            return (
+              <li key={item.key}>
+                <NavLink
+                  end={item.path === ''}
+                  onClick={onMobileSidebarClose}
+                  title={t(`sidebar.${item.key}`, {
+                    defaultValue: item.title,
+                  })}
+                  to={`/${lang}/${item.path}`}
+                  className={({ isActive }) =>
+                    `relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors duration-200 ${
+                      isActive
+                        ? 'bg-[#2a2119] text-white'
+                        : 'text-[#a89a8a] hover:bg-white/10 hover:text-white'
+                    } ${collapsed ? 'lg:justify-center' : ''}`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      {isActive && (
+                        <span
+                          aria-hidden="true"
+                          className={`absolute inset-y-0 w-1 rounded-full bg-[#e08b2f] ${
+                            isRTL ? 'right-0' : 'left-0'
+                          }`}
+                        />
+                      )}
 
-        <div className="hidden items-center justify-center border-t border-white/10 p-4 lg:flex">
-            <button
-                onClick={onCollapse}
-                className="rounded-full bg-[#2a2119] p-2 text-white/70 hover:bg-[#3a2b1f] hover:text-white"
-                aria-label={collapsed ? t("sidebar.expand", { defaultValue: "Expand sidebar" }) : t("sidebar.collapse", { defaultValue: "Collapse sidebar" })}
-            >
-                { isRTL ? collapsed ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />
-                : collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
+                      <Icon className={`h-5 w-5 ${isActive ? 'text-[#e08b2f]' : ''}`} />
 
-            </button>
-        </div>
-        
-        </aside>
-    );
-}          
+                      <span className={collapsed ? 'truncate lg:hidden' : 'truncate'}>
+                        {t(`sidebar.${item.key}`, {
+                          defaultValue: item.title,
+                        })}
+                      </span>
+                    </>
+                  )}
+                </NavLink>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      <div className="hidden items-center justify-center border-t border-white/10 p-4 lg:flex">
+        <button
+          onClick={onCollapse}
+          className="rounded-full bg-[#2a2119] p-2 text-white/70 hover:bg-[#3a2b1f] hover:text-white"
+          aria-label={
+            collapsed
+              ? t('sidebar.expand', {
+                  defaultValue: 'Expand sidebar',
+                })
+              : t('sidebar.collapse', {
+                  defaultValue: 'Collapse sidebar',
+                })
+          }
+        >
+          {isRTL ? (
+            collapsed ? (
+              <ChevronLeft className="h-5 w-5" />
+            ) : (
+              <ChevronRight className="h-5 w-5" />
+            )
+          ) : collapsed ? (
+            <ChevronRight className="h-5 w-5" />
+          ) : (
+            <ChevronLeft className="h-5 w-5" />
+          )}
+        </button>
+      </div>
+    </aside>
+  );
+}
