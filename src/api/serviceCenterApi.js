@@ -1,57 +1,20 @@
 import apiClient from './apiClient';
+import { callApi } from './apiRequest';
 
-export async function verifyWorkshop(id) {
-  try {
-    const response = await apiClient.post(`/Admin/verify-workshop/${id}`);
-
-    const data = response.data;
-
-    if (!data.isSuccess) {
-      throw new Error(data.message || 'Failed to accept workshop');
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Accept workshop failed:', error);
-
-    if (error.response) {
-      throw new Error(
-        error.response.data?.message || error.response.data?.title || 'Failed to accept workshop'
-      );
-    }
-
-    if (error.request) {
-      throw new Error('Unable to reach the server. Please check your connection.');
-    }
-
-    throw error;
-  }
+// POST /Admin/verify-workshop/{id}: accepts a workshop so it can sign in
+export function verifyWorkshop(id) {
+  return callApi(
+    'Accept workshop',
+    () => apiClient.post(`/Admin/verify-workshop/${id}`),
+    'Failed to accept workshop'
+  );
 }
 
-export async function unverifyWorkshop(id) {
-  try {
-    const response = await apiClient.post(`/Admin/unverify-workshop/${id}`);
-
-    const data = response.data;
-
-    if (!data.isSuccess) {
-      throw new Error(data.message || 'Failed to reject workshop');
-    }
-
-    return data;
-  } catch (error) {
-    console.error('Reject workshop failed:', error);
-
-    if (error.response) {
-      throw new Error(
-        error.response.data?.message || error.response.data?.title || 'Failed to reject workshop'
-      );
-    }
-
-    if (error.request) {
-      throw new Error('Unable to reach the server. Please check your connection.');
-    }
-
-    throw error;
-  }
+// POST /Admin/unverify-workshop/{id}: takes the verification back
+export function unverifyWorkshop(id) {
+  return callApi(
+    'Reject workshop',
+    () => apiClient.post(`/Admin/unverify-workshop/${id}`),
+    'Failed to reject workshop'
+  );
 }

@@ -7,20 +7,25 @@ import DetailsDrawer from '../components/UI/DetailsDrawer';
 import useAppTranslation from '../hooks/useAppTranslation';
 import { Search } from 'lucide-react';
 import FilterButton from '../components/UI/FilterButton';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import State from '../components/UI/State';
 import DataTable from '../components/UI/DataTable';
-import { showSuccessToast } from '../components/UI/toastNotifications';
+import { showErrorToast, showSuccessToast } from '../components/UI/toastNotifications';
 import Pagination from '../components/UI/Pagination';
 import SuspendModal from '../components/UI/SuspendModal';
-import { getClients } from '../api/clientsApi';
-import { paginate, usePaginationParams } from '../hooks/usePaginationParams';
+import {
+  activateClient,
+  getClientActivity,
+  getClientById,
+  getClients,
+  suspendClient,
+} from '../api/clientsApi';
+import { usePaginationParams } from '../hooks/usePaginationParams';
 import { useUrlParams } from '../hooks/useUrlParams';
+import { usePolling } from '../hooks/usePolling';
+import { POLLING } from '../constants/polling';
 
 const emptyResult = { items: [], totalCount: 0, counts: {} };
-
-// How often the customers list refreshes in the background
-const REFRESH_INTERVAL_MS = 15000;
 
 function formatDate(value) {
   if (!value) return '';
@@ -47,6 +52,7 @@ function formatMoney(value) {
 function Customers() {
   const { t } = useAppTranslation('customers');
   const [suspendedAcctount, setSuspendedAcctount] = useState(null);
+  const [isChangingStatus, setIsChangingStatus] = useState(false);
 
   /*
    * Everything that decides what the page shows lives in the URL, so a link or a
@@ -75,9 +81,34 @@ function Customers() {
   const isCurrentResult =
     !isLoading && result.queryKey === queryKey && debouncedSearch === search.trim();
 
-  const selectedCustomer = selectedCustomerId
+  const listCustomer = selectedCustomerId
     ? (customers.find((item) => String(item.id) === selectedCustomerId) ?? null)
     : null;
+
+  // The open customer from GET /Admin/clients/{id}; the list row shows until it arrives
+  const [details, setDetails] = useState({ id: null, data: null, error: '' });
+  const [detailsReloadKey, setDetailsReloadKey] = useState(0);
+  const loadedDetails = details.id === selectedCustomerId ? details : null;
+  const selectedCustomer = loadedDetails?.data
+    ? { ...listCustomer, ...loadedDetails.data }
+    : listCustomer;
+
+  useEffect(() => {
+    if (!selectedCustomerId) return undefined;
+
+    let ignore = false;
+    getClientById(selectedCustomerId)
+      .then((data) => {
+        if (!ignore) setDetails({ id: selectedCustomerId, data, error: '' });
+      })
+      .catch((error) => {
+        if (!ignore) setDetails({ id: selectedCustomerId, data: null, error: error.message });
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [selectedCustomerId, detailsReloadKey]);
 
   // Wait until the user stops typing before searching
   useEffect(() => {
@@ -118,45 +149,35 @@ function Customers() {
     };
   }, [page, pageSize, debouncedSearch, isActive, reloadKey, queryKey]);
 
-  // Refresh the list every 15 seconds without the loading state. Paused while the browser tab
-  // is hidden, or while a drawer or the suspend modal is open, so rows don't move under the user.
+  // Refresh the list in the background (POLLING.customers, every 15 s) without the loading
+  // state. Paused while a drawer or the suspend modal is open, so rows don't move under the
+  // user; usePolling also pauses while the tab is hidden, refreshes as soon as it's shown
+  // again, and slows down while the server keeps failing.
   const isRefreshPaused = Boolean(selectedCustomerId || suspendedAcctount);
 
+  // An answer for an older search / page must not replace the newer list.
+  const currentQueryKey = useRef(queryKey);
   useEffect(() => {
-    if (isRefreshPaused || isLoading) return undefined;
+    currentQueryKey.current = queryKey;
+  }, [queryKey]);
 
-    let ignore = false;
-    let inFlight = false;
+  usePolling(
+    async () => {
+      const requestKey = queryKey;
+      const data = await getClients({
+        page,
+        pageSize,
+        search: debouncedSearch,
+        status: isActive,
+      });
 
-    const timer = setInterval(async () => {
-      if (inFlight || document.visibilityState !== 'visible') return;
-
-      inFlight = true;
-
-      try {
-        const data = await getClients({
-          page,
-          pageSize,
-          search: debouncedSearch,
-          status: isActive,
-        });
-
-        if (!ignore) {
-          setResult({ ...emptyResult, ...data, items: data?.items || [], queryKey });
-          setLoadError('');
-        }
-      } catch {
-        // Keep showing the last list; the next refresh tries again
-      } finally {
-        inFlight = false;
+      if (requestKey === currentQueryKey.current) {
+        setResult({ ...emptyResult, ...data, items: data?.items || [], queryKey: requestKey });
+        setLoadError('');
       }
-    }, REFRESH_INTERVAL_MS);
-
-    return () => {
-      ignore = true;
-      clearInterval(timer);
-    };
-  }, [isRefreshPaused, isLoading, page, pageSize, debouncedSearch, isActive, queryKey]);
+    },
+    { ...POLLING.customers, enabled: !isRefreshPaused && !isLoading }
+  );
 
   // ?page=9 when there are only 3 pages: go to the last page instead of an empty table
   useEffect(() => {
@@ -165,12 +186,14 @@ function Customers() {
     if (isCurrentResult && totalCount > 0 && page > lastPage) setPage(lastPage);
   }, [isCurrentResult, totalCount, page, pageSize, setPage]);
 
-  // A link to a customer that isn't on this page: there's no details endpoint yet, so drop it
+  // A link to a customer that isn't on this page opens from the details endpoint;
+  // drop it only when that customer can't be loaded either
   useEffect(() => {
-    if (isCurrentResult && selectedCustomerId && !selectedCustomer) {
+    if (isCurrentResult && selectedCustomerId && !listCustomer && loadedDetails?.error) {
+      showErrorToast(loadedDetails.error);
       updateParams({ customer: null });
     }
-  }, [isCurrentResult, selectedCustomerId, selectedCustomer, updateParams]);
+  }, [isCurrentResult, selectedCustomerId, listCustomer, loadedDetails, updateParams]);
 
   // Opening a customer adds a history entry, so the browser's Back button closes it
   const openCustomer = useCallback(
@@ -199,30 +222,39 @@ function Customers() {
   );
 
   function cancelPromoDelete() {
+    if (isChangingStatus) return;
     setSuspendedAcctount(null);
   }
 
-  // There's no suspend endpoint yet, so this only changes the status on screen
+  // POST /Admin/clients/{id}/suspend or /activate, then reload so the row, the tab counts
+  // and the open drawer show what the backend saved
+  async function changeAccountStatus(send, successMessage) {
+    if (!suspendedAcctount || isChangingStatus) return;
+
+    setIsChangingStatus(true);
+    try {
+      await send(suspendedAcctount.id);
+      showSuccessToast(successMessage);
+      setSuspendedAcctount(null);
+      setReloadKey((count) => count + 1);
+      setDetailsReloadKey((count) => count + 1);
+    } catch (error) {
+      // The modal stays open so the admin can retry
+      showErrorToast(error.message);
+    } finally {
+      setIsChangingStatus(false);
+    }
+  }
+
   function confirmSuspendedAccount(reason, durationDays = 1) {
-    if (!suspendedAcctount) return;
-
-    suspendedAcctount.status = 'suspended';
-    suspendedAcctount.suspensionReason = reason;
-    suspendedAcctount.suspensionDays = durationDays;
-    cancelPromoDelete();
-
-    showSuccessToast(
-      `${suspendedAcctount.fullName + ' ' + suspendedAcctount.id} suspended for ${durationDays} day(s)`
+    changeAccountStatus(
+      (id) => suspendClient(id, { reason: reason.trim(), durationDays }),
+      `${suspendedAcctount.fullName} suspended for ${durationDays} day(s)`
     );
   }
 
   function confirmUnSuspendedAccount() {
-    if (!suspendedAcctount) return;
-
-    suspendedAcctount.status = 'active';
-    cancelPromoDelete();
-
-    showSuccessToast(`${suspendedAcctount.fullName + ' ' + suspendedAcctount.id} is now ACTIVE`);
+    changeAccountStatus(activateClient, `${suspendedAcctount.fullName} is now active`);
   }
 
   /*********** */
@@ -234,8 +266,32 @@ function Customers() {
   /****** View Customer ******* */
   // The drawer's history table has its own page in the URL: ?historyPage=2&historySize=10
   const history = usePaginationParams('history');
-  const currentCustomerActivities = selectedCustomer?.activity || [];
-  const paginatedActivities = paginate(currentCustomerActivities, history.page, history.pageSize);
+
+  // GET /Admin/clients/{id}/activity, one page at a time
+  const [activity, setActivity] = useState({ key: null, items: [], totalCount: 0, error: '' });
+  const activityKey = [selectedCustomerId, history.page, history.pageSize, detailsReloadKey].join(
+    '|'
+  );
+  const isActivityLoading = Boolean(selectedCustomerId) && activity.key !== activityKey;
+
+  useEffect(() => {
+    if (!selectedCustomerId) return undefined;
+
+    let ignore = false;
+    getClientActivity(selectedCustomerId, { page: history.page, pageSize: history.pageSize })
+      .then(({ items, totalCount }) => {
+        if (!ignore) setActivity({ key: activityKey, items, totalCount, error: '' });
+      })
+      .catch((error) => {
+        if (!ignore) {
+          setActivity({ key: activityKey, items: [], totalCount: 0, error: error.message });
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
+  }, [selectedCustomerId, history.page, history.pageSize, activityKey]);
 
   /** */
   function CustomerDetails({ customer }) {
@@ -286,27 +342,36 @@ function Customers() {
           </section>
         )}
 
-        {currentCustomerActivities.length > 0 && (
-          <section>
-            <div>
-              <h3 className="mb-4 text-base font-bold text-[#1C1712]">Customer History</h3>
-            </div>
-            <DataTable
-              columns={activityColumns}
-              data={paginatedActivities}
-              emptyMessage="No Activiyes were found."
-              cellClassName="text-sm"
-            />
+        <section>
+          <div>
+            <h3 className="mb-4 text-base font-bold text-[#1C1712]">Customer History</h3>
+          </div>
+
+          {activity.error && !isActivityLoading && (
+            <p className="mb-3 text-sm text-[#B03A3A]">
+              Couldn't load the history: {activity.error}
+            </p>
+          )}
+
+          <DataTable
+            columns={activityColumns}
+            data={isActivityLoading ? [] : activity.items}
+            emptyMessage={isActivityLoading ? 'Loading history...' : 'No activity yet.'}
+            cellClassName="text-sm"
+          />
+
+          {activity.totalCount > 0 && (
             <Pagination
               currentPage={history.page}
-              totalItems={currentCustomerActivities.length}
+              totalItems={activity.totalCount}
               pageSize={history.pageSize}
               onPageChange={history.setPage}
               pageSizeOptions={history.sizeOptions}
               onPageSizeChange={history.setPageSize}
+              disabled={isActivityLoading}
             />
-          </section>
-        )}
+          )}
+        </section>
       </div>
     );
   }
@@ -415,7 +480,11 @@ function Customers() {
           confirmSuspendedAccount(payload.reason, payload.durationDays);
         }}
         confirmLabel={
-          suspendedAcctount?.status === 'suspended' ? 'Activate Account' : 'Suspend Account'
+          isChangingStatus
+            ? 'Saving…'
+            : suspendedAcctount?.status === 'suspended'
+              ? 'Activate Account'
+              : 'Suspend Account'
         }
       >
         <p className="text-sm leading-6 text-[#8A8074]">

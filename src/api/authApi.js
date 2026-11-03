@@ -1,4 +1,5 @@
 import apiClient from './apiClient';
+import { callApi } from './apiRequest';
 import { PERMISSION_IDS_BY_CODE } from '../constants/permissions';
 
 // GET /Admin/permissions groups permissions by module:
@@ -39,133 +40,78 @@ export function toPermissionIds(data) {
 }
 
 export async function getPermissions() {
-  try {
-    const response = await apiClient.get('/Admin/permissions');
-    const data = response.data;
+  const data = await callApi(
+    'Get permissions',
+    () => apiClient.get('/Admin/permissions'),
+    'Failed to get permissions',
+    { networkMessage: 'Unable to reach the server.' }
+  );
 
-    if (!data.isSuccess) {
-      throw new Error(data.message || 'Failed to get permissions');
-    }
-
-    return normalizePermissions(data.data);
-  } catch (error) {
-    console.error('Get permissions failed:', error);
-
-    if (error.response) {
-      throw new Error(
-        error.response.data?.message || error.response.data?.title || 'Failed to get permissions'
-      );
-    }
-
-    if (error.request) {
-      throw new Error('Unable to reach the server.');
-    }
-
-    throw error;
-  }
+  return normalizePermissions(data.data);
 }
 
 export async function getUserPermissions(userId) {
-  try {
-    const response = await apiClient.get(`/Admin/user-permissions/${userId}`);
+  const data = await callApi(
+    'Get user permissions',
+    () => apiClient.get(`/Admin/user-permissions/${userId}`),
+    'Failed to get user permissions',
+    { networkMessage: 'Unable to reach the server.' }
+  );
 
-    const data = response.data;
-
-    if (!data.isSuccess) {
-      throw new Error(data.message || 'Failed to get user permissions');
-    }
-
-    return data.data;
-  } catch (error) {
-    console.error('Get user permissions failed:', error);
-
-    if (error.response) {
-      throw new Error(
-        error.response.data?.message ||
-          error.response.data?.title ||
-          'Failed to get user permissions'
-      );
-    }
-
-    if (error.request) {
-      throw new Error('Unable to reach the server.');
-    }
-
-    throw error;
-  }
+  return data.data;
 }
 
 /******************LOGIN*****************/
 export async function loginAdmin({ email, password }) {
+  const data = await callApi(
+    'Admin login',
+    () => apiClient.post('/Admin/login', { email, password }),
+    'Login failed',
+    { networkMessage: 'Unable to reach the login server. Check CORS or the API connection.' }
+  );
+
+  const adminData = data.data;
+
+  // Save authentication data FIRST
+  localStorage.setItem('accessToken', adminData.accessToken);
+  localStorage.setItem('refreshToken', adminData.refreshToken);
+  localStorage.setItem('accessTokenExpiresAt', adminData.expiresAt);
+
+  // Save basic admin information
+  localStorage.setItem(
+    'adminUser',
+    JSON.stringify({
+      userId: adminData.id,
+      email: adminData.email,
+    })
+  );
+
+  // NOW get this user's permissions
+  let userPermissions = [];
+
   try {
-    const response = await apiClient.post('/Admin/login', {
-      email,
-      password,
-    });
+    const response = await getUserPermissions(adminData.id);
 
-    const data = response.data;
+    console.log('USER PERMISSIONS:', response);
 
-    if (!data.isSuccess) {
-      throw new Error(data.message || 'Login failed');
-    }
+    // Saved as ids, e.g. [5, 6, 11]
+    userPermissions = toPermissionIds(response);
 
-    const adminData = data.data;
-
-    // Save authentication data FIRST
-    localStorage.setItem('accessToken', adminData.accessToken);
-    localStorage.setItem('refreshToken', adminData.refreshToken);
-    localStorage.setItem('accessTokenExpiresAt', adminData.expiresAt);
-
-    // Save basic admin information
-    localStorage.setItem(
-      'adminUser',
-      JSON.stringify({
-        userId: adminData.id,
-        email: adminData.email,
-      })
-    );
-
-    // NOW get this user's permissions
-    let userPermissions = [];
-
-    try {
-      const response = await getUserPermissions(adminData.id);
-
-      console.log('USER PERMISSIONS:', response);
-
-      // Saved as ids, e.g. [5, 6, 11]
-      userPermissions = toPermissionIds(response);
-
-      localStorage.setItem('adminPermissions', JSON.stringify(userPermissions));
-    } catch (error) {
-      console.error('Could not get user permissions:', error.message);
-
-      localStorage.setItem('adminPermissions', JSON.stringify([]));
-    }
-
-    // Remove old authentication data
-    localStorage.removeItem('user');
-    localStorage.removeItem('loginResponse');
-
-    return {
-      ...adminData,
-      permissions: userPermissions,
-    };
+    localStorage.setItem('adminPermissions', JSON.stringify(userPermissions));
   } catch (error) {
-    console.error('Admin login failed:', error);
+    console.error('Could not get user permissions:', error.message);
 
-    if (error.response) {
-      const message = error.response.data?.message || error.response.data?.title || 'Login failed';
-
-      throw new Error(message);
-    }
-
-    if (error.request) {
-      throw new Error('Unable to reach the login server. Check CORS or the API connection.');
-    }
-
-    throw error;
+    localStorage.setItem('adminPermissions', JSON.stringify([]));
   }
+
+  // Remove old authentication data
+  localStorage.removeItem('user');
+  localStorage.removeItem('loginResponse');
+
+  return {
+    ...adminData,
+    permissions: userPermissions,
+  };
 }
 
 export function logoutAdmin() {
