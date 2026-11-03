@@ -73,9 +73,12 @@ export async function loginAdmin({ email, password }) {
   const adminData = data.data;
 
   // Save authentication data FIRST
-  localStorage.setItem('accessToken', adminData.accessToken);
-  localStorage.setItem('refreshToken', adminData.refreshToken);
-  localStorage.setItem('accessTokenExpiresAt', adminData.expiresAt);
+  // Only save what the backend sent, so a missing value isn't stored as the text "undefined"
+  const saveIfPresent = (key, value) =>
+    value ? localStorage.setItem(key, value) : localStorage.removeItem(key);
+  saveIfPresent('accessToken', adminData.accessToken);
+  saveIfPresent('refreshToken', adminData.refreshToken);
+  saveIfPresent('accessTokenExpiresAt', adminData.expiresAt);
 
   // Save basic admin information
   localStorage.setItem(

@@ -1,136 +1,141 @@
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_ADMIN_API;
+
+// The backend has no admin refresh endpoint yet, so the client one is used.
+// When POST /Admin/refresh-token exists (same body), change only this line.
+const REFRESH_PATH = '/Auth/client/refresh-token';
+
+// Refresh a little before the token actually expires
+const EXPIRY_MARGIN_MS = 30 * 1000;
+
 const apiClient = axios.create({
-  baseURL: import.meta.env.VITE_ADMIN_API,
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
 });
 
-// Prevent multiple requests from refreshing the token at the same time
+/** A stored value, or null when it's missing or was saved as "undefined"/"null". */
+function readStored(key) {
+  const value = localStorage.getItem(key);
+  return value && value !== 'undefined' && value !== 'null' ? value : null;
+}
+
+function isAccessTokenExpired() {
+  const expiresAt = Date.parse(readStored('accessTokenExpiresAt') || '');
+  return Number.isFinite(expiresAt) && expiresAt - EXPIRY_MARGIN_MS <= Date.now();
+}
+
+/** The session can't be refreshed: clear it and send the admin to the login page. */
+function endSession() {
+  ['accessToken', 'refreshToken', 'accessTokenExpiresAt', 'adminUser', 'adminPermissions'].forEach(
+    (key) => localStorage.removeItem(key)
+  );
+
+  const lang = window.location.pathname.split('/')[1] === 'ar' ? 'ar' : 'en';
+  if (!window.location.pathname.endsWith('/login')) {
+    window.location.replace(`/${lang}/login`);
+  }
+}
+
+// Every request that needs a new token waits for this one refresh
 let refreshPromise = null;
 
-// Add access token to every request
-apiClient.interceptors.request.use(
-  (config) => {
-    const accessToken = localStorage.getItem('accessToken');
+/** POST the refresh token once, save the new tokens, and return the new access token. */
+function refreshAccessToken() {
+  if (refreshPromise) return refreshPromise;
 
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
+  const refreshToken = readStored('refreshToken');
+  if (!refreshToken) return Promise.reject(new Error('No refresh token saved — log in again.'));
+
+  refreshPromise = axios
+    .post(
+      `${API_URL}${REFRESH_PATH}`,
+      { refreshToken },
+      { headers: { 'Content-Type': 'application/json', Accept: 'application/json' } }
+    )
+    .then((response) => {
+      const data = response.data;
+      if (!data?.isSuccess) throw new Error(data?.message || 'Unable to refresh access token');
+
+      const tokenData = data.data || data;
+      if (!tokenData.accessToken) throw new Error('No new access token was returned');
+
+      localStorage.setItem('accessToken', tokenData.accessToken);
+      // Some backends rotate the refresh token too
+      if (tokenData.refreshToken) localStorage.setItem('refreshToken', tokenData.refreshToken);
+      if (tokenData.expiresAt) localStorage.setItem('accessTokenExpiresAt', tokenData.expiresAt);
+
+      return tokenData.accessToken;
+    })
+    .catch((error) => {
+      // e.g. 400 "Invalid token" when the client endpoint doesn't accept admin refresh tokens
+      console.error(
+        'Token refresh failed:',
+        error.response?.status ?? '',
+        error.response?.data?.message || error.message
+      );
+      endSession();
+      throw error;
+    })
+    .finally(() => {
+      refreshPromise = null;
+    });
+
+  return refreshPromise;
+}
+
+const isRefreshRequest = (config) => config?.url?.includes(REFRESH_PATH);
+
+// Add the access token to every request, refreshing first when it has already expired
+apiClient.interceptors.request.use(
+  async (config) => {
+    if (!isRefreshRequest(config) && readStored('refreshToken') && isAccessTokenExpired()) {
+      try {
+        await refreshAccessToken();
+      } catch {
+        // Send it anyway; the 401 below ends the session cleanly
+      }
     }
+
+    const accessToken = readStored('accessToken');
+    if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`;
 
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Handle expired access token
+// 401 → refresh the token → run the same request again (once)
 apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
 
   async (error) => {
     const originalRequest = error.config;
 
-    // No response or not unauthorized
-    if (!error.response || error.response.status !== 401) {
+    if (error.response?.status !== 401 || !originalRequest) return Promise.reject(error);
+
+    // Don't retry forever, and don't refresh the refresh request itself
+    if (originalRequest._retry || isRefreshRequest(originalRequest)) {
       return Promise.reject(error);
     }
 
-    // Don't retry the same request forever
-    if (originalRequest._retry) {
-      return Promise.reject(error);
-    }
-
-    // Don't try to refresh the refresh-token request itself
-    if (originalRequest.url?.includes('/Auth/client/refresh-token')) {
-      return Promise.reject(error);
-    }
-
-    const refreshToken = localStorage.getItem('refreshToken');
-
-    // No refresh token means the user has to log in again
-    if (!refreshToken) {
+    if (!readStored('refreshToken')) {
+      endSession();
       return Promise.reject(error);
     }
 
     originalRequest._retry = true;
 
     try {
-      // If another request is already refreshing,
-      // wait for that refresh instead of sending another one.
-      if (!refreshPromise) {
-        refreshPromise = axios
-          .post(
-            `${import.meta.env.VITE_ADMIN_API}/Auth/client/refresh-token`,
-            {
-              refreshToken,
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-              },
-            }
-          )
-          .then((response) => {
-            const data = response.data;
-
-            if (!data.isSuccess) {
-              throw new Error(data.message || 'Unable to refresh access token');
-            }
-
-            // Support the same response structure as your login
-            const tokenData = data.data || data;
-
-            const newAccessToken = tokenData.accessToken;
-            const newRefreshToken = tokenData.refreshToken;
-            const newExpiresAt = tokenData.expiresAt;
-
-            if (!newAccessToken) {
-              throw new Error('No new access token was returned');
-            }
-
-            // Save the new access token
-            localStorage.setItem('accessToken', newAccessToken);
-
-            // Some backends rotate the refresh token too
-            if (newRefreshToken) {
-              localStorage.setItem('refreshToken', newRefreshToken);
-            }
-
-            if (newExpiresAt) {
-              localStorage.setItem('accessTokenExpiresAt', newExpiresAt);
-            }
-
-            return newAccessToken;
-          })
-          .finally(() => {
-            refreshPromise = null;
-          });
-      }
-
-      const newAccessToken = await refreshPromise;
-
-      // Put the new token on the failed request
+      const newAccessToken = await refreshAccessToken();
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-      // Try the original request again
       return apiClient(originalRequest);
-    } catch (refreshError) {
-      console.error('Token refresh failed:', refreshError);
-
-      // Refresh token is no longer usable
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('accessTokenExpiresAt');
-      localStorage.removeItem('adminUser');
-
-      return Promise.reject(refreshError);
+    } catch {
+      // Reject with the original 401 so callers show "Unauthorized", not the refresh error
+      return Promise.reject(error);
     }
   }
 );
