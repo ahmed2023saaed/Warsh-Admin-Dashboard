@@ -2,6 +2,7 @@ import {
   customerFilters,
   createCustomerColumns,
   creatActivityTable,
+  createCarColumns,
 } from '../utils/CustomerFilters';
 import DetailsDrawer from '../components/UI/DetailsDrawer';
 import useAppTranslation from '../hooks/useAppTranslation';
@@ -89,6 +90,7 @@ function Customers() {
   const [details, setDetails] = useState({ id: null, data: null, error: '' });
   const [detailsReloadKey, setDetailsReloadKey] = useState(0);
   const loadedDetails = details.id === selectedCustomerId ? details : null;
+  const isDetailsLoading = Boolean(selectedCustomerId) && !loadedDetails;
   const selectedCustomer = loadedDetails?.data
     ? { ...listCustomer, ...loadedDetails.data }
     : listCustomer;
@@ -259,6 +261,7 @@ function Customers() {
 
   /*********** */
   const activityColumns = useMemo(() => creatActivityTable(), []);
+  const carColumns = useMemo(() => createCarColumns(), []);
 
   // Tab badges come from `counts` in the response: { all, active, suspended, new }
   const FilterCount = result.counts || {};
@@ -308,55 +311,62 @@ function Customers() {
             </State>
 
             <Detail label="Joined" value={formatDate(customer.createdAt)} />
+
+            {customer.status === 'suspended' && (
+              <>
+                <Detail label="Suspended until" value={formatDate(customer.suspendedUntil)} />
+                <Detail label="Suspension reason" value={customer.suspensionReason} />
+              </>
+            )}
           </div>
         </section>
 
         <section>
-          <h3 className="text-base font-bold text-[#1C1712]">Activity</h3>
+          <h3 className="text-base font-bold text-[#1C1712]">Summary</h3>
 
           <div className="mt-3 grid gap-4 sm:grid-cols-3">
-            <Detail label="Cars" value={String(customer.carsCount ?? 0)} />
+            <Detail label="Cars" value={String(customer.carsCount ?? customer.cars?.length ?? 0)} />
             <Detail label="Bookings" value={String(customer.bookingsCount ?? 0)} />
             <Detail label="Total spending" value={formatMoney(customer.totalSpending)} />
           </div>
         </section>
 
-        {/* The list endpoint doesn't return cars or history yet */}
-        {customer.cars?.length > 0 && (
-          <section>
-            <h3 className="text-base font-bold text-[#1C1712]">Registered cars</h3>
-
-            <div className="mt-3 space-y-3">
-              {customer.cars.map((car) => (
-                <div key={car.id} className="rounded-xl border border-[#E8E2D8] p-4">
-                  <p className="font-bold text-[#1C1712]">
-                    {car.brand} {car.model}
-                  </p>
-
-                  <p className="mt-1 text-sm text-[#8A8074]">
-                    {car.year} · {car.plateNumber}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
+        {/* Cars come from GET /Admin/clients/{id} (the list endpoint has only carsCount) */}
         <section>
-          <div>
-            <h3 className="mb-4 text-base font-bold text-[#1C1712]">Customer History</h3>
-          </div>
+          <SectionTitle count={isDetailsLoading ? null : (customer.cars?.length ?? 0)}>
+            Registered cars
+          </SectionTitle>
+
+          {loadedDetails?.error && (
+            <p className="mb-3 text-sm text-[#B03A3A]">
+              Couldn't load the cars: {loadedDetails.error}
+            </p>
+          )}
+
+          <DataTable
+            columns={carColumns}
+            data={isDetailsLoading ? [] : customer.cars || []}
+            emptyMessage={isDetailsLoading ? 'Loading cars...' : 'No cars registered.'}
+            cellClassName="text-sm"
+          />
+        </section>
+
+        {/* GET /Admin/clients/{id}/activity, one page at a time */}
+        <section>
+          <SectionTitle count={isActivityLoading ? null : activity.totalCount}>
+            Activity history
+          </SectionTitle>
 
           {activity.error && !isActivityLoading && (
             <p className="mb-3 text-sm text-[#B03A3A]">
-              Couldn't load the history: {activity.error}
+              Couldn't load the activity: {activity.error}
             </p>
           )}
 
           <DataTable
             columns={activityColumns}
             data={isActivityLoading ? [] : activity.items}
-            emptyMessage={isActivityLoading ? 'Loading history...' : 'No activity yet.'}
+            emptyMessage={isActivityLoading ? 'Loading activity...' : 'No activity yet.'}
             cellClassName="text-sm"
           />
 
@@ -372,6 +382,19 @@ function Customers() {
             />
           )}
         </section>
+      </div>
+    );
+  }
+
+  function SectionTitle({ children, count }) {
+    return (
+      <div className="mb-3 flex items-center gap-2">
+        <h3 className="text-base font-bold text-[#1C1712]">{children}</h3>
+        {count !== null && count !== undefined && (
+          <span className="inline-flex min-w-6 items-center justify-center rounded-full bg-[#F3EFE9] px-2 py-0.5 text-xs font-bold text-[#6F665C]">
+            {count}
+          </span>
+        )}
       </div>
     );
   }

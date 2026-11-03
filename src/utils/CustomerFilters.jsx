@@ -129,43 +129,118 @@ export function createCustomerColumns({ onView, onSuspend }) {
   ];
 }
 
+/** "2026-10-18T17:17:49Z" → { date: "18 Oct 2026", time: "7:17 PM" }; anything else is shown as it is. */
+function splitDateTime(value) {
+  const date = new Date(value);
+  if (!value || Number.isNaN(date.getTime())) return { date: value || '—', time: '' };
+
+  return {
+    date: new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).format(date),
+    time: new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(date),
+  };
+}
+
+// booking_completed → "Booking completed". The color follows what happened (checked in this
+// order), so booking_completed is green and booking_rejected is red.
+const ACTIVITY_STYLES = {
+  rejected: 'bg-[#FDECEC] text-[#D64545]',
+  cancelled: 'bg-[#FDECEC] text-[#D64545]',
+  suspend: 'bg-[#FDECEC] text-[#D64545]',
+  completed: 'bg-[#EAF8EF] text-[#169447]',
+  payment: 'bg-[#EAF8EF] text-[#169447]',
+  review: 'bg-[#FDF1DE] text-[#C8790A]',
+  created: 'bg-[#EAF1FE] text-[#2F6FED]',
+  booking: 'bg-[#EAF1FE] text-[#2F6FED]',
+};
+
+function activityLabel(type = '') {
+  const text = String(type).replace(/[_-]+/g, ' ').trim();
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : '—';
+}
+
 export function creatActivityTable() {
   return [
     {
-      key: 'id',
-      header: 'id',
-      // cellClassName: "text-[8px] leading-5 break-words whitespace-normal",
-      render: (activity) => {
-        return <p>{activity.id}</p>;
-      },
-    },
-    {
       key: 'type',
-      header: 'type',
-      // cellClassName: "text-sm",/
+      header: 'Activity',
+      cellClassName: '!text-left',
+      headerClassName: '!text-left',
       render: (activity) => {
-        return <p>{activity.type.split('_').join(' ')}</p>;
-      },
-    },
-    {
-      key: 'description',
-      header: 'description',
-      cellClassName: 'max-w-[220px] leading-5 break-words whitespace-normal',
-      render: (activity) => {
+        const kind = Object.keys(ACTIVITY_STYLES).find((key) =>
+          String(activity.type).toLowerCase().includes(key)
+        );
+
         return (
-          <p className="mx-auto max-w-[220px] truncate" title={activity.description}>
-            {activity.description}
-          </p>
+          <span
+            className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold whitespace-nowrap ${
+              ACTIVITY_STYLES[kind] ?? 'bg-[#F3EFE9] text-[#6F665C]'
+            }`}
+          >
+            {activityLabel(activity.type)}
+          </span>
         );
       },
     },
     {
+      key: 'description',
+      header: 'Description',
+      cellClassName: '!text-left max-w-[260px] leading-5 break-words whitespace-normal',
+      headerClassName: '!text-left',
+      render: (activity) => (
+        <p className="text-[#1C1712]" title={activity.description}>
+          {activity.description || '—'}
+        </p>
+      ),
+    },
+    {
       key: 'date',
-      header: 'date',
-      className: 'text-[8px]! leading-5 break-words whitespace-normal',
+      header: 'Date',
+      cellClassName: '!text-left whitespace-nowrap',
+      headerClassName: '!text-left',
       render: (activity) => {
-        return <p>{activity.date}</p>;
+        const { date, time } = splitDateTime(activity.date);
+
+        return (
+          <div className="flex flex-col">
+            <span className="font-medium text-[#1C1712]">{date}</span>
+            {time && <span className="text-xs text-[#8A8074]">{time}</span>}
+          </div>
+        );
       },
+    },
+  ];
+}
+
+/** Cars from GET /Admin/clients/{id}: { id, brand, model, year, plateNumber } */
+export function createCarColumns() {
+  return [
+    {
+      key: 'car',
+      header: 'Car',
+      cellClassName: '!text-left',
+      headerClassName: '!text-left',
+      render: (car) => (
+        <p className="font-semibold whitespace-nowrap text-[#1C1712]">
+          {[car.brand, car.model].filter(Boolean).join(' ') || '—'}
+        </p>
+      ),
+    },
+    {
+      key: 'year',
+      header: 'Year',
+      render: (car) => <p>{car.year || '—'}</p>,
+    },
+    {
+      key: 'plateNumber',
+      header: 'Plate number',
+      render: (car) =>
+        car.plateNumber ? (
+          <span className="inline-flex rounded-md border border-[#E8E2D8] bg-[#FDFBF8] px-2 py-0.5 font-mono text-xs font-semibold text-[#1C1712]">
+            {car.plateNumber}
+          </span>
+        ) : (
+          <span className="text-[#A0978D]">—</span>
+        ),
     },
   ];
 }
