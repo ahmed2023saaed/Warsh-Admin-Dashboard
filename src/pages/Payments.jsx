@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import FilterButton from "../components/UI/FilterButton";
 import StatCard from "../components/UI/StatCard";
 import { paymentTabs } from "../constants/paymentsConstants";
@@ -8,15 +8,21 @@ import { Download } from "lucide-react";
 import Button from "../components/UI/Button";
 import { getPaymentColumns } from "../constants/paymentColumns";
 import DataTable from "../components/UI/DataTable";
-import Pagination from "../utils/Pagination";
+import Pagination from "../components/UI/Pagination";
+import { paginate, usePaginationParams } from "../hooks/usePaginationParams";
+import { useUrlParams } from "../hooks/useUrlParams";
 
-
+const DEFAULT_TAB = 'bookingFees'
 
 function Payments() {
 
-  const [isActive, setIsActive] = useState('bookingFees')
+  // The tab and page live in the URL: ?tab=refunds&page=2&size=20
+  const [searchParams, updateParams] = useUrlParams()
+  const { page, pageSize, setPage, setPageSize, sizeOptions } = usePaginationParams()
+  const requestedTab = searchParams.get('tab')
+  const isActive = paymentTabs.some((tab) => tab.key === requestedTab) ? requestedTab : DEFAULT_TAB
   const activeData = paymentsMockData[isActive]
-  const [paginatedPayments, setPaginatedPayments] = useState([]);
+  const paginatedPayments = paginate(activeData, page, pageSize)
 
   const paymentColumns = useMemo(
     () => getPaymentColumns(isActive),
@@ -44,7 +50,12 @@ function Payments() {
               key={payment.key}
               count={payment.key.length}
               active={isActive === payment.key}
-              onClick={() => { setIsActive(payment.key) }}
+              onClick={() => {
+                updateParams(
+                  { tab: payment.key === DEFAULT_TAB ? null : payment.key },
+                  { resetPage: true }
+                )
+              }}
               className="text-xs"
             >
               {payment.label}
@@ -73,7 +84,16 @@ function Payments() {
           emptyMessage="No payment records found."
           minWidth={isActive === 'refunds' ? '1450px' : '1000px'}
         />
-        <Pagination data={activeData} perPage={10} onPaginate={setPaginatedPayments} />
+        {activeData.length > 0 && (
+          <Pagination
+            currentPage={page}
+            totalItems={activeData.length}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            pageSizeOptions={sizeOptions}
+            onPageSizeChange={setPageSize}
+          />
+        )}
 
 
     </div>

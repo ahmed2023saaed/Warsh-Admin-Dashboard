@@ -9,7 +9,6 @@
     "passwordPlaceholder": "Enter your password",
     "passwordRequired": "Password is required.",
     "rememberMe": "Remember me",
-    "registerLink": "Forgot password?",
     "failed": "Unable to sign in. Please check your email and password.",
     "loading": "Signing in...",
     "submit": "Sign in"
@@ -46,5 +45,13 @@
     "reviews": "Reviews",
     "marketing": "Marketing",
     "loyalty": "Loyalty & Rewards"
+  },
+  "pagination": {
+    "navigation": "Pagination",
+    "showing": "Showing",
+    "of": "of",
+    "rowsPerPage": "Rows per page",
+    "previous": "Previous page",
+    "next": "Next page"
   }
 }

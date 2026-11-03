@@ -1,9 +1,12 @@
 import { ShieldX } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../components/UI/Button';
+import { useAuth } from '../context/AuthContext';
 
 export default function NotAllowed() {
   const navigate = useNavigate();
+  const { lang = 'en' } = useParams();
+  const { firstAllowedPage } = useAuth();
 
   return (
     <div className="flex min-h-full items-center justify-center p-6">
@@ -15,15 +18,19 @@ export default function NotAllowed() {
         <h1 className="mt-5 text-2xl font-bold text-[#1C1712]">Access Denied</h1>
 
         <p className="mt-2 text-sm leading-6 text-[#8A8074]">
-          You don't have permission to access this page.
+          {firstAllowedPage
+            ? "You don't have permission to access this page."
+            : "Your account doesn't have any permissions yet. Ask an admin to give you access."}
         </p>
 
-        <Button
-          onClick={() => navigate('../')}
-          className="mt-5 !border-[#1C1712] !bg-[#1C1712] !px-5 !py-2.5 !text-sm !text-white hover:!bg-[#2A211C]"
-        >
-          Back to Dashboard
-        </Button>
+        {firstAllowedPage && (
+          <Button
+            onClick={() => navigate(`/${lang}/${firstAllowedPage.path}`)}
+            className="mt-5 !border-[#1C1712] !bg-[#1C1712] !px-5 !py-2.5 !text-sm !text-white hover:!bg-[#2A211C]"
+          >
+            Go to {firstAllowedPage.title}
+          </Button>
+        )}
       </div>
     </div>
   );

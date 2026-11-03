@@ -9,11 +9,16 @@ import { CheckCircle2, Search, TriangleAlert } from 'lucide-react';
 import { showSuccessToast } from '../components/UI/toastNotifications';
 import { useCallback, useMemo, useState } from 'react';
 import Button from '../components/UI/Button';
-import Pagination from '../utils/Pagination';
+import Pagination from '../components/UI/Pagination';
 import SuspendModal from '../components/UI/SuspendModal';
 
 import { verifyWorkshop, unverifyWorkshop } from '../api/serviceCenterApi';
 import { toast } from 'react-hot-toast';
+import { paginate, usePaginationParams } from '../hooks/usePaginationParams';
+import { useUrlParams } from '../hooks/useUrlParams';
+
+// The cards sit in rows of 3, so keep pages full
+const GRID_PAGE_SIZES = [6, 12, 24];
 
 function ServiceCenters() {
   const [centerIdToReject, setCenterIdToReject] = useState(null);
@@ -21,7 +26,16 @@ function ServiceCenters() {
 
   const [centers, setCenters] = useState(() => serviceCenters.serviceCenters);
   const [suspendCenterId, setSuspendCenterId] = useState(null);
-  const [selectedCenter, setSelectedCenter] = useState(null);
+
+  // Two lists on one page, each with its own page in the URL:
+  // ?pendingPage=2&centersPage=3&centersSize=12, plus ?center=SC-001 for the open drawer
+  const [searchParams, updateParams] = useUrlParams();
+  const pendingPagination = usePaginationParams('pending');
+  const centersPagination = usePaginationParams('centers', GRID_PAGE_SIZES);
+  const selectedCenterId = searchParams.get('center');
+  const selectedCenter = selectedCenterId
+    ? (centers.find((center) => String(center.id) === selectedCenterId) ?? null)
+    : null;
 
   // const [View, setView] = useState(false);
 
@@ -35,8 +49,16 @@ function ServiceCenters() {
   );
 
   const centerTable = serviceCenters.pendingServiceCenters;
-  const [paginatedCenters, setPaginatedCenters] = useState([]);
-  const [paginatedCentersGrid, setPaginatedCentersGrid] = useState([]);
+  const paginatedCenters = paginate(
+    centerTable,
+    pendingPagination.page,
+    pendingPagination.pageSize
+  );
+  const paginatedCentersGrid = paginate(
+    centers,
+    centersPagination.page,
+    centersPagination.pageSize
+  );
 
   const centerToApprove = centerTable.find((center) => center.id === centerIdToApprove);
 
@@ -76,9 +98,11 @@ function ServiceCenters() {
     updateCenterStatus('Active');
   }
 
-  const handleViewCenter = useCallback((center) => {
-    setSelectedCenter(center);
-  }, []);
+  // Opening a center adds a history entry, so the browser's Back button closes it
+  const handleViewCenter = useCallback(
+    (center) => updateParams({ center: center.id }, { addToHistory: true }),
+    [updateParams]
+  );
 
   const handleEditCenter = useCallback((center) => {
     setSuspendCenterId(center.id);
@@ -233,9 +257,18 @@ function ServiceCenters() {
             data={paginatedCenters}
             emptyMessage="No pending service centers."
           />
-          <div className="mt-4">
-            <Pagination data={centerTable} perPage={5} onPaginate={setPaginatedCenters} />
-          </div>
+          {centerTable.length > 0 && (
+            <div className="mt-4">
+              <Pagination
+                currentPage={pendingPagination.page}
+                totalItems={centerTable.length}
+                pageSize={pendingPagination.pageSize}
+                onPageChange={pendingPagination.setPage}
+                pageSizeOptions={pendingPagination.sizeOptions}
+                onPageSizeChange={pendingPagination.setPageSize}
+              />
+            </div>
+          )}
 
           {/* ==================== APPROVE MODAL ==================== */}
           <Modal
@@ -362,13 +395,22 @@ function ServiceCenters() {
         </div>
 
         <div className="grid gap-3 sm:gap-4 md:grid-cols-2 xl:grid-cols-3">{centerCards}</div>
-        <div className="mt-4">
-          <Pagination data={centers} perPage={6} onPaginate={setPaginatedCentersGrid} />
-        </div>
+        {centers.length > 0 && (
+          <div className="mt-4">
+            <Pagination
+              currentPage={centersPagination.page}
+              totalItems={centers.length}
+              pageSize={centersPagination.pageSize}
+              onPageChange={centersPagination.setPage}
+              pageSizeOptions={centersPagination.sizeOptions}
+              onPageSizeChange={centersPagination.setPageSize}
+            />
+          </div>
+        )}
       </section>
       <DetailsDrawer
         open={selectedCenter !== null}
-        onClose={() => setSelectedCenter(null)}
+        onClose={() => updateParams({ center: null })}
         title={selectedCenter?.name}
         subtitle={selectedCenter?.brand}
       >

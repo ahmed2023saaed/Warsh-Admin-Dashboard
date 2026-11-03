@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { logoutAdmin } from '../api/authApi';
+import { logoutAdmin, toPermissionIds } from '../api/authApi';
+import { PAGE_PERMISSIONS } from '../constants/permissions';
+import navItems from '../utils/NavItem';
 
 const AuthContext = createContext(null);
 
@@ -20,7 +22,8 @@ export const AuthProvider = ({ children }) => {
 
         if (parsedUser && typeof parsedUser === 'object') {
           setUser(parsedUser);
-          setPermissions(parsedPermissions);
+          // Older logins saved the raw response, so normalize it here too
+          setPermissions(toPermissionIds(parsedPermissions));
         } else {
           logoutAdmin();
         }
@@ -40,7 +43,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     setUser(userData);
-    setPermissions(Array.isArray(adminData.permissions) ? adminData.permissions : []);
+    setPermissions(toPermissionIds(adminData.permissions));
   };
 
   const logout = () => {
@@ -49,15 +52,20 @@ export const AuthProvider = ({ children }) => {
     setPermissions([]);
   };
 
+  const isSuperAdmin = user?.email === 'superadmin@warsha.app';
+
+  // permissionId is a backend id, see PERMISSIONS in constants/permissions.js
   const hasPermission = (permissionId) => {
-    const isSuperAdmin = user?.email === 'superadmin@warsha.app';
-
-    if (isSuperAdmin) {
-      return true;
-    }
-
-    return permissions.includes(permissionId);
+    return isSuperAdmin || permissions.includes(permissionId);
   };
+
+  // page is a NavItem key, e.g. 'bookings'
+  const canAccessPage = (page) => {
+    return (PAGE_PERMISSIONS[page] || []).some(hasPermission);
+  };
+
+  // Where to send users who can't open the dashboard
+  const firstAllowedPage = navItems.find((item) => canAccessPage(item.key)) || null;
 
   return (
     <AuthContext.Provider
@@ -68,6 +76,8 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         hasPermission,
+        canAccessPage,
+        firstAllowedPage,
       }}
     >
       {children}

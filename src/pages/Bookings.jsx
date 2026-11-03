@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Download } from 'lucide-react';
 import Button from '../components/UI/Button';
 import FilterButton from '../components/UI/FilterButton';
@@ -7,8 +7,10 @@ import MockBookings from '../Data/bookingsMock.json';
 import DataTable from '../components/UI/DataTable';
 import DetailsDrawer from '../components/UI/DetailsDrawer';
 import StatusBadge from '../components/widgets/statusBadge';
-import Pagination from '../utils/Pagination';
+import Pagination from '../components/UI/Pagination';
 import { showSuccessToast } from '../components/UI/toastNotifications';
+import { paginate, usePaginationParams } from '../hooks/usePaginationParams';
+import { useUrlParams } from '../hooks/useUrlParams';
 
 function CancellationForm({ booking, setSelectedBooking }) {
   const [reason, setReason] = useState('');
@@ -175,18 +177,34 @@ function CancellationForm({ booking, setSelectedBooking }) {
   );
 }
 
+const filteres = ['all', 'pending', 'active', 'completed', 'cancelled'];
+
 function Bookings() {
-  const [isActive, setIsActive] = useState('all');
-  const [selectedBooking, setSelectedBooking] = useState(null);
   const [bookings] = useState(MockBookings['bookings']);
-  const [paginatedBookings, setPaginatedBookings] = useState([]);
+
+  // The tab, page and open booking live in the URL: ?tab=pending&page=2&booking=BK-1198
+  const [searchParams, updateParams] = useUrlParams();
+  const { page, pageSize, setPage, setPageSize, sizeOptions } = usePaginationParams();
+  const requestedTab = searchParams.get('tab');
+  const isActive = filteres.includes(requestedTab) ? requestedTab : 'all';
+  const selectedBookingId = searchParams.get('booking');
+  const selectedBooking = selectedBookingId
+    ? (bookings.find((booking) => String(booking.id) === selectedBookingId) ?? null)
+    : null;
+
+  // Opening a booking adds a history entry, so the browser's Back button closes it
+  const openBooking = useCallback(
+    (booking) => updateParams({ booking: booking.id }, { addToHistory: true }),
+    [updateParams]
+  );
+  const closeBooking = () => updateParams({ booking: null });
 
   const bookingColumns = useMemo(
     () =>
       createBookingColumns({
-        onView: setSelectedBooking,
+        onView: openBooking,
       }),
-    []
+    [openBooking]
   );
 
   const filteredBookings = useMemo(
@@ -197,11 +215,12 @@ function Bookings() {
     [bookings, isActive]
   );
 
+  const paginatedBookings = paginate(filteredBookings, page, pageSize);
+
   const coutn = [10, 2560, 10, 520, 1];
-  const filteres = ['all', 'pending', 'active', 'completed', 'cancelled'];
 
   function handelClick(name) {
-    setIsActive(name);
+    updateParams({ tab: name === 'all' ? null : name }, { resetPage: true });
   }
 
   function BookingDetails({ booking }) {
@@ -245,7 +264,7 @@ function Bookings() {
             <CancellationForm
               key={booking.id}
               booking={booking}
-              setSelectedBooking={setSelectedBooking}
+              setSelectedBooking={closeBooking}
             />
           </section>
         )}
@@ -291,10 +310,19 @@ function Bookings() {
         emptyMessage="No bookings found."
         minWidth="800px"
       />
-      <Pagination data={filteredBookings} perPage={10} onPaginate={setPaginatedBookings} />
+      {filteredBookings.length > 0 && (
+        <Pagination
+          currentPage={page}
+          totalItems={filteredBookings.length}
+          pageSize={pageSize}
+          onPageChange={setPage}
+          pageSizeOptions={sizeOptions}
+          onPageSizeChange={setPageSize}
+        />
+      )}
       <DetailsDrawer
         open={selectedBooking !== null}
-        onClose={() => setSelectedBooking(null)}
+        onClose={closeBooking}
         title={selectedBooking?.id}
         subtitle={selectedBooking?.customer.name}
       >

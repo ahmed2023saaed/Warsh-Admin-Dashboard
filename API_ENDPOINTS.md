@@ -30,7 +30,7 @@ what each one needs from the backend. Today most pages run on mock data in `src/
 | 🆕 | `POST /Admin/logout` | Logout button |
 | 🆕 | `GET /Admin/me` | Topbar name and role (currently hardcoded "Saif Fawzy / Super Admin") |
 | ✅ | `GET /Admin/user-permissions/{id}` | Permissions after login |
-| ✅ | `GET /Admin/permissions` | Permission list for Add Employee (not wired yet) |
+| ✅ | `GET /Admin/permissions` | Permission list for Add Employee |
 
 - **Login** body `{ email, password }` → `{ id, email, accessToken, refreshToken, expiresAt }`.
   Please also return `name` and `role` so the topbar can show them.
@@ -81,13 +81,15 @@ what each one needs from the backend. Today most pages run on mock data in `src/
 
 | | Method & path | Used for |
 |---|---|---|
-| 🆕 | `GET /Admin/clients` | Customers table, search, filter tabs |
+| ✅ | `GET /Admin/clients` | Customers table, search, filter tabs |
 | 🆕 | `GET /Admin/clients/{id}` | "View" drawer: info and cars |
 | 🆕 | `GET /Admin/clients/{id}/activity` | "Customer History" table in the drawer |
 | 🆕 | `POST /Admin/clients/{id}/suspend` | Suspend modal |
 | 🆕 | `POST /Admin/clients/{id}/activate` | Unsuspend |
 
-- **List** query `page, pageSize, search (name/phone), status = active | suspended | new`
+- **List** query `Page, PageSize, Search, Status` (Status is a number 0-3). The dashboard sends
+  1 = active, 2 = suspended, 3 = new, and no Status for "All", following the order of `counts`.
+  Please confirm these numbers, since Swagger doesn't name them.
   - item `{ id, fullName, phone, email, carsCount, bookingsCount, totalSpending, status, createdAt }`
   - `counts: { all, active, suspended, new }`. "New" means joined this month. It could be a
     separate filter instead of a status.
@@ -276,7 +278,7 @@ All lists take `page, pageSize, status, from, to, search`.
 | 🆕 | `PUT /Admin/settings/pricing` | Its Edit → Save |
 | 🆕 | `GET /Admin/settings/platform` | "Platform" section |
 | 🆕 | `PATCH /Admin/settings/platform` | The toggles |
-| 🆕 | `GET /Admin/roles` | "Admin Roles & Permissions" section, role select in Add Employee |
+| 🆕 | `GET /Admin/roles` | "Admin Roles & Permissions" section |
 | | **Catalog** ("Manage" buttons; those pages aren't built yet) | |
 | 🆕 | `GET / POST / PUT / DELETE /Admin/service-categories` | Service categories |
 | ✅ | `GET /CarCatalog/car-brands` · `POST /CarCatalog/brands` | Car brands (list, add) |
@@ -302,7 +304,7 @@ All lists take `page, pageSize, status, from, to, search`.
 |---|---|---|
 | 🆕 | `GET /Admin/users` | Users table, search, role and status filters |
 | 🆕 | `GET /Admin/users/summary` | 4 stat cards |
-| ⚠️ | `POST /Admin/create-admin` · `POST /Admin/create-employee` | "Add Employee" form |
+| ✅ | `POST /Admin/create-admin` · `POST /Admin/create-employee` | "Add Employee" form |
 | 🆕 | `GET /Admin/users/{id}` | "View Details" |
 | 🆕 | `PUT /Admin/users/{id}/role` | "Change Role" |
 | 🆕 | `PUT /Admin/users/{id}/permissions` | "Manage Permissions" |
@@ -311,9 +313,7 @@ All lists take `page, pageSize, status, from, to, search`.
 - **List** query `page, pageSize, search, role, status = active | inactive` → item
   `{ id, fullName, email, role, status, lastActiveAt, isProtected, createdAt }`
 - **Summary** → `{ totalUsers, admins, customRoles, activeUsers }`
-- **Create:** today it accepts `{ name, email, password, permissionIds }`, but the form also
-  collects **`nationalId` (14 digits), `phoneNumber`, and `role`**, which are currently dropped.
-  The backend should accept them.
+- **Create:** body `{ name, email, password, permissionIds }`. The form sends only these fields.
 - **Role** body `{ role }` · **Permissions** body `{ permissionIds: [] }` · **Status** body `{ status }`
 
 ---
@@ -338,7 +338,7 @@ These are in `PLAN.md` / the topbar titles and will need endpoints when they're 
 |---|---|---|---|
 | Auth & admin | 3 | 1 | 2 |
 | Dashboard | 0 | 0 | 4 |
-| Customers | 0 | 0 | 5 |
+| Customers | 1 | 0 | 4 |
 | Service Centers | 1 | 1 | 5 |
 | Bookings | 0 | 0 | 4 |
 | Payments | 0 | 0 | 7 |
@@ -346,5 +346,5 @@ These are in `PLAN.md` / the topbar titles and will need endpoints when they're 
 | Marketing | 0 | 0 | 9 |
 | Loyalty | 2 | 0 | 5 |
 | Settings | 4 | 0 | 19 |
-| Admin Users | 0 | 2 | 6 |
-| **Total** | **10** | **4** | **69** |
+| Admin Users | 2 | 0 | 6 |
+| **Total** | **13** | **2** | **68** |

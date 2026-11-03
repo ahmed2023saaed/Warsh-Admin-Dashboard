@@ -71,83 +71,81 @@ export const router = createBrowserRouter([
         ),
 
         children: [
-          // Dashboard - permission 1
+          // Dashboard - View Analytics
           {
             index: true,
             element: (
-              <PermissionRoute permissionId={1}>{withSuspense(<Dashboard />)}</PermissionRoute>
+              <PermissionRoute page="dashboard">{withSuspense(<Dashboard />)}</PermissionRoute>
             ),
           },
 
-          // Customers - permission 2
+          // Customers - View or Manage Clients
           {
             path: 'customers',
             element: (
-              <PermissionRoute permissionId={2}>{withSuspense(<Customers />)}</PermissionRoute>
+              <PermissionRoute page="customers">{withSuspense(<Customers />)}</PermissionRoute>
             ),
           },
 
-          // Service Centers - permission 3
+          // Service Centers - any Workshops permission
           {
             path: 'serviceCenters',
             element: (
-              <PermissionRoute permissionId={3}>{withSuspense(<ServiceCenters />)}</PermissionRoute>
+              <PermissionRoute page="serviceCenters">
+                {withSuspense(<ServiceCenters />)}
+              </PermissionRoute>
             ),
           },
 
-          // Bookings - permission 4
+          // Bookings - View or Manage Bookings
           {
             path: 'bookings',
             element: (
-              <PermissionRoute permissionId={4}>{withSuspense(<Bookings />)}</PermissionRoute>
+              <PermissionRoute page="bookings">{withSuspense(<Bookings />)}</PermissionRoute>
             ),
           },
 
-          // Payments - permission 5
+          // Payments - admins only until the backend adds a permission
           {
             path: 'payments',
             element: (
-              <PermissionRoute permissionId={5}>{withSuspense(<Payments />)}</PermissionRoute>
+              <PermissionRoute page="payments">{withSuspense(<Payments />)}</PermissionRoute>
             ),
           },
 
-          // Reviews - permission 6
+          // Reviews - View or Manage Reviews
           {
             path: 'reviews',
-            element: (
-              <PermissionRoute permissionId={6}>{withSuspense(<Reviews />)}</PermissionRoute>
-            ),
+            element: <PermissionRoute page="reviews">{withSuspense(<Reviews />)}</PermissionRoute>,
           },
 
-          // Marketing - permission 7
+          // Marketing - admins only until the backend adds a permission
           {
             path: 'marketing',
             element: (
-              <PermissionRoute permissionId={7}>{withSuspense(<Marketing />)}</PermissionRoute>
+              <PermissionRoute page="marketing">{withSuspense(<Marketing />)}</PermissionRoute>
             ),
           },
 
-          // Loyalty management. Permission 10 is provisional and must match the backend.
+          // Loyalty - admins only until the backend adds a permission
           {
             path: 'loyalty',
-            element: (
-              <PermissionRoute permissionId={10}>{withSuspense(<Loyalty />)}</PermissionRoute>
-            ),
+            element: <PermissionRoute page="loyalty">{withSuspense(<Loyalty />)}</PermissionRoute>,
           },
 
-          // Settings - permission 8
+          // Settings - admins only until the backend adds a permission
           {
             path: 'settings',
             element: (
-              <PermissionRoute permissionId={8}>{withSuspense(<Settings />)}</PermissionRoute>
+              <PermissionRoute page="settings">{withSuspense(<Settings />)}</PermissionRoute>
             ),
           },
 
-          // Admin Users - permission 9
+          // Admin Users - Manage Admins
           {
             path: 'adminUsers',
             element: (
-              <PermissionRoute permissionId={9}>{withSuspense(<AdminUsers />)}</PermissionRoute>
+              <PermissionRoute page="adminUsers">{withSuspense(<AdminUsers />)}</PermissionRoute>
             ),
           },
         ],

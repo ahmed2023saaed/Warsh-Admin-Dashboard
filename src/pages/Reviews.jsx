@@ -6,17 +6,29 @@ import { useMemo, useState } from "react";
 import { ArrowRight, Flag, Search, Star, Trash2 } from "lucide-react";
 import Modal from "../components/UI/Modal";
 import Input from "../components/UI/Input";
-import Pagination from "../utils/Pagination";
+import Pagination from "../components/UI/Pagination";
 import {
   showErrorToast,
   showSuccessToast,
 } from "../components/UI/toastNotifications";
+import { paginate, usePaginationParams } from "../hooks/usePaginationParams";
+import { useUrlParams } from "../hooks/useUrlParams";
+
+const filteres = ["all", "5", "4", "3", "2", "1", "reported"];
 
 function Reviews() {
-  const [isActive, setIsActive] = useState("all");
   const [reviews, setReviews] = useState(reviewsMock.reviews);
 
-  const filteres = ["all", "5", "4", "3", "2", "1", "reported"];
+  // The filter and page live in the URL: ?tab=reported&page=2
+  const [searchParams, updateParams] = useUrlParams();
+  const { page, pageSize, setPage, setPageSize, sizeOptions } =
+    usePaginationParams();
+  const requestedTab = searchParams.get("tab");
+  const isActive = filteres.includes(requestedTab) ? requestedTab : "all";
+
+  function setIsActive(tab) {
+    updateParams({ tab: tab === "all" ? null : tab }, { resetPage: true });
+  }
 
   const filterCounts = useMemo(
     () => ({
@@ -42,7 +54,7 @@ function Reviews() {
     [reviews, isActive],
   );
 
-  const [paginatedReviews, setPaginatedReviews] = useState([]);
+  const paginatedReviews = paginate(filterReviews, page, pageSize);
 
   function handleDelete(reviewId) {
     try {
@@ -167,9 +179,18 @@ function Reviews() {
           </div>
         )}
       </div>
-      <div className="mt-4">
-        <Pagination data={filterReviews} onPaginate={setPaginatedReviews} />
-      </div>
+      {filterReviews.length > 0 && (
+        <div className="mt-4">
+          <Pagination
+            currentPage={page}
+            totalItems={filterReviews.length}
+            pageSize={pageSize}
+            onPageChange={setPage}
+            pageSizeOptions={sizeOptions}
+            onPageSizeChange={setPageSize}
+          />
+        </div>
+      )}
     </div>
   );
 }
